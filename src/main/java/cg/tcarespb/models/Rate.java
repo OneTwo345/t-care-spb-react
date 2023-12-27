@@ -23,6 +23,7 @@ public class Rate {
     private String id;
     private Float starQuantity;
     private String content;
+    private Boolean deleted = false;
 
     @ManyToOne
     private User user;

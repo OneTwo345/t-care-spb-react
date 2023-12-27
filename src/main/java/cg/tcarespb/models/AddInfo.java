@@ -22,6 +22,7 @@ public class AddInfo {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String name;
+    private Boolean deleted = false;
 
     @OneToMany(mappedBy = "addInfo")
     private List<EmployeeInfo> employeeInfos;

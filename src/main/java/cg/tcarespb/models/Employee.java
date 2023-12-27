@@ -34,6 +34,7 @@ public class Employee {
     private String bioTitle;
     private String experience;
     private String personID;
+    private Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
     private EGender gender;

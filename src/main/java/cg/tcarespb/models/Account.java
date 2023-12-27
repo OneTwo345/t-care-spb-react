@@ -21,6 +21,7 @@ public class Account {
     private String id;
     private String email;
     private String password;
+    private Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
     private ERole eRole;

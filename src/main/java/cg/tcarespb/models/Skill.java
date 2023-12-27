@@ -22,6 +22,7 @@ public class Skill {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String name;
+    private Boolean deleted = false;
 
     @OneToMany(mappedBy = "skill")
     private List<EmployeeSkill> employeeSkills;

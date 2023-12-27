@@ -17,6 +17,7 @@ public class CartInfo {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    private Boolean deleted = false;
 
     @ManyToOne
     private Cart cart;

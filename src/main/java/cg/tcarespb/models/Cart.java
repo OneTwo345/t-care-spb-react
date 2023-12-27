@@ -37,6 +37,7 @@ public class Cart {
     private Integer hourPerDay;
     private BigDecimal priceMin;
     private BigDecimal priceMax;
+    private Boolean deleted = false;
     @Enumerated(EnumType.STRING)
     private EMemberOfFamily memberOfFamily;
     @Enumerated(EnumType.STRING)

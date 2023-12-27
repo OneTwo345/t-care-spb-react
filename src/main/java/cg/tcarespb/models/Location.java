@@ -24,6 +24,8 @@ public class Location {
     private String distanceForWork;
     private String longitude;
     private String latitude;
+    private Boolean deleted = false;
+
     @OneToOne
     private Employee employee;
     @OneToOne
