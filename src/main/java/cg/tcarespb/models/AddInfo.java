@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +18,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "add_infos")
+@SQLDelete(sql = "UPDATE add_infos SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class AddInfo {
     @Id
     @GeneratedValue(generator = "uuid")

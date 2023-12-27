@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +17,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE skills SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table(name = "skills")
 public class Skill {
     @Id
