@@ -30,6 +30,7 @@ public class Schedule {
     private Integer minHourPerJob;
     private EJobType jobType;
     private ESessionOfDate sessionOfDate;
+    private Boolean deleted = false;
 
     @OneToOne
     private Employee employee;

@@ -25,6 +25,7 @@ public class Availability {
     private EDateInWeek dateInWeek;
     private LocalTime timeStart;
     private LocalTime timeEnd;
+    private Boolean deleted = false;
     @ManyToOne
     private Employee employee;
 

@@ -21,6 +21,7 @@ public class FeeContact {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    private Boolean deleted = false;
 
     @OneToMany(mappedBy = "feeContact")
     private List<FeeContactEmployee> feeContactEmployees;

@@ -23,6 +23,7 @@ public class Service {
     private String id;
     private String name;
     private String description;
+    private Boolean deleted = false;
 
     @OneToMany(mappedBy = "service")
     private List<EmployeeService> employeeServiceList;

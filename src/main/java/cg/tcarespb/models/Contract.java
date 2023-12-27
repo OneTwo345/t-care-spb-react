@@ -32,6 +32,7 @@ public class Contract {
     private BigDecimal totalPrice;
     private Integer dateQuantity;
     private Integer hourPerDay;
+    private Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
     private EGender gender;

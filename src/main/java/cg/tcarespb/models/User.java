@@ -26,8 +26,7 @@ public class User {
     private String firstName;
     private String fullName;
     private EGender gender;
-
-
+    private Boolean deleted = false;
 
     @OneToMany(mappedBy = "user")
     private List<Rate> rates;

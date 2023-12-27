@@ -20,6 +20,8 @@ public class Photo {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    private Boolean deleted = false;
+
     @Column(name = "file_name")
     private String fileName;
     @Column(name = "file_folder")
