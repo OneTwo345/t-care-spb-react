@@ -22,6 +22,7 @@ public class Service {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String name;
+    private String description;
 
     @OneToMany(mappedBy = "service")
     private List<EmployeeService> employeeServiceList;
