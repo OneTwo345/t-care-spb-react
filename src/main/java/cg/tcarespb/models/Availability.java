@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalTime;
 import java.util.UUID;
@@ -17,6 +19,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "availabilities")
+@SQLDelete(sql = "UPDATE availabilities SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class Availability {
     @Id
     @GeneratedValue(generator = "uuid")
