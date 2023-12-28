@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.UUID;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +23,6 @@ public class EmployeeService {
     @ManyToOne
     private Employee employee;
     @ManyToOne
-    private Service service;
+    private ServiceGeneral service;
 
 }

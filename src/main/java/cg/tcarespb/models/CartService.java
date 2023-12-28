@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-
-import java.util.UUID;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @AllArgsConstructor
@@ -15,6 +15,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "cart_services")
+@SQLDelete(sql = "UPDATE cart_services SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 public class CartService {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -26,5 +28,5 @@ public class CartService {
     private Cart cart;
 
     @ManyToOne
-    private Service service;
+    private ServiceGeneral service;
 }
