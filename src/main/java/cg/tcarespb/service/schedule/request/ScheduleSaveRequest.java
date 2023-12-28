@@ -19,6 +19,5 @@ public class ScheduleSaveRequest {
     private String priceMax;
     private String minHourPerJob;
     private String jobType;
-    private String sessionOfDate;
     private String employeeId;
 }
