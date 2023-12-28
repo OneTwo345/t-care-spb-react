@@ -1,7 +1,6 @@
 package cg.tcarespb.models;
 
 import cg.tcarespb.models.enums.EJobType;
-import cg.tcarespb.models.enums.ESessionOfDate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
