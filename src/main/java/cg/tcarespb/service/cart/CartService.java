@@ -35,6 +35,9 @@ public class CartService {
     public Cart saveCart(Cart cart) {
         return cartRepository.save(cart);
     }
+    public List<Cart> getAllByIdUser(String userId){
+        return cartRepository.findAllByUserId(userId);
+    }
 
     public Cart findById(String id) {
         return cartRepository.findById(id).orElseThrow(

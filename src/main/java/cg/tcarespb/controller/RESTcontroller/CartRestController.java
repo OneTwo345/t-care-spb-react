@@ -26,6 +26,7 @@ public class CartRestController {
         cartService.updateCartService(req, id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/dateSessions/{id}")
     public ResponseEntity<?> updateDateSession(@PathVariable("id") String id, @RequestBody CartDateSessionListSaveRequest req) {
         cartService.updateDateSessionCart(req, id);
@@ -37,4 +38,5 @@ public class CartRestController {
         Cart cart = cartService.findById(id);
         return new ResponseEntity<>(cart.getId(), HttpStatus.OK);
     }
+
 }
