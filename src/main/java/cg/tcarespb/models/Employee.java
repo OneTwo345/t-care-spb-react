@@ -69,4 +69,7 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<Rate> rates;
+
+    @OneToMany(mappedBy = "employee")
+    private List<DateSession> dateSessions;
 }

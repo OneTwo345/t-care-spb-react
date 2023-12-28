@@ -20,5 +20,6 @@ public class ScheduleListResponse {
     private Integer minHourPerJob;
     private EJobType jobType;
     private ESessionOfDate sessionOfDate;
+    private String employeeId;
 
 }

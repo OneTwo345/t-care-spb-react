@@ -29,7 +29,6 @@ public class Schedule {
     private BigDecimal priceMax;
     private Integer minHourPerJob;
     private EJobType jobType;
-    private ESessionOfDate sessionOfDate;
     private Boolean deleted = false;
 
     @OneToOne
