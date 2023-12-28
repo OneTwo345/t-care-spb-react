@@ -10,5 +10,5 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class CartServiceListSaveRequest {
-    List<CartServiceSaveRequest> serviceList;
+    List<String> serviceList;
 }
