@@ -1,6 +1,7 @@
 package cg.tcarespb.models;
 
 import cg.tcarespb.models.enums.EDateInWeek;
+import cg.tcarespb.models.enums.ESessionOfDate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -8,6 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CartServiceSaveRequest {
-    private String idCart;
     private String idGeneralService;
 }
