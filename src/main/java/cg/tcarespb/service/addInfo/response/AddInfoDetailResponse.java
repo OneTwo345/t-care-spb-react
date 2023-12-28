@@ -1,15 +1,14 @@
 package cg.tcarespb.service.addInfo.response;
 
-import jdk.jshell.Snippet;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-public class AddInfoListResponse {
-    private String id;
+@AllArgsConstructor
+@NoArgsConstructor
+public class AddInfoDetailResponse {
     private String name;
 }

@@ -27,7 +27,6 @@ public class Availability {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private EDateInWeek dateInWeek;
     private LocalTime timeStart;
     private LocalTime timeEnd;
     private Boolean deleted = false;

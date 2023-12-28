@@ -11,28 +11,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE employees SET deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Table( name = "employees")
 public class Employee {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private String name;
     private String address;
     private String firstName;
     private String lastName;
     private String descriptionAboutMySelf;
     private String bioTitle;
-    private String experience;
     private String personID;
     private Boolean deleted = false;
 
@@ -41,7 +42,7 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private EStatus status;
     @Enumerated(EnumType.STRING)
-    private EExperience eExperience;
+    private EExperience experience;
     @Enumerated(EnumType.STRING)
     private EEducation education;
 
@@ -68,4 +69,7 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<Rate> rates;
+
+    @OneToMany(mappedBy = "employee")
+    private List<DateSession> dateSessions;
 }
