@@ -5,7 +5,6 @@ import cg.tcarespb.models.ServiceGeneral;
 import cg.tcarespb.repository.CartServiceRepository;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cartService.request.CartServiceListSaveRequest;
-import cg.tcarespb.service.cartService.request.CartServiceSaveRequest;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,8 @@ public class CartServiceService {
 
     public void create(CartServiceListSaveRequest req, String cartId) {
         Cart cart = cartService.findById(cartId);
-        for (CartServiceSaveRequest cartServiceSaveRequest : req.getServiceList()) {
-            ServiceGeneral serviceGeneral = serviceGeneralService.findById(cartServiceSaveRequest.getIdGeneralService());
+        for (var cartService : req.getServiceList()) {
+            ServiceGeneral serviceGeneral = serviceGeneralService.findById(cartService);
             cg.tcarespb.models.CartService cartServiceCreate = new cg.tcarespb.models.CartService();
             cartServiceCreate.setService(serviceGeneral);
             cartServiceCreate.setCart(cart);

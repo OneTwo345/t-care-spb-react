@@ -4,6 +4,7 @@ import cg.tcarespb.models.ServiceGeneral;
 import cg.tcarespb.repository.ServiceGeneralRepository;
 import cg.tcarespb.service.serviceGeneral.request.ServiceSaveRequest;
 import cg.tcarespb.service.serviceGeneral.response.ServiceListResponse;
+import cg.tcarespb.util.AppMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,8 @@ public class ServiceGeneralService {
     }
 
     public ServiceGeneral findById(String id) {
-        return serviceGeneralRepository.findById(id).get();
+        return serviceGeneralRepository.findById(id).orElseThrow(
+                () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "ServiceGeneral", id)));
     }
 
 }
