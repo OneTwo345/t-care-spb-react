@@ -15,7 +15,7 @@ import java.util.List;
 public class EmployeeRestController {
     private final EmployeeService employeeService;
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<List<EmployeeListResponse>> getEmployeeList(){
         List<EmployeeListResponse> employeeListResponseList = employeeService.getEmployeeList();
         return ResponseEntity.ok(employeeListResponseList);

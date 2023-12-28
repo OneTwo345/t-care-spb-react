@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/skills")
 @AllArgsConstructor
 public class SkillRestController {
-    private SkillService skillService;
+    private final SkillService skillService;
 
     @GetMapping()
     public ResponseEntity<List<SkillListResponse>> getSkillListResponse() {

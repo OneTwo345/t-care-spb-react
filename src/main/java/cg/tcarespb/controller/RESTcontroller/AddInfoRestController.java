@@ -20,9 +20,9 @@ import java.util.List;
 @RequestMapping("/api/add-infos")
 @AllArgsConstructor
 public class AddInfoRestController {
-    private AddInfoService addInfoService;
+    private final AddInfoService addInfoService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<AddInfoListResponse>> getAddInfoListResponse() {
         List<AddInfoListResponse> addInfoListResponseList = addInfoService.getAddInfoList();
         return ResponseEntity.ok(addInfoListResponseList);
