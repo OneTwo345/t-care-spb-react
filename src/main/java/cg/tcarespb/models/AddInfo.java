@@ -34,4 +34,7 @@ public class AddInfo {
     @OneToMany(mappedBy = "addInfo")
     private List<CartInfo> cartInfos;
 
+    public AddInfo(String id) {
+        this.id = id;
+    }
 }

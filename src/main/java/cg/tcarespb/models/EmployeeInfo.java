@@ -27,5 +27,8 @@ public class EmployeeInfo {
     @ManyToOne
     private AddInfo addInfo;
 
-
+    public EmployeeInfo(Employee employee, AddInfo addInfo) {
+        this.employee = employee;
+        this.addInfo = addInfo;
+    }
 }

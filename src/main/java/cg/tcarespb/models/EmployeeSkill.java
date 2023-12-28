@@ -27,4 +27,8 @@ public class EmployeeSkill {
     @ManyToOne
     private Skill skill;
 
+    public EmployeeSkill(Employee employee, Skill skill) {
+        this.employee = employee;
+        this.skill = skill;
+    }
 }

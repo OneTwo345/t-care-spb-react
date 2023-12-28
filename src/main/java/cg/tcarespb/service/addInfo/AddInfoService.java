@@ -55,10 +55,4 @@ public class AddInfoService {
         addInfo.setName(request.getName());
         addInfoRepository.save(addInfo);
     }
-
-
-
-
-
-
 }

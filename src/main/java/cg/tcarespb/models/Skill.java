@@ -33,4 +33,8 @@ public class Skill {
 
     @OneToMany(mappedBy = "skill")
     private List<CartSkill> cartSkills;
+
+    public Skill(String id) {
+        this.id = id;
+    }
 }
