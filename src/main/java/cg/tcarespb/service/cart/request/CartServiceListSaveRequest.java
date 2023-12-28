@@ -1,4 +1,4 @@
-package cg.tcarespb.service.cartService.request;
+package cg.tcarespb.service.cart.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package cg.tcarespb.service.dateSession.request;
+package cg.tcarespb.service.cart.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DateSessionSaveRequest {
+public class CartDateSessionSaveRequest {
     private String date;
     private List<String> sessionOfDateList;
 }

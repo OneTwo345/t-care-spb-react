@@ -2,8 +2,8 @@ package cg.tcarespb.controller.RESTcontroller;
 
 import cg.tcarespb.models.Cart;
 import cg.tcarespb.service.cart.CartService;
-import cg.tcarespb.service.cartService.CartServiceService;
-import cg.tcarespb.service.cartService.request.CartServiceListSaveRequest;
+import cg.tcarespb.service.cart.request.CartDateSessionListSaveRequest;
+import cg.tcarespb.service.cart.request.CartServiceListSaveRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class CartRestController {
     private final CartService cartService;
-    private final CartServiceService cartServiceService;
 
     @PostMapping
     public ResponseEntity<?> create() {
@@ -23,8 +22,13 @@ public class CartRestController {
     }
 
     @PutMapping("/services/{id}")
-    public ResponseEntity<Void> deleteServiceGeneral(@PathVariable("id") String id, @RequestBody CartServiceListSaveRequest req) {
-        cartServiceService.create(req, id);
+    public ResponseEntity<?> updateServiceGeneral(@PathVariable("id") String id, @RequestBody CartServiceListSaveRequest req) {
+        cartService.updateCartService(req, id);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/dateSessions/{id}")
+    public ResponseEntity<?> updateDateSession(@PathVariable("id") String id, @RequestBody CartDateSessionListSaveRequest req) {
+        cartService.updateDateSessionCart(req, id);
         return ResponseEntity.noContent().build();
     }
 
