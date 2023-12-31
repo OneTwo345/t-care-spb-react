@@ -1,10 +1,7 @@
 package cg.tcarespb.models;
 
 
-import cg.tcarespb.models.enums.EEducation;
-import cg.tcarespb.models.enums.EExperience;
-import cg.tcarespb.models.enums.EGender;
-import cg.tcarespb.models.enums.EStatus;
+import cg.tcarespb.models.enums.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -35,6 +33,13 @@ public class Employee {
     private String descriptionAboutMySelf;
     private String bioTitle;
     private String personID;
+
+    private Integer hourPerWeekMin;
+    private Integer hourPerWeekMax;
+    private BigDecimal priceMin;
+    private BigDecimal priceMax;
+    private Integer minHourPerJob;
+    private EJobType jobType;
     private Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
@@ -72,4 +77,8 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<DateSession> dateSessions;
+
+    public Employee(String id) {
+        this.id = id;
+    }
 }

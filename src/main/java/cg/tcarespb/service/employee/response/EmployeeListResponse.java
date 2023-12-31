@@ -1,13 +1,12 @@
 package cg.tcarespb.service.employee.response;
 
-import cg.tcarespb.models.enums.EEducation;
-import cg.tcarespb.models.enums.EExperience;
-import cg.tcarespb.models.enums.EGender;
-import cg.tcarespb.models.enums.EStatus;
+import cg.tcarespb.models.Schedule;
+import cg.tcarespb.models.enums.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -27,6 +26,14 @@ public class EmployeeListResponse {
     private EEducation education;
     private List<String> skills;
     private List<String> addInfos;
+    private List<String> dateSessions;
+
+    private Integer hourPerWeekMin;
+    private Integer hourPerWeekMax;
+    private BigDecimal priceMin;
+    private BigDecimal priceMax;
+    private Integer minHourPerJob;
+    private EJobType jobType;
 
 
 }

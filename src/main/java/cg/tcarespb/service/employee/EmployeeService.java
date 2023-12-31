@@ -2,10 +2,7 @@ package cg.tcarespb.service.employee;
 
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.EExperience;
-import cg.tcarespb.repository.EmployeeAddInfoRepository;
-import cg.tcarespb.repository.EmployeeRepository;
-import cg.tcarespb.repository.EmployeeSkillRepository;
-import cg.tcarespb.repository.SkillRepository;
+import cg.tcarespb.repository.*;
 import cg.tcarespb.service.dto.response.SelectOptionResponse;
 import cg.tcarespb.service.employee.request.EmployeeSaveRequest;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
@@ -22,7 +19,9 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeSkillRepository employeeSkillRepository;
     private final EmployeeAddInfoRepository employeeAddInfoRepository;
-    private final SkillRepository skillRepository;
+    private final DateSessionRepository dateSessionRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final RateRepository rateRepository;
 
     public List<EmployeeListResponse> getEmployeeList(){
         return employeeRepository.findAll()
@@ -36,9 +35,16 @@ public class EmployeeService {
                         .bioTitle(service.getBioTitle())
                         .personID(service.getPersonID())
                         .gender(service.getGender())
-                        .experience(service.getExperience())
                         .status(service.getStatus())
                         .education(service.getEducation())
+                        .experience(service.getExperience())
+                        .hourPerWeekMin(service.getHourPerWeekMin())
+                        .hourPerWeekMax(service.getHourPerWeekMax())
+                        .priceMin(service.getPriceMin())
+                        .priceMax(service.getPriceMax())
+                        .minHourPerJob(service.getMinHourPerJob())
+                        .jobType(service.getJobType())
+
                         .skills(service.getEmployeeSkills()
                                 .stream()
                                 .map(employeeSkill -> employeeSkill.getSkill().getName())
@@ -48,13 +54,17 @@ public class EmployeeService {
                                 .map(employeeInfo -> employeeInfo.getAddInfo().getName())
                                 .collect(Collectors.toList())
                         )
+                        .dateSessions(service.getDateSessions()
+                                .stream()
+                                .map(dateSession -> dateSession.getDateInWeek().getName() + " : " + dateSession.getSessionOfDate().getName())
+                                .collect(Collectors.toList())
+                        )
                         .build())
                 .collect(Collectors.toList());
     }
 
     public void create(EmployeeSaveRequest request){
         var employee = AppUtil.mapper.map(request, Employee.class);
-
         employee = employeeRepository.save(employee);
 
         Employee employeeData = employee;
@@ -70,8 +80,10 @@ public class EmployeeService {
                 .map(id -> new EmployeeInfo(employeeData, new AddInfo(String.valueOf(id))))
                 .collect(Collectors.toList())
         );
-
-
+//        List<DateSession> dateSessions = request.getIdDateSessions().stream()
+//                .map(id -> new DateSession(id, employeeData.getDateSessions()))
+//                .collect(Collectors.toList());
+//        dateSessionRepository.saveAll(dateSessions);
     }
 
 
