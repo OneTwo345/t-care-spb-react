@@ -1,19 +1,23 @@
 package cg.tcarespb.service.cart;
 
-import cg.tcarespb.models.Cart;
-import cg.tcarespb.models.DateSession;
-import cg.tcarespb.models.ServiceGeneral;
+import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.CartRepository;
+import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.cart.request.*;
+import cg.tcarespb.service.cartInfo.CartInfoService;
 import cg.tcarespb.service.cartService.CartServiceService;
+import cg.tcarespb.service.cartSkill.CartSkillService;
 import cg.tcarespb.service.dateSession.DateSessionService;
+import cg.tcarespb.service.location.LocationPalaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
+import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.util.AppMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,9 +28,13 @@ public class CartService {
     private final ServiceGeneralService serviceGeneralService;
     private final CartServiceService cartServiceService;
     private final DateSessionService dateSessionService;
+    private final LocationPalaceService locationPalaceService;
+    private final CartSkillService cartSkillService;
+    private final SkillService skillService;
+    private final CartInfoService cartInfoService;
+    private final AddInfoService addInfoService;
 
-    public Cart create() {
-        Cart cart = new Cart();
+    public Cart create(Cart cart) {
         return cartRepository.save(cart);
     }
 
@@ -45,9 +53,9 @@ public class CartService {
 
     public void updateCartService(CartServiceListSaveRequest req, String cartId) {
         Cart cart = findById(cartId);
-        for (var cartService : req.getServiceList()) {
+        for (var cartService : req.getServiceIdList()) {
             ServiceGeneral serviceGeneral = serviceGeneralService.findById(cartService);
-            cg.tcarespb.models.CartService cartServiceCreate = new cg.tcarespb.models.CartService();
+            CartServiceGeneral cartServiceCreate = new CartServiceGeneral();
             cartServiceCreate.setService(serviceGeneral);
             cartServiceCreate.setCart(cart);
             cartServiceService.create(cartServiceCreate);
@@ -71,7 +79,7 @@ public class CartService {
             }
         }
         cart.setDateSessions(dateSessionList);
-        saveCart(cart);
+        cartRepository.save(cart);
     }
 
     public void updateJobType(CartJobTypeSaveRequest req, String cartId) {
@@ -79,9 +87,6 @@ public class CartService {
         EJobType eJobType = EJobType.valueOf(req.getJobType());
         cart.setEJobType(eJobType);
         cartRepository.save(cart);
-    }
-
-    public void updateTimeStartEnd(CartTimeStartEndSaveRequest req, String cartId) {
 
     }
 
@@ -94,16 +99,67 @@ public class CartService {
 
     public void updateInfoPatient(CartInfoPatientSaveRequest req, String cardId) {
         Cart cart = findById(cardId);
+        cart.setNamePatient(req.getNamePatient());
         cart.setNoteForPatient(req.getNoteForPatient());
-        cart.setGender(EGender.valueOf(req.getNoteForPatient()));
-        cart.setEDecade(EDecade.valueOf(req.getEDecade()));
+        cart.setGender(EGender.valueOf(req.getGender()));
+        cart.setEDecade(EDecade.valueOf(req.getDecade()));
         cart.setMemberOfFamily(EMemberOfFamily.valueOf(req.getMemberOfFamily()));
         cartRepository.save(cart);
     }
+
     public void updateNoteForEmployee(CartNoteForEmployeeSaveRequest req, String cardId) {
         Cart cart = findById(cardId);
         cart.setNoteForEmployee(req.getNoteForEmployee());
         cartRepository.save(cart);
     }
 
+    public void updateLocationForCart(CartLocationSaveRequest req, String cardId) {
+        Cart cart = findById(cardId);
+        LocationPlace locationPalace = new LocationPlace();
+        locationPalace.setName(req.getNameLocation());
+        locationPalace.setDistanceForWork(req.getDistanceForWork());
+        locationPalace.setLatitude(req.getLatitude());
+        locationPalace.setLongitude(req.getLongitude());
+        locationPalace.setCart(cart);
+        locationPalaceService.create(locationPalace);
+        cart.setLocationPlace(locationPalace);
+        cartRepository.save(cart);
+    }
+    public void updateCartSkill(CartSkillSaveRequest req, String cartId) {
+        Cart cart = findById(cartId);
+        List<CartSkill> cartSkillList = new ArrayList<>();
+        for (var skillElemId : req.getCartSkillIdList()) {
+            Skill skill = skillService.findByIdForEdit(skillElemId);
+            CartSkill cartSkill = new CartSkill();
+            cartSkill.setSkill(skill);
+            cartSkill.setCart(cart);
+            cartSkillService.create(cartSkill);
+            cartSkillList.add(cartSkill);
+        }
+        cart.setCartSkills(cartSkillList);
+        cartRepository.save(cart);
+    }
+    public void updateCartInfo(CartInfoSaveRequest req, String cartId) {
+        Cart cart = findById(cartId);
+        List<CartInfo> cartInfoList = new ArrayList<>();
+        for (var infoElemId : req.getInfoIdList()) {
+            AddInfo info = addInfoService.findByIdForEdit(infoElemId);
+            CartInfo cartInfo = new CartInfo();
+            cartInfo.setAddInfo(info);
+            cartInfo.setCart(cart);
+            cartInfoService.create(cartInfo);
+            cartInfoList.add(cartInfo);
+        }
+        cart.setCartInfos(cartInfoList);
+        cartRepository.save(cart);
+    }
+    public void updateTimeStartEnd(CartTimeStartEndSaveRequest req, String cardId) {
+        Cart cart = findById(cardId);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate startDate = LocalDate.parse(req.getTimeStart(),dateTimeFormatter);
+        LocalDate endDate = LocalDate.parse(req.getTimeEnd(),dateTimeFormatter);
+        cart.setTimeStart(startDate);
+        cart.setTimeEnd(endDate);
+        cartRepository.save(cart);
+    }
 }

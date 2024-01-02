@@ -1,16 +1,16 @@
 package cg.tcarespb.service.cartService;
 
-import cg.tcarespb.repository.CartServiceRepository;
+import cg.tcarespb.repository.CartServiceGeneralRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import  cg.tcarespb.models.CartService;
+import cg.tcarespb.models.CartServiceGeneral;
 
 @AllArgsConstructor
 @Service
 public class CartServiceService {
-    private final CartServiceRepository cartServiceRepository;
+    private final CartServiceGeneralRepository cartServiceRepository;
 
-    public void create(CartService cartService) {
+    public void create(CartServiceGeneral cartService) {
         cartServiceRepository.save(cartService);
     }
 }

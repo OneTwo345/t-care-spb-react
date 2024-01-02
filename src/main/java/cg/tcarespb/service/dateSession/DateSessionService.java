@@ -29,7 +29,6 @@ public class DateSessionService {
     public DateSession create(DateSession dateSession) {
         return dateSessionRepository.save(dateSession);
     }
-
         public List<DateSessionListResponseForEmployee> getDateSessionListResponseForEmployee(){
             return dateSessionRepository.findAll()
                     .stream()

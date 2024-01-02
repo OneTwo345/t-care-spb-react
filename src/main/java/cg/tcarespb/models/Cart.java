@@ -15,9 +15,7 @@ import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -32,7 +30,6 @@ public class Cart {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-
     private LocalDate timeStart;
     private LocalDate timeEnd;
     private String namePatient;
@@ -59,7 +56,7 @@ public class Cart {
     private List<CartInfo> cartInfos;
 
     @OneToMany(mappedBy = "cart")
-    private List<CartService> cartServices;
+    private List<CartServiceGeneral> cartServices;
 
     @OneToMany(mappedBy = "cart")
     private List<CartSkill> cartSkills;
@@ -69,8 +66,9 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart")
     private List<Contract> contracts;
-
     @OneToMany(mappedBy = "cart")
     private List<DateSession> dateSessions;
+    @OneToOne(mappedBy = "cart")
+    private LocationPlace locationPlace;
 
 }

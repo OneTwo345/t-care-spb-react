@@ -14,19 +14,25 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "cart_services")
-@SQLDelete(sql = "UPDATE cart_services SET deleted = true WHERE id=?")
+@Table(name = "locations")
+@SQLDelete(sql = "UPDATE locations SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-public class CartService {
+public class LocationPlace {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
+    private String name;
+    private String distanceForWork;
+    private String longitude;
+    private String latitude;
     private Boolean deleted = false;
 
-    @ManyToOne
+    @OneToOne
+    private Employee employee;
+    @OneToOne
+    private Contract contract;
+    @OneToOne
     private Cart cart;
 
-    @ManyToOne
-    private ServiceGeneral service;
 }

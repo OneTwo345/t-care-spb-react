@@ -33,7 +33,6 @@ public class Employee {
     private String descriptionAboutMySelf;
     private String bioTitle;
     private String personID;
-
     private Integer hourPerWeekMin;
     private Integer hourPerWeekMax;
     private BigDecimal priceMin;

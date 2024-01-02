@@ -52,13 +52,8 @@ public class AppUtil {
                 }catch (Exception e){
                     return null;
                 }
-
             }
         };
-
-
-
-
 
         mapper.createTypeMap(String.class, LocalDate.class);
         mapper.addConverter(toStringDate);

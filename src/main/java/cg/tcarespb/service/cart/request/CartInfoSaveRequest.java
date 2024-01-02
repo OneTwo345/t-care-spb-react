@@ -6,9 +6,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class CartServiceListSaveRequest {
-    List<String> serviceIdList;
+public class CartInfoSaveRequest {
+    public List<String> infoIdList;
 }
