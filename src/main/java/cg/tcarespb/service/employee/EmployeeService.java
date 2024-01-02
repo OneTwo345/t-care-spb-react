@@ -4,7 +4,6 @@ import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.*;
 import cg.tcarespb.service.dateSession.DateSessionService;
-import cg.tcarespb.service.dto.response.SelectOptionResponse;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
@@ -211,6 +210,10 @@ public class EmployeeService {
                 .collect(Collectors.toList()));
 
         return result;
+    }
+
+    public List<Employee> get3Employee(){
+        return rateRepository.findTop3EmployeesWithHighestRate();
     }
 
 
