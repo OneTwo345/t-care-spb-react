@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @Setter
 @Table(name = "employee_services")
-public class EmployeeService {
+public class EmployeeServiceGeneral {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -24,5 +24,11 @@ public class EmployeeService {
     private Employee employee;
     @ManyToOne
     private ServiceGeneral service;
+
+    public EmployeeServiceGeneral(Employee employee, ServiceGeneral service) {
+        this.employee = employee;
+        this.service = service;
+    }
+
 
 }

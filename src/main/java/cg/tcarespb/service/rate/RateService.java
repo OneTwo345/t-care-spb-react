@@ -6,9 +6,13 @@ import cg.tcarespb.models.Rate;
 import cg.tcarespb.models.Skill;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.RateRepository;
+import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
+import cg.tcarespb.service.rate.request.RateEditRequest;
 import cg.tcarespb.service.rate.request.RateSaveRequest;
+import cg.tcarespb.service.rate.response.RateDetailsResponse;
 import cg.tcarespb.service.rate.response.RateListResponse;
 import cg.tcarespb.service.skill.request.SkillSaveRequest;
+import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,5 +46,28 @@ public class RateService {
         rate.setEmployee(employee.get());
         rate = rateRepository.save(rate);
     }
+
+    public void edit(RateEditRequest request, String id){
+        Rate rate = rateRepository.findById(id).orElseThrow(
+                () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Rate", id)));
+        rate.setRateQuantity(Integer.valueOf(request.getRateQuantity()));
+        rate.setStarQuantity(Float.valueOf(request.getStarQuantity()));
+        rate.setContent(request.getContent());
+        rateRepository.save(rate);
+    }
+
+    public RateDetailsResponse findRateById(String id){
+        var rate = rateRepository.findById(id).orElseThrow(
+                () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Rate", id)));
+        var result = AppUtil.mapper.map(rate,RateDetailsResponse.class);
+        result.setEmployeeId(rate.getEmployee().getFirstName());
+        return result;
+    }
+
+    public void delete(String id){
+        rateRepository.deleteById(id);
+    }
+
+
 
 }

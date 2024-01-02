@@ -57,7 +57,7 @@ public class Employee {
     private List<EmployeeInfo> employeeInfos;
 
     @OneToMany(mappedBy = "employee")
-    private List<EmployeeService> employeeServices;
+    private List<EmployeeServiceGeneral> employeeServiceGenerals;
 
     @OneToMany(mappedBy = "employee")
     private List<EmployeeSkill> employeeSkills;
