@@ -25,28 +25,11 @@ import java.util.stream.Collectors;
 public class DateSessionService {
     private final DateSessionRepository dateSessionRepository;
     private final EmployeeRepository employeeRepository;
-    private final CartService cartService;
 
     public DateSession create(DateSession dateSession) {
         return dateSessionRepository.save(dateSession);
     }
-        public void updateDateSessionCart(CartDateSessionListSaveRequest req, String idCart){
-                Cart cart = cartService.findById(idCart);
-                for (var dateSession: req.getListDateSession()){
-                    EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
-                    for (var sessionOfDate :dateSession.getSessionOfDateList()){
-                        ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
-                        DateSession newDateSession = new DateSession();
-                        newDateSession.setSessionOfDate(sessionDate);
-                        newDateSession.setDateInWeek(date);
-                        newDateSession.setCart(cart);
-                        List<DateSession> dateSessionList = new ArrayList<>();
-                        cart.getDateSessions().add(newDateSession);
-                        dateSessionRepository.save(newDateSession);
-                    }
-                }
 
-        }
         public List<DateSessionListResponseForEmployee> getDateSessionListResponseForEmployee(){
             return dateSessionRepository.findAll()
                     .stream()
