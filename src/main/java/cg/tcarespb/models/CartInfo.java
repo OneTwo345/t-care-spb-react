@@ -2,7 +2,9 @@ package cg.tcarespb.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
@@ -11,7 +13,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "cart_infos")
-
+@Getter
+@Setter
 public class CartInfo {
     @Id
     @GeneratedValue(generator = "uuid")

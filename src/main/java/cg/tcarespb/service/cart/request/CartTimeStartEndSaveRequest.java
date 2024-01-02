@@ -10,6 +10,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class CartTimeStartEndSaveRequest {
-    private LocalDate timeStart;
-    private LocalDate timeEnd;
+    private String timeStart;
+    private String timeEnd;
 }

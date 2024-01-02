@@ -32,5 +32,5 @@ public class ServiceGeneral {
     private List<EmployeeService> employeeServiceList;
 
     @OneToMany(mappedBy = "service")
-    private List<CartService> cartServices;
+    private List<CartServiceGeneral> cartServices;
 }

@@ -8,8 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CartInfoPatientSaveRequest {
+
 private String memberOfFamily;
+private String namePatient;
 private String gender;
-private String eDecade;
+private String decade;
 private String noteForPatient;
 }
