@@ -1,17 +1,11 @@
 package cg.tcarespb.service.employee;
 
 import cg.tcarespb.models.*;
-import cg.tcarespb.models.enums.EDateInWeek;
-import cg.tcarespb.models.enums.EEducation;
-import cg.tcarespb.models.enums.EExperience;
-import cg.tcarespb.models.enums.ESessionOfDate;
+import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.*;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.dto.response.SelectOptionResponse;
-import cg.tcarespb.service.employee.request.EmployeeBioSaveRequest;
-import cg.tcarespb.service.employee.request.EmployeeExperienceSaveRequest;
-import cg.tcarespb.service.employee.request.EmployeeSaveRequest;
-import cg.tcarespb.service.employee.request.EmployeeScheduleSaveRequest;
+import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
@@ -182,6 +176,17 @@ public class EmployeeService {
 
     }
 
+    public void updateAccountEmployee(EmployeeAccountSaveRequest request, String employeeId){
+        Employee employee = findById(employeeId);
+        employee.setAddress(request.getAddress());
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setGender(EGender.valueOf(request.getGender()));
+        employee.setPersonID(request.getPersonID());
+        employee.setStatus(EStatus.valueOf(request.getStatus()));
+        employeeRepository.save(employee);
+    }
+
     public EmployeeDetailResponse findDetailEmployeeById(String id){
         var employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
@@ -209,23 +214,15 @@ public class EmployeeService {
     }
 
 
+
     public Employee findById(String id) {
         return employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
     }
 
-    public List<SelectOptionResponse> findAll() {
-        return employeeRepository.findAll()
-                .stream().map(employee -> new SelectOptionResponse(employee.getId()
-                        , employee.getFirstName())).collect(Collectors.toList());
-    }
 
     public void delete(String id){
         employeeRepository.deleteById(id);
     }
-
-
-
-
 
 }

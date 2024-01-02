@@ -2,10 +2,7 @@ package cg.tcarespb.controller.RESTcontroller;
 
 import cg.tcarespb.service.cart.request.CartDateSessionListSaveRequest;
 import cg.tcarespb.service.employee.EmployeeService;
-import cg.tcarespb.service.employee.request.EmployeeBioSaveRequest;
-import cg.tcarespb.service.employee.request.EmployeeExperienceSaveRequest;
-import cg.tcarespb.service.employee.request.EmployeeSaveRequest;
-import cg.tcarespb.service.employee.request.EmployeeScheduleSaveRequest;
+import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
@@ -51,6 +48,12 @@ public class EmployeeRestController {
     @PutMapping("/experience/{id}")
     public ResponseEntity<?> updateExperience(@PathVariable("id") String id, @RequestBody EmployeeExperienceSaveRequest req) {
         employeeService.updateExperienceEmployee(req, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/account/{id}")
+    public ResponseEntity<?> updateAccountEmployee(@PathVariable("id") String id, @RequestBody EmployeeAccountSaveRequest req) {
+        employeeService.updateAccountEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
 
