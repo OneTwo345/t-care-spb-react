@@ -27,6 +27,7 @@ public class EmployeeListResponse {
     private List<String> skills;
     private List<String> addInfos;
     private List<String> dateSessions;
+    private List<String> services;
 
     private Integer hourPerWeekMin;
     private Integer hourPerWeekMax;

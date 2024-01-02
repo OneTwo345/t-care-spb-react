@@ -20,17 +20,17 @@ public class EmployeeSaveRequest {
     private String personID;
     private List<String> idSkills;
     private List<String> idAddInfos;
-    private List<String> idDateSessions;
+    private List<String> idServices;
     private String gender;
     private String status;
     private String experience;
     private String education;
-
     private String hourPerWeekMin;
     private String hourPerWeekMax;
     private String priceMin;
     private String priceMax;
     private String minHourPerJob;
     private String jobType;
+    private List<EmployeeDateSessionSaveRequest> employeeDateSessionSaveRequests;
 
 }

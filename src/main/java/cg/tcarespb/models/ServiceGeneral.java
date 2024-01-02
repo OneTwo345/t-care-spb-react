@@ -29,8 +29,12 @@ public class ServiceGeneral {
     private Boolean deleted = false;
 
     @OneToMany(mappedBy = "service")
-    private List<EmployeeService> employeeServiceList;
+    private List<EmployeeServiceGeneral> employeeServiceGeneralList;
 
     @OneToMany(mappedBy = "service")
     private List<CartService> cartServices;
+
+    public ServiceGeneral(String id) {
+        this.id = id;
+    }
 }
