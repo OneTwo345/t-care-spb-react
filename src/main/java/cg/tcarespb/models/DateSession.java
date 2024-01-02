@@ -11,6 +11,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.util.List;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +31,7 @@ public class DateSession {
     private EDateInWeek dateInWeek;
     @Enumerated(EnumType.STRING)
     private ESessionOfDate sessionOfDate;
+    private Boolean deleted = false;
 
     @ManyToOne
     private Cart cart;
@@ -37,5 +40,15 @@ public class DateSession {
     private Employee employee;
 
 
+    public DateSession(String id) {
+        this.id = id;
+    }
+
+    public DateSession(String id, EDateInWeek dateInWeek, ESessionOfDate sessionOfDate, Employee employee) {
+        this.id = id;
+        this.dateInWeek = dateInWeek;
+        this.sessionOfDate = sessionOfDate;
+        this.employee = employee;
+    }
 
 }

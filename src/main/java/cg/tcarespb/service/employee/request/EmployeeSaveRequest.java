@@ -1,13 +1,11 @@
 package cg.tcarespb.service.employee.request;
 
-import cg.tcarespb.models.enums.EEducation;
-import cg.tcarespb.models.enums.EExperience;
-import cg.tcarespb.models.enums.EGender;
-import cg.tcarespb.models.enums.EStatus;
+import cg.tcarespb.models.enums.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -22,9 +20,17 @@ public class EmployeeSaveRequest {
     private String personID;
     private List<String> idSkills;
     private List<String> idAddInfos;
+    private List<String> idDateSessions;
     private String gender;
     private String status;
     private String experience;
     private String education;
+
+    private String hourPerWeekMin;
+    private String hourPerWeekMax;
+    private String priceMin;
+    private String priceMax;
+    private String minHourPerJob;
+    private String jobType;
 
 }
