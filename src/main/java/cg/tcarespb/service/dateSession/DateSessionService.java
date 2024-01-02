@@ -8,7 +8,7 @@ import cg.tcarespb.models.enums.ESessionOfDate;
 import cg.tcarespb.repository.DateSessionRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.service.cart.CartService;
-import cg.tcarespb.service.dateSession.request.DateSessionListSaveRequest;
+import cg.tcarespb.service.cart.request.CartDateSessionListSaveRequest;
 import cg.tcarespb.service.dateSession.request.DateSessionSaveRequestForEmployee;
 import cg.tcarespb.service.dateSession.response.DateSessionListResponseForEmployee;
 import cg.tcarespb.util.AppUtil;
@@ -30,7 +30,7 @@ public class DateSessionService {
     public DateSession create(DateSession dateSession) {
         return dateSessionRepository.save(dateSession);
     }
-        public void updateDateSessionCart(DateSessionListSaveRequest req,String idCart){
+        public void updateDateSessionCart(CartDateSessionListSaveRequest req, String idCart){
                 Cart cart = cartService.findById(idCart);
                 for (var dateSession: req.getListDateSession()){
                     EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
@@ -47,7 +47,6 @@ public class DateSessionService {
                 }
 
         }
-
         public List<DateSessionListResponseForEmployee> getDateSessionListResponseForEmployee(){
             return dateSessionRepository.findAll()
                     .stream()
@@ -58,12 +57,10 @@ public class DateSessionService {
                             .build())
                     .collect(Collectors.toList());
         }
-
         public void createDateSessionForEmployee(DateSessionSaveRequestForEmployee request){
             var dateSession = AppUtil.mapper.map(request,DateSession.class);
             Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
             dateSession.setEmployee(employee.get());
             dateSession = dateSessionRepository.save(dateSession);
         }
-
 }
