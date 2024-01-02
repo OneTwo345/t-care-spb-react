@@ -14,6 +14,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -32,8 +33,8 @@ public class Cart {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    private LocalDateTime timeStart;
-    private LocalDateTime timeEnd;
+    private LocalDate timeStart;
+    private LocalDate timeEnd;
     private String namePatient;
     private Integer agePatient;
     private String noteForPatient;

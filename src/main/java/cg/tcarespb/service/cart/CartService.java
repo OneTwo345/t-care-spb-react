@@ -3,18 +3,17 @@ package cg.tcarespb.service.cart;
 import cg.tcarespb.models.Cart;
 import cg.tcarespb.models.DateSession;
 import cg.tcarespb.models.ServiceGeneral;
-import cg.tcarespb.models.enums.EDateInWeek;
-import cg.tcarespb.models.enums.ESessionOfDate;
+import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.CartRepository;
-import cg.tcarespb.service.cart.request.CartDateSessionListSaveRequest;
+import cg.tcarespb.service.cart.request.*;
 import cg.tcarespb.service.cartService.CartServiceService;
-import cg.tcarespb.service.cart.request.CartServiceListSaveRequest;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.util.AppMessage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +25,6 @@ public class CartService {
     private final CartServiceService cartServiceService;
     private final DateSessionService dateSessionService;
 
-
     public Cart create() {
         Cart cart = new Cart();
         return cartRepository.save(cart);
@@ -35,7 +33,8 @@ public class CartService {
     public Cart saveCart(Cart cart) {
         return cartRepository.save(cart);
     }
-    public List<Cart> getAllByIdUser(String userId){
+
+    public List<Cart> getAllByIdUser(String userId) {
         return cartRepository.findAllByUserId(userId);
     }
 
@@ -55,8 +54,9 @@ public class CartService {
             cart.getCartServices().add(cartServiceCreate);
         }
     }
-    public void updateDateSessionCart(CartDateSessionListSaveRequest req, String idCart) {
-        Cart cart = findById(idCart);
+
+    public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
+        Cart cart = findById(cartId);
         List<DateSession> dateSessionList = new ArrayList<>();
         for (var dateSession : req.getListDateSession()) {
             EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
@@ -73,4 +73,37 @@ public class CartService {
         cart.setDateSessions(dateSessionList);
         saveCart(cart);
     }
+
+    public void updateJobType(CartJobTypeSaveRequest req, String cartId) {
+        Cart cart = findById(cartId);
+        EJobType eJobType = EJobType.valueOf(req.getJobType());
+        cart.setEJobType(eJobType);
+        cartRepository.save(cart);
+    }
+
+    public void updateTimeStartEnd(CartTimeStartEndSaveRequest req, String cartId) {
+
+    }
+
+    public void updatePriceMinMax(CartPriceMinMaxSaveRequest req, String cardId) {
+        Cart cart = findById(cardId);
+        cart.setPriceMax(req.getPriceMax());
+        cart.setPriceMin(req.getPriceMin());
+        cartRepository.save(cart);
+    }
+
+    public void updateInfoPatient(CartInfoPatientSaveRequest req, String cardId) {
+        Cart cart = findById(cardId);
+        cart.setNoteForPatient(req.getNoteForPatient());
+        cart.setGender(EGender.valueOf(req.getNoteForPatient()));
+        cart.setEDecade(EDecade.valueOf(req.getEDecade()));
+        cart.setMemberOfFamily(EMemberOfFamily.valueOf(req.getMemberOfFamily()));
+        cartRepository.save(cart);
+    }
+    public void updateNoteForEmployee(CartNoteForEmployeeSaveRequest req, String cardId) {
+        Cart cart = findById(cardId);
+        cart.setNoteForEmployee(req.getNoteForEmployee());
+        cartRepository.save(cart);
+    }
+
 }

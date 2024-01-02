@@ -33,12 +33,8 @@ public class Contract {
     private Integer dateQuantity;
     private Integer hourPerDay;
     private Boolean deleted = false;
-
     @Enumerated(EnumType.STRING)
     private EGender gender;
-
-
-
     @ManyToOne
     private Employee employee;
     @ManyToOne
