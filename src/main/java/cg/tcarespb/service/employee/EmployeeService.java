@@ -8,6 +8,7 @@ import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
+import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
@@ -212,9 +213,7 @@ public class EmployeeService {
         return result;
     }
 
-    public List<Employee> get3Employee(){
-        return rateRepository.findTop3EmployeesWithHighestRate();
-    }
+
 
 
 

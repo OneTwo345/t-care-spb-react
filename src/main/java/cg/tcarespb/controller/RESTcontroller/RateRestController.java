@@ -1,6 +1,7 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
+import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
 import cg.tcarespb.service.rate.RateService;
 import cg.tcarespb.service.rate.request.RateEditRequest;
 import cg.tcarespb.service.rate.request.RateSaveRequest;
@@ -28,6 +29,11 @@ public class RateRestController {
         return ResponseEntity.ok(rateListResponses);
     }
 
+    @GetMapping("/top3")
+    public ResponseEntity<List<EmployeeListTop3Response>> getTopEmployeeList(){
+        List<EmployeeListTop3Response> listEmployee = rateService.get3Employee();
+        return ResponseEntity.ok(listEmployee);
+    }
     @PostMapping
     public void create(@RequestBody RateSaveRequest request){
         rateService.create(request);
