@@ -8,6 +8,7 @@ import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
+import cg.tcarespb.service.rate.request.RateEditRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,11 @@ public class EmployeeRestController {
         employeeService.createScheduleEmployee(request);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody EmployeeEditRequest request) {
+        employeeService.edit(request, id);
+        return ResponseEntity.noContent().build();
+    }
     @PutMapping("/dateSessions/{id}")
     public ResponseEntity<?> updateDateSession(@PathVariable("id") String id, @RequestBody EmployeeDateSessionListResponse req) {
         employeeService.updateDateSessionEmployee(req, id);
