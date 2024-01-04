@@ -18,4 +18,5 @@ public class EmployeeListTop3Response {
     private String employeeStar;
     private String employeeRateQuantity;
 
+
 }
