@@ -2,6 +2,7 @@ package cg.tcarespb.service.cart.request;
 
 import cg.tcarespb.models.enums.EJobType;
 import cg.tcarespb.models.enums.EStatus;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,5 +23,6 @@ public class CartFilterRequest {
     private BigDecimal priceMin;
     private EJobType jobType;
     private EStatus status;
+
 
 }
