@@ -1,14 +1,11 @@
 package cg.tcarespb.controller.RESTcontroller;
 
-import cg.tcarespb.models.Employee;
-import cg.tcarespb.service.cart.request.CartDateSessionListSaveRequest;
+
 import cg.tcarespb.service.employee.EmployeeService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
-import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
-import cg.tcarespb.service.rate.request.RateEditRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +42,11 @@ public class EmployeeRestController {
         employeeService.createScheduleEmployee(request);
     }
 
+    @PostMapping("/account")
+    public void createEmployeeAccount(@RequestBody EmployeeAccountSaveRequest request){
+        employeeService.createAccountEmployee(request);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody EmployeeEditRequest request) {
         employeeService.edit(request, id);
@@ -58,12 +60,6 @@ public class EmployeeRestController {
     @PutMapping("/experience/{id}")
     public ResponseEntity<?> updateExperience(@PathVariable("id") String id, @RequestBody EmployeeExperienceSaveRequest req) {
         employeeService.updateExperienceEmployee(req, id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/account/{id}")
-    public ResponseEntity<?> updateAccountEmployee(@PathVariable("id") String id, @RequestBody EmployeeAccountSaveRequest req) {
-        employeeService.updateAccountEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
 
