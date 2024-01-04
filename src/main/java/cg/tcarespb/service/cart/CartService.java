@@ -175,11 +175,25 @@ public class CartService {
         Cart cart = findById(idCart);
 //        CartLocationFilterRequest req = new CartLocationFilterRequest();
         CartSkillFilterRequest req = new CartSkillFilterRequest();
-        req.setCartSkillIdList(cart.getCartSkills().stream().map(e->e.getSkill().getId()).collect(Collectors.joining(",")));
+        req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
 //        req.setDistance(cart.getLocationPlace().getDistanceForWork());
 //        req.setLatitude(cart.getLocationPlace().getLatitude());
 //        req.setLongitude(cart.getLocationPlace().getLongitude());
-        Page<String> employeeList = employeeRepository.filterSkill(req, pageable);
+
+
+        CartFilterRequest request = new CartFilterRequest();
+        request.setCartServiceIdList(cart.getCartServices().stream().map(e -> e.getService().getId()).collect(Collectors.joining(",")));
+        request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
+        request.setCartInfoIdList(cart.getCartInfos().stream().map(e -> e.getAddInfo().getId()).collect(Collectors.joining(",")));
+        request.setDistance(cart.getLocationPlace().getDistanceForWork());
+        request.setLatitude(cart.getLocationPlace().getLatitude());
+        request.setLongitude(cart.getLocationPlace().getLongitude());
+        request.setPriceMax(cart.getPriceMax());
+        request.setPriceMin(cart.getPriceMin());
+        request.setJobType(cart.getEJobType());
+        request.setStatus(EStatus.ACTIVE);
+
+        Page<String> employeeList = employeeRepository.filter(request, pageable);
         return employeeList;
     }
 }
