@@ -17,6 +17,9 @@ public class EmployeeListTop3Response {
     private String employeeLocation;
     private String employeeStar;
     private String employeeRateQuantity;
+    private String photoURL;
+    private String userName;
+    private String content;
 
 
 }
