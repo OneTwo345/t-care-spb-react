@@ -7,6 +7,7 @@ import cg.tcarespb.models.Skill;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.RateRepository;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
+import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
 import cg.tcarespb.service.rate.request.RateEditRequest;
 import cg.tcarespb.service.rate.request.RateSaveRequest;
 import cg.tcarespb.service.rate.response.RateDetailsResponse;
@@ -56,12 +57,40 @@ public class RateService {
         rateRepository.save(rate);
     }
 
+    public Rate findById(String id) {
+        return rateRepository.findById(id).orElseThrow(
+                () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Rate", id)));
+    }
+
     public RateDetailsResponse findRateById(String id){
         var rate = rateRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Rate", id)));
         var result = AppUtil.mapper.map(rate,RateDetailsResponse.class);
         result.setEmployeeId(rate.getEmployee().getFirstName());
         return result;
+    }
+
+    public List<EmployeeListTop3Response> get3Employee(){
+        List<String> rateIdList = rateRepository.findTop3EmployeesWithHighestRate();
+
+        List<Rate> rateList =  rateIdList.stream()
+                .map(e ->  findById(e))
+                .collect(Collectors.toList());
+        return rateList.stream()
+                .map(service -> EmployeeListTop3Response.builder()
+                                .employeeId(service.getEmployee().getId())
+                                .employeeName(service.getEmployee().getFirstName())
+                                .employeeRateQuantity(String.valueOf(service.getRateQuantity()))
+                                .employeeLocation(service.getEmployee().getAddress())
+                                .employeeStar(String.valueOf(service.getStarQuantity()))
+                                .build())
+                .collect(Collectors.toList());
+
+//
+//
+//                        )
+
+
     }
 
     public void delete(String id){

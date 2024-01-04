@@ -9,4 +9,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class AccountListResponse {
+    private String id;
+    private String email;
 }

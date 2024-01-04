@@ -9,8 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.LocalDate;
 
 @Entity
 @AllArgsConstructor
@@ -23,8 +22,8 @@ public class Contract {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private LocalDateTime timeStart;
-    private LocalDateTime timeEnd;
+    private LocalDate timeStart;
+    private LocalDate timeEnd;
     private String namePatient;
     private Integer agePatient;
     private String content;
