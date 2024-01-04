@@ -8,4 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AccountSaveRequest {
+    private String id;
+    private String email;
+    private String password;
 }
