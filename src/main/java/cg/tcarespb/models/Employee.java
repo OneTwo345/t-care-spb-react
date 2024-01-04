@@ -78,6 +78,8 @@ public class Employee {
     private List<DateSession> dateSessions;
     @OneToOne(mappedBy = "employee")
     private LocationPlace locationPlace;
+    @OneToOne
+    private Photo photo;
 
     public Employee(String id) {
         this.id = id;

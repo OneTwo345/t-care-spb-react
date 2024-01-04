@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -32,10 +33,4 @@ public class Photo {
     private String fileType;
     @Column(name = "cloud_id")
     private String cloudId;
-
-    @OneToOne
-    private Employee employee;
-
-    @OneToOne
-    private User user;
 }
