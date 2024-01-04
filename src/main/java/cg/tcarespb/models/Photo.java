@@ -35,7 +35,6 @@ public class Photo {
 
     @OneToOne
     private Employee employee;
-
     @OneToOne
     private User user;
 }
