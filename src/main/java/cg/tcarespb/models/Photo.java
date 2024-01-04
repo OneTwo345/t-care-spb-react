@@ -33,4 +33,5 @@ public class Photo {
     private String fileType;
     @Column(name = "cloud_id")
     private String cloudId;
+
 }

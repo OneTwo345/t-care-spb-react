@@ -11,5 +11,5 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class CartSkillFilterRequest {
-    private String CartSkillIdList;
+    private String cartSkillIdList;
 }
