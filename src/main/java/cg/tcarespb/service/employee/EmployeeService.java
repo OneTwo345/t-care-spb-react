@@ -26,6 +26,7 @@ public class EmployeeService {
     private final EmployeeAddInfoRepository employeeAddInfoRepository;
     private final DateSessionService dateSessionService;
     private final EmployeeServiceGeneralRepository employeeServiceGeneralRepository;
+    private final AccountRepository accountRepository;
 
     public List<EmployeeListResponse> getEmployeeList() {
         return employeeRepository.findAll()
@@ -120,6 +121,7 @@ public class EmployeeService {
         employee = employeeRepository.save(employee);
     }
 
+
     public void updateDateSessionEmployee(EmployeeDateSessionListResponse req, String employeeId) {
         Employee employee = findById(employeeId);
         List<DateSession> dateSessionList = new ArrayList<>();
@@ -138,6 +140,8 @@ public class EmployeeService {
         employee.setDateSessions(dateSessionList);
         saveEmployee(employee);
     }
+
+
 
     public void updateExperienceEmployee(EmployeeExperienceSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
@@ -165,6 +169,25 @@ public class EmployeeService {
 
     }
 
+    public void createAccountEmployee(EmployeeAccountSaveRequest request) {
+
+        Account account = new Account();
+        // validate
+        account.setEmail(request.getEmail());
+        account.setPassword(request.getPassword());
+        account.setERole(ERole.EMPLOYEE);
+        accountRepository.save(account);
+        Employee employee = new Employee();
+        employee.setGender(EGender.valueOf(request.getGender()));
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setPersonID(request.getPersonID());
+        employee.setStatus(EStatus.WAITING);
+        employeeRepository.save(employee);
+        account.setEmployee(employee);
+        accountRepository.save(account);
+    }
+
     public void updateBioEmployee(EmployeeBioSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
         employee.setBioTitle(request.getBioTitle());
@@ -173,16 +196,16 @@ public class EmployeeService {
 
     }
 
-    public void updateAccountEmployee(EmployeeAccountSaveRequest request, String employeeId) {
+    public void updateScheduleEmployee(EmployeeScheduleSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
-        employee.setAddress(request.getAddress());
-        employee.setFirstName(request.getFirstName());
-        employee.setLastName(request.getLastName());
-        employee.setGender(EGender.valueOf(request.getGender()));
-        employee.setPersonID(request.getPersonID());
-        employee.setStatus(EStatus.valueOf(request.getStatus()));
+        employee.setHourPerWeekMin(Integer.valueOf(request.getHourPerWeekMin()));
+        employee.setHourPerWeekMax(Integer.valueOf(request.getHourPerWeekMax()));
+        employee.setPriceMin(new BigDecimal(request.getPriceMin()));
+        employee.setPriceMax(new BigDecimal(request.getPriceMax()));
         employeeRepository.save(employee);
+
     }
+
 
     public EmployeeDetailResponse findDetailEmployeeById(String id) {
         var employee = employeeRepository.findById(id).orElseThrow(
