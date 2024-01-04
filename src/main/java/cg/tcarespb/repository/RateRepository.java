@@ -14,8 +14,7 @@ public interface RateRepository extends JpaRepository<Rate,String> {
     @Query( value =
             "SELECT r.id " +
             "FROM rates r " +
-            "WHERE r.rate_quantity >= (SELECT AVG(rate.rate_quantity) " +
-            "FROM rates rate)" +
-                    " ORDER BY r.star_quantity DESC LIMIT 3",nativeQuery = true)
+            "WHERE r.star_quantity >= 4 " +
+                    " ORDER BY r.rate_quantity DESC LIMIT 3",nativeQuery = true)
     List<String> findTop3EmployeesWithHighestRate();
 }
