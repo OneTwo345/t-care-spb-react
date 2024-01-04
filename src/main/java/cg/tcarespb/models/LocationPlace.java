@@ -23,9 +23,9 @@ public class LocationPlace {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String name;
-    private String distanceForWork;
-    private String longitude;
-    private String latitude;
+    private Float distanceForWork;
+    private Float longitude;
+    private Float latitude;
     private Boolean deleted = false;
 
     @OneToOne

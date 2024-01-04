@@ -57,6 +57,5 @@ public class SkillService {
       Skill skill = findByIdForEdit(id);
         skill.setName(request.getName());
         skillRepository.save(skill);
-
     }
 }

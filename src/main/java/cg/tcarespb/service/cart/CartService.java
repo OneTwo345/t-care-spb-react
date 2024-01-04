@@ -3,6 +3,7 @@ package cg.tcarespb.service.cart;
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.CartRepository;
+import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.cart.request.*;
 import cg.tcarespb.service.cartInfo.CartInfoService;
@@ -14,12 +15,15 @@ import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.util.AppMessage;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -33,6 +37,7 @@ public class CartService {
     private final SkillService skillService;
     private final CartInfoService cartInfoService;
     private final AddInfoService addInfoService;
+    private final EmployeeRepository employeeRepository;
 
     public Cart create(Cart cart) {
         return cartRepository.save(cart);
@@ -117,14 +122,15 @@ public class CartService {
         Cart cart = findById(cardId);
         LocationPlace locationPalace = new LocationPlace();
         locationPalace.setName(req.getNameLocation());
-        locationPalace.setDistanceForWork(req.getDistanceForWork());
-        locationPalace.setLatitude(req.getLatitude());
-        locationPalace.setLongitude(req.getLongitude());
+        locationPalace.setDistanceForWork(Float.valueOf(req.getDistanceForWork()));
+        locationPalace.setLatitude(Float.valueOf(req.getLatitude()));
+        locationPalace.setLongitude(Float.valueOf(req.getLongitude()));
         locationPalace.setCart(cart);
         locationPalaceService.create(locationPalace);
         cart.setLocationPlace(locationPalace);
         cartRepository.save(cart);
     }
+
     public void updateCartSkill(CartSkillSaveRequest req, String cartId) {
         Cart cart = findById(cartId);
         List<CartSkill> cartSkillList = new ArrayList<>();
@@ -139,6 +145,7 @@ public class CartService {
         cart.setCartSkills(cartSkillList);
         cartRepository.save(cart);
     }
+
     public void updateCartInfo(CartInfoSaveRequest req, String cartId) {
         Cart cart = findById(cartId);
         List<CartInfo> cartInfoList = new ArrayList<>();
@@ -153,13 +160,26 @@ public class CartService {
         cart.setCartInfos(cartInfoList);
         cartRepository.save(cart);
     }
+
     public void updateTimeStartEnd(CartTimeStartEndSaveRequest req, String cardId) {
         Cart cart = findById(cardId);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate startDate = LocalDate.parse(req.getTimeStart(),dateTimeFormatter);
-        LocalDate endDate = LocalDate.parse(req.getTimeEnd(),dateTimeFormatter);
+        LocalDate startDate = LocalDate.parse(req.getTimeStart(), dateTimeFormatter);
+        LocalDate endDate = LocalDate.parse(req.getTimeEnd(), dateTimeFormatter);
         cart.setTimeStart(startDate);
         cart.setTimeEnd(endDate);
         cartRepository.save(cart);
+    }
+
+    public Page<String> filter(String idCart, Pageable pageable) {
+        Cart cart = findById(idCart);
+//        CartLocationFilterRequest req = new CartLocationFilterRequest();
+        CartSkillFilterRequest req = new CartSkillFilterRequest();
+        req.setCartSkillIdList(cart.getCartSkills().stream().map(e->e.getSkill().getId()).collect(Collectors.joining(",")));
+//        req.setDistance(cart.getLocationPlace().getDistanceForWork());
+//        req.setLatitude(cart.getLocationPlace().getLatitude());
+//        req.setLongitude(cart.getLocationPlace().getLongitude());
+        Page<String> employeeList = employeeRepository.filterSkill(req, pageable);
+        return employeeList;
     }
 }

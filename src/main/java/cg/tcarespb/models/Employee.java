@@ -76,6 +76,8 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<DateSession> dateSessions;
+    @OneToOne(mappedBy = "employee")
+    private LocationPlace locationPlace;
 
     public Employee(String id) {
         this.id = id;
