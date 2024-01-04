@@ -4,7 +4,10 @@ import cg.tcarespb.models.Cart;
 import cg.tcarespb.models.User;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
+import cg.tcarespb.service.employee.EmployeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,6 +81,7 @@ public class CartRestController {
         cartService.updateCartInfo(req, id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/timeStartEnd/{id}")
     public ResponseEntity<?> updateTimeStartEnd(@PathVariable("id") String id, @RequestBody CartTimeStartEndSaveRequest req) {
         cartService.updateTimeStartEnd(req, id);
@@ -90,5 +94,9 @@ public class CartRestController {
         return new ResponseEntity<>(cart.getId(), HttpStatus.OK);
     }
 
+    @GetMapping("/filter/{id}")
+    public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 5) Pageable pageable){
+        return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
+    }
 
 }

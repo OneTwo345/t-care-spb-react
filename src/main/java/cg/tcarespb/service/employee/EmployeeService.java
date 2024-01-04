@@ -3,6 +3,7 @@ package cg.tcarespb.service.employee;
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.*;
+import cg.tcarespb.service.cart.request.CartLocationFilterRequest;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
@@ -11,6 +12,8 @@ import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ public class EmployeeService {
     private final DateSessionService dateSessionService;
     private final EmployeeServiceGeneralRepository employeeServiceGeneralRepository;
 
-    public List<EmployeeListResponse> getEmployeeList(){
+    public List<EmployeeListResponse> getEmployeeList() {
         return employeeRepository.findAll()
                 .stream()
                 .map(service -> EmployeeListResponse.builder()
@@ -78,7 +81,7 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    public void create(EmployeeSaveRequest request){
+    public void create(EmployeeSaveRequest request) {
         var employee = AppUtil.mapper.map(request, Employee.class);
         employee = employeeRepository.save(employee);
 
@@ -117,7 +120,7 @@ public class EmployeeService {
         employee.setDateSessions(dateSessionList);
     }
 
-    public void createScheduleEmployee(EmployeeScheduleSaveRequest request){
+    public void createScheduleEmployee(EmployeeScheduleSaveRequest request) {
         var employee = AppUtil.mapper.map(request, Employee.class);
         employee = employeeRepository.save(employee);
     }
@@ -169,13 +172,13 @@ public class EmployeeService {
 
     public void updateBioEmployee(EmployeeBioSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
-       employee.setBioTitle(request.getBioTitle());
-       employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
+        employee.setBioTitle(request.getBioTitle());
+        employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
         employeeRepository.save(employee);
 
     }
 
-    public void updateAccountEmployee(EmployeeAccountSaveRequest request, String employeeId){
+    public void updateAccountEmployee(EmployeeAccountSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
         employee.setAddress(request.getAddress());
         employee.setFirstName(request.getFirstName());
@@ -186,11 +189,11 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    public EmployeeDetailResponse findDetailEmployeeById(String id){
+    public EmployeeDetailResponse findDetailEmployeeById(String id) {
         var employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
 
-        var result = AppUtil.mapper.map(employee,EmployeeDetailResponse.class);
+        var result = AppUtil.mapper.map(employee, EmployeeDetailResponse.class);
         result.setIdSkills(employee
                 .getEmployeeSkills()
                 .stream().map(employeeSkill -> employeeSkill.getSkill().getName())
@@ -212,19 +215,19 @@ public class EmployeeService {
         return result;
     }
 
-    public List<Employee> get3Employee(){
+    public List<Employee> get3Employee() {
         return rateRepository.findTop3EmployeesWithHighestRate();
     }
-
 
 
     public Employee findById(String id) {
         return employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
     }
-
-
-    public void delete(String id){
+    public List<Employee> getAllEmployee() {
+        return employeeRepository.findAll();
+    }
+    public void delete(String id) {
         employeeRepository.deleteById(id);
     }
 
