@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/schedules")
+@CrossOrigin("http://localhost:3000")
 public class ScheduleRestController {
     private final ScheduleService scheduleService;
 
