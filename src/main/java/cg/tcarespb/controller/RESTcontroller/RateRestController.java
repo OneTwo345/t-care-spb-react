@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/rates")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class RateRestController {
     private final RateService rateService;
 

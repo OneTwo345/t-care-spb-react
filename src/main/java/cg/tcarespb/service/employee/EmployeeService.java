@@ -3,6 +3,7 @@ package cg.tcarespb.service.employee;
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.*;
+import cg.tcarespb.service.cart.request.CartLocationSaveRequest;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
@@ -27,6 +28,7 @@ public class EmployeeService {
     private final DateSessionService dateSessionService;
     private final EmployeeServiceGeneralRepository employeeServiceGeneralRepository;
     private final AccountRepository accountRepository;
+    private final LocationPalaceRepository locationPalaceRepository;
 
     public List<EmployeeListResponse> getEmployeeList() {
         return employeeRepository.findAll()
@@ -169,7 +171,7 @@ public class EmployeeService {
 
     }
 
-    public void createAccountEmployee(EmployeeAccountSaveRequest request) {
+    public String createAccountEmployee(EmployeeAccountSaveRequest request) {
 
         Account account = new Account();
         // validate
@@ -186,6 +188,7 @@ public class EmployeeService {
         employeeRepository.save(employee);
         account.setEmployee(employee);
         accountRepository.save(account);
+        return employee.getId();
     }
 
     public void updateBioEmployee(EmployeeBioSaveRequest request, String employeeId) {
@@ -202,6 +205,7 @@ public class EmployeeService {
         employee.setHourPerWeekMax(Integer.valueOf(request.getHourPerWeekMax()));
         employee.setPriceMin(new BigDecimal(request.getPriceMin()));
         employee.setPriceMax(new BigDecimal(request.getPriceMax()));
+        employee.setJobType(EJobType.valueOf(request.getJobType()));
         employeeRepository.save(employee);
 
     }
@@ -297,6 +301,19 @@ public class EmployeeService {
 
     public void delete(String id){
         employeeRepository.deleteById(id);
+    }
+
+    public void updateLocationForEmployee(EmployeeLocationSaveRequest request, String id) {
+        Employee employee = findById(id);
+        LocationPlace locationPalace = new LocationPlace();
+        locationPalace.setName(request.getNameLocation());
+        locationPalace.setDistanceForWork(Float.valueOf(request.getDistanceForWork()));
+        locationPalace.setLatitude(Float.valueOf(request.getLatitude()));
+        locationPalace.setLongitude(Float.valueOf(request.getLongitude()));
+        locationPalace.setEmployee(employee);
+        locationPalaceRepository.save(locationPalace);
+        employee.setLocationPlace(locationPalace);
+        employeeRepository.save(employee);
     }
 
 }
