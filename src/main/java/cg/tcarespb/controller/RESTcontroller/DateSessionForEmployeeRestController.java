@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/date-session-for-employees")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class DateSessionForEmployeeRestController {
     private final DateSessionService dateSessionService;
 

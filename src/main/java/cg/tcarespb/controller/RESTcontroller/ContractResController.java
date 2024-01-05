@@ -20,6 +20,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/contracts")
+@CrossOrigin("http://localhost:3000")
 public class ContractResController {
     private final ContractService contractService;
 
