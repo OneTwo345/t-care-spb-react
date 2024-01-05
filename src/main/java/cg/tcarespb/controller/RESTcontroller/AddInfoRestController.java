@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/add-infos")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class AddInfoRestController {
     private final AddInfoService addInfoService;
 

@@ -1,15 +1,13 @@
 package cg.tcarespb.controller.RESTcontroller;
 
-import cg.tcarespb.models.Employee;
-import cg.tcarespb.service.cart.request.CartDateSessionListSaveRequest;
+
 import cg.tcarespb.service.employee.EmployeeService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
-import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
-import cg.tcarespb.service.rate.request.RateEditRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/employees")
+@CrossOrigin("http://localhost:3000")
 public class EmployeeRestController {
     private final EmployeeService employeeService;
 
@@ -45,6 +44,12 @@ public class EmployeeRestController {
         employeeService.createScheduleEmployee(request);
     }
 
+    @PostMapping("/account")
+    public ResponseEntity<?> createEmployeeAccount(@RequestBody EmployeeAccountSaveRequest request){
+      String employeeId =  employeeService.createAccountEmployee(request);
+         return new ResponseEntity<>(employeeId, HttpStatus.CREATED);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody EmployeeEditRequest request) {
         employeeService.edit(request, id);
@@ -60,10 +65,9 @@ public class EmployeeRestController {
         employeeService.updateExperienceEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
-
-    @PutMapping("/account/{id}")
-    public ResponseEntity<?> updateAccountEmployee(@PathVariable("id") String id, @RequestBody EmployeeAccountSaveRequest req) {
-        employeeService.updateAccountEmployee(req, id);
+    @PutMapping("/schedule/{id}")
+    public ResponseEntity<?> updateSchedule(@PathVariable("id") String id, @RequestBody EmployeeScheduleSaveRequest req) {
+        employeeService.updateScheduleEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
 
@@ -72,10 +76,37 @@ public class EmployeeRestController {
         employeeService.updateBioEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/jobType/{id}")
+    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody EmployeeJobTypeSaveRequest req) {
+        employeeService.updateJobType(req, id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/location/{id}")
+    public ResponseEntity<?> updateLocation(@PathVariable("id") String id, @RequestBody EmployeeLocationSaveRequest req) {
+        employeeService.updateLocationForEmployee(req, id);
+        return ResponseEntity.noContent().build();
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
         employeeService.delete(id);
         return ResponseEntity.ok("Employee deleted successfully");
     }
+
+    @PostMapping("/filterCreate")
+    public  ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req){
+        employeeService.createEmployeeFilter(req);
+        return ResponseEntity.noContent().build();
+    }
+
+
+    // Cho phép các phương thức liên quan tới CORS
+    @RequestMapping(method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> options() {
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }

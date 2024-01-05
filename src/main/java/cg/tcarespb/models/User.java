@@ -41,5 +41,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Cart> carts;
 
+    @OneToOne
+    private Photo photo;
+
 
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/serviceGenerals")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class ServiceGeneralRestController {
     private final ServiceGeneralService serviceGeneralService;
 

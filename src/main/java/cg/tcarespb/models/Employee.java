@@ -38,9 +38,10 @@ public class Employee {
     private BigDecimal priceMin;
     private BigDecimal priceMax;
     private Integer minHourPerJob;
-    private EJobType jobType;
     private Boolean deleted = false;
 
+    @Enumerated(EnumType.STRING)
+    private EJobType jobType;
     @Enumerated(EnumType.STRING)
     private EGender gender;
     @Enumerated(EnumType.STRING)
@@ -78,6 +79,8 @@ public class Employee {
     private List<DateSession> dateSessions;
     @OneToOne(mappedBy = "employee")
     private LocationPlace locationPlace;
+    @OneToOne
+    private Photo photo;
 
     public Employee(String id) {
         this.id = id;

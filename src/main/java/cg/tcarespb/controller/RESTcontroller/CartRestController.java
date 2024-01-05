@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/carts")
 @AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class CartRestController {
     private final CartService cartService;
 
@@ -97,6 +98,10 @@ public class CartRestController {
     @GetMapping("/filter/{id}")
     public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 5) Pageable pageable){
         return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
+    }
+    @GetMapping("/filterTest/{id}")
+    public ResponseEntity<?> filterList(@PathVariable("id") String id){
+        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
     }
 
 }

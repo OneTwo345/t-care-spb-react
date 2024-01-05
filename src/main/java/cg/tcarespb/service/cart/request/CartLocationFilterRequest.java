@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CartLocationFilterRequest {
-    private Float distance;
-    private Float longitude;
-    private Float latitude;
+    private Double distance;
+    private Double longitude;
+    private Double latitude;
 }
