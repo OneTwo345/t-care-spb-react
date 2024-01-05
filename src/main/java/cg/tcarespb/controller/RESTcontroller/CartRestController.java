@@ -99,5 +99,9 @@ public class CartRestController {
     public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 5) Pageable pageable){
         return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
     }
+    @GetMapping("/filterTest/{id}")
+    public ResponseEntity<?> filterList(@PathVariable("id") String id){
+        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
+    }
 
 }

@@ -76,6 +76,11 @@ public class EmployeeRestController {
         employeeService.updateBioEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/jobType/{id}")
+    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody EmployeeJobTypeSaveRequest req) {
+        employeeService.updateJobType(req, id);
+        return ResponseEntity.noContent().build();
+    }
 
     @PutMapping("/location/{id}")
     public ResponseEntity<?> updateLocation(@PathVariable("id") String id, @RequestBody EmployeeLocationSaveRequest req) {
@@ -89,11 +94,19 @@ public class EmployeeRestController {
         return ResponseEntity.ok("Employee deleted successfully");
     }
 
+    @PostMapping("/filterCreate")
+    public  ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req){
+        employeeService.createEmployeeFilter(req);
+        return ResponseEntity.noContent().build();
+    }
+
+
     // Cho phép các phương thức liên quan tới CORS
     @RequestMapping(method = RequestMethod.OPTIONS)
     public ResponseEntity<?> options() {
         return ResponseEntity.ok().build();
     }
+
 
 
 }
