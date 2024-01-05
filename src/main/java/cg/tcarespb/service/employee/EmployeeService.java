@@ -3,16 +3,22 @@ package cg.tcarespb.service.employee;
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.*;
+import cg.tcarespb.service.addInfo.AddInfoService;
+import cg.tcarespb.service.cart.request.CartJobTypeSaveRequest;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
+import cg.tcarespb.service.location.LocationPalaceService;
+import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
+import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +33,10 @@ public class EmployeeService {
     private final DateSessionService dateSessionService;
     private final EmployeeServiceGeneralRepository employeeServiceGeneralRepository;
     private final AccountRepository accountRepository;
+    private final AddInfoService addInfoService;
+    private final SkillService skillService;
+    private final ServiceGeneralService serviceGeneralService;
+    private final LocationPalaceService locationPalaceService;
 
     public List<EmployeeListResponse> getEmployeeList() {
         return employeeRepository.findAll()
@@ -142,7 +152,6 @@ public class EmployeeService {
     }
 
 
-
     public void updateExperienceEmployee(EmployeeExperienceSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
         employee.setExperience(EExperience.valueOf(request.getExperience()));
@@ -234,15 +243,13 @@ public class EmployeeService {
     }
 
 
-
-
     public Employee findById(String id) {
         return employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
     }
 
     @Transactional
-    public void edit(EmployeeEditRequest request, String id){
+    public void edit(EmployeeEditRequest request, String id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
         employee.setAddress(request.getAddress());
@@ -294,8 +301,57 @@ public class EmployeeService {
         employeeServiceGeneralRepository.saveAll(employeeServices);
     }
 
+    public void updateJobType(EmployeeJobTypeSaveRequest req, String employeeId) {
+        Employee employee = findById(employeeId);
+        EJobType eJobType = EJobType.valueOf(req.getJobType());
+        employee.setJobType(eJobType);
+        employeeRepository.save(employee);
 
-    public void delete(String id){
+    }
+
+    public void createEmployeeFilter(EmployeeSaveFilterRequest req) {
+        Employee employee = new Employee();
+        employeeRepository.save(employee);
+        employee.setEmployeeInfos(req.getListInfoId().stream().map(e -> {
+            EmployeeInfo employeeInfo = new EmployeeInfo();
+            AddInfo addInfo = addInfoService.findByIdForEdit(e);
+            employeeInfo.setEmployee(employee);
+            employeeInfo.setAddInfo(addInfo);
+            employeeAddInfoRepository.save(employeeInfo);
+            return employeeInfo;
+        }).collect(Collectors.toList()));
+        employee.setEmployeeSkills(req.getListSkillId().stream().map(e -> {
+            EmployeeSkill employeeSkill = new EmployeeSkill();
+            Skill skill = skillService.findByIdForEdit(e);
+            employeeSkill.setEmployee(employee);
+            employeeSkill.setSkill(skill);
+            employeeSkillRepository.save(employeeSkill);
+            return employeeSkill;
+        }).collect(Collectors.toList()));
+
+        employee.setEmployeeServiceGenerals(req.getListServiceId().stream().map(e -> {
+            EmployeeServiceGeneral employeeServiceGeneral = new EmployeeServiceGeneral();
+            ServiceGeneral serviceGeneral = serviceGeneralService.findById(e);
+            employeeServiceGeneral.setService(serviceGeneral);
+            employeeServiceGeneral.setEmployee(employee);
+            employeeServiceGeneralRepository.save(employeeServiceGeneral);
+            return employeeServiceGeneral;
+        }).collect(Collectors.toList()));
+        employee.setJobType(EJobType.valueOf(req.getJobType()));
+        employee.setPriceMax(req.getPriceMax());
+        employee.setPriceMin(req.getPriceMin());
+        employee.setStatus(EStatus.valueOf(req.getStatus()));
+        LocationPlace locationPlace = new LocationPlace();
+        locationPlace.setLongitude(Double.valueOf(req.getLongitude()));
+        locationPlace.setLatitude(Double.valueOf(req.getLatitude()));
+        locationPlace.setName(req.getNameLocation());
+        locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
+        locationPlace.setEmployee(employee);
+        employee.setLocationPlace(locationPalaceService.create(locationPlace));
+        employeeRepository.save(employee);
+    }
+
+    public void delete(String id) {
         employeeRepository.deleteById(id);
     }
 

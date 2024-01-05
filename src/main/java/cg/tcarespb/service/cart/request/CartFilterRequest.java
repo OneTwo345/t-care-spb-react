@@ -16,9 +16,9 @@ public class CartFilterRequest {
     private String cartServiceIdList;
     private String cartInfoIdList;
     private String cartSkillIdList;
-    private Float distance;
-    private Float longitude;
-    private Float latitude;
+    private Double distance;
+    private Double longitude;
+    private Double latitude;
     private BigDecimal priceMax;
     private BigDecimal priceMin;
     private EJobType jobType;

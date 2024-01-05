@@ -68,10 +68,20 @@ public class EmployeeRestController {
         employeeService.updateBioEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/jobType/{id}")
+    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody EmployeeJobTypeSaveRequest req) {
+        employeeService.updateJobType(req, id);
+        return ResponseEntity.noContent().build();
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
         employeeService.delete(id);
         return ResponseEntity.ok("Employee deleted successfully");
+    }
+    @PostMapping("/filterCreate")
+    public  ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req){
+        employeeService.createEmployeeFilter(req);
+        return ResponseEntity.noContent().build();
     }
 }
