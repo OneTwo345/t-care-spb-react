@@ -5,9 +5,6 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.util.List;
-import java.util.UUID;
-
 @Getter
 @NoArgsConstructor
 @Setter

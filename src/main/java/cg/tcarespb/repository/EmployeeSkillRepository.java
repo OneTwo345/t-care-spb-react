@@ -1,6 +1,5 @@
 package cg.tcarespb.repository;
 
-import cg.tcarespb.models.Employee;
 import cg.tcarespb.models.EmployeeSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
 

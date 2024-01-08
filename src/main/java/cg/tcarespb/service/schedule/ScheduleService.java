@@ -30,7 +30,6 @@ public class ScheduleService {
                         .priceMin(service.getPriceMin())
                         .priceMax(service.getPriceMax())
                         .minHourPerJob(service.getMinHourPerJob())
-                        .jobType(service.getJobType())
                         .employeeId(service.getEmployee().getFirstName())
                         .build())
                         .collect(Collectors.toList());

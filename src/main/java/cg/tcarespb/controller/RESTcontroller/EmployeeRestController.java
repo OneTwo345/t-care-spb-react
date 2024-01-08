@@ -1,13 +1,15 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 
+import cg.tcarespb.service.customMail.EmailSenderService;
 import cg.tcarespb.service.employee.EmployeeService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
+import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,8 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class EmployeeRestController {
     private final EmployeeService employeeService;
+
+    private  final EmailSenderService emailSenderService;
 
     @GetMapping
     public ResponseEntity<List<EmployeeListResponse>> getEmployeeList(){
@@ -44,11 +48,11 @@ public class EmployeeRestController {
         employeeService.createScheduleEmployee(request);
     }
 
-    @PostMapping("/account")
-    public ResponseEntity<?> createEmployeeAccount(@RequestBody EmployeeAccountSaveRequest request){
-      String employeeId =  employeeService.createAccountEmployee(request);
-         return new ResponseEntity<>(employeeId, HttpStatus.CREATED);
-    }
+//    @PostMapping("/account")
+//    public ResponseEntity<?> createEmployeeAccount(@RequestBody EmployeeAccountSaveRequest request){
+//      String employeeId =  employeeService.createAccountEmployee(request);
+//         return new ResponseEntity<>(employeeId, HttpStatus.CREATED);
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody EmployeeEditRequest request) {
@@ -65,17 +69,22 @@ public class EmployeeRestController {
         employeeService.updateExperienceEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("/schedule/{id}")
-    public ResponseEntity<?> updateSchedule(@PathVariable("id") String id, @RequestBody EmployeeScheduleSaveRequest req) {
-        employeeService.updateScheduleEmployee(req, id);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping("/schedule/{id}")
+//    public ResponseEntity<?> updateSchedule(@PathVariable("id") String id, @RequestBody EmployeeScheduleSaveRequest req) {
+//        employeeService.updateScheduleEmployee(req, id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @PutMapping("/bio/{id}")
     public ResponseEntity<?> updateBio(@PathVariable("id") String id, @RequestBody EmployeeBioSaveRequest req) {
         employeeService.updateBioEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
+//    @PutMapping("/jobType/{id}")
+//    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody EmployeeJobTypeSaveRequest req) {
+//        employeeService.updateJobType(req, id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @PutMapping("/location/{id}")
     public ResponseEntity<?> updateLocation(@PathVariable("id") String id, @RequestBody EmployeeLocationSaveRequest req) {
@@ -89,11 +98,24 @@ public class EmployeeRestController {
         return ResponseEntity.ok("Employee deleted successfully");
     }
 
+    @PostMapping("/filterCreate")
+    public  ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req){
+        emailSenderService.sendEmail("quochuy248@gmail.com","this is subject","this is body");
+        employeeService.createEmployeeFilter(req);
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/detail/{idEmployee}")
+    public ResponseEntity<EmployeeDetailInFilterListResponse> getEmployeeDetailInFilter(@PathVariable("idEmployee") String idEmployee, @RequestBody String idCart){
+        EmployeeDetailInFilterListResponse employee = employeeService.findEmployeeDetailById(idEmployee,idCart);
+        return ResponseEntity.ok(employee);
+    }
+
     // Cho phép các phương thức liên quan tới CORS
     @RequestMapping(method = RequestMethod.OPTIONS)
     public ResponseEntity<?> options() {
         return ResponseEntity.ok().build();
     }
+
 
 
 }

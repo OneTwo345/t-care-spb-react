@@ -1,16 +1,11 @@
 package cg.tcarespb.controller.RESTcontroller;
 
-import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
 import cg.tcarespb.service.rate.RateService;
 import cg.tcarespb.service.rate.request.RateEditRequest;
 import cg.tcarespb.service.rate.request.RateSaveRequest;
 import cg.tcarespb.service.rate.response.RateDetailsResponse;
 import cg.tcarespb.service.rate.response.RateListResponse;
-import cg.tcarespb.service.skill.SkillService;
-import cg.tcarespb.service.skill.request.SkillEditRequest;
-import cg.tcarespb.service.skill.request.SkillSaveRequest;
-import cg.tcarespb.service.skill.response.SkillListResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

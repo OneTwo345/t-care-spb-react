@@ -11,7 +11,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -28,7 +27,7 @@ public class User {
     private String id;
     private String personID;
     private String firstName;
-    private String fullName;
+    private String lastName;
     private EGender gender;
     private Boolean deleted = false;
 
@@ -43,6 +42,5 @@ public class User {
 
     @OneToOne
     private Photo photo;
-
 
 }

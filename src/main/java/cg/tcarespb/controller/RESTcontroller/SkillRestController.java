@@ -1,9 +1,5 @@
 package cg.tcarespb.controller.RESTcontroller;
 
-import cg.tcarespb.service.addInfo.request.AddInfoEditRequest;
-import cg.tcarespb.service.addInfo.request.AddInfoSaveRequest;
-import cg.tcarespb.service.addInfo.response.AddInfoDetailResponse;
-import cg.tcarespb.service.addInfo.response.AddInfoListResponse;
 import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.service.skill.request.SkillEditRequest;
 import cg.tcarespb.service.skill.request.SkillSaveRequest;

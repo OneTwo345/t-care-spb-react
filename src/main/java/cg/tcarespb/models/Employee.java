@@ -11,7 +11,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -33,13 +32,8 @@ public class Employee {
     private String descriptionAboutMySelf;
     private String bioTitle;
     private String personID;
-    private Integer hourPerWeekMin;
-    private Integer hourPerWeekMax;
-    private BigDecimal priceMin;
-    private BigDecimal priceMax;
-    private Integer minHourPerJob;
-    private EJobType jobType;
     private Boolean deleted = false;
+
 
     @Enumerated(EnumType.STRING)
     private EGender gender;
@@ -63,9 +57,6 @@ public class Employee {
     private List<EmployeeSkill> employeeSkills;
 
     @OneToMany(mappedBy = "employee")
-    private List<Availability> availabilities;
-
-    @OneToMany(mappedBy = "employee")
     private List<Favorite> favorites;
 
     @OneToMany(mappedBy = "employee")
@@ -78,6 +69,8 @@ public class Employee {
     private List<DateSession> dateSessions;
     @OneToOne(mappedBy = "employee")
     private LocationPlace locationPlace;
+    @OneToMany(mappedBy = "employee")
+    private List<HistoryWorking> historyWorking;
     @OneToOne
     private Photo photo;
 

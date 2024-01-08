@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -27,16 +28,18 @@ public class Contract {
     private String namePatient;
     private Integer agePatient;
     private String content;
-    private BigDecimal pricePerHour;
     private BigDecimal totalPrice;
     private Integer dateQuantity;
-    private Integer hourPerDay;
     private Boolean deleted = false;
+    private String nameService;
+    private BigDecimal priceService;
     @Enumerated(EnumType.STRING)
     private EGender gender;
     @ManyToOne
     private Employee employee;
     @ManyToOne
-    private Cart cart;
+    private User user;
+    @OneToMany(mappedBy = "contract")
+    private List<HistoryWorking> historyWorking;
 
 }

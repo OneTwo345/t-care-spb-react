@@ -1,14 +1,10 @@
 package cg.tcarespb.service.user;
 
-import cg.tcarespb.models.Employee;
 import cg.tcarespb.models.Favorite;
-import cg.tcarespb.models.Rate;
 import cg.tcarespb.models.User;
 import cg.tcarespb.repository.UserRepository;
 import cg.tcarespb.service.employee.EmployeeService;
 import cg.tcarespb.service.favorite.FavoriteService;
-import cg.tcarespb.service.rate.request.RateSaveRequest;
-import cg.tcarespb.service.rate.response.RateListResponse;
 import cg.tcarespb.service.user.request.UserFavoriteListSaveRequest;
 import cg.tcarespb.service.user.request.UserSaveRequest;
 import cg.tcarespb.service.user.response.UserListResponse;
@@ -17,9 +13,7 @@ import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,7 +41,7 @@ public class UserService {
                 .stream()
                 .map(user ->UserListResponse.builder()
                         .id(user.getId())
-                        .fullName(user.getFullName())
+                        .fullName(user.getLastName())
                         .firstName(user.getFirstName())
                         .gender(user.getGender())
                         .personID(user.getPersonID())

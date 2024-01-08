@@ -1,6 +1,5 @@
 package cg.tcarespb.service.cart.request;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CartLocationFilterRequest {
-    private Float distance;
-    private Float longitude;
-    private Float latitude;
+    private Double distance;
+    private Double longitude;
+    private Double latitude;
 }

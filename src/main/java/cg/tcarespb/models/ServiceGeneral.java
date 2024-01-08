@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -27,13 +28,15 @@ public class ServiceGeneral {
     private String name;
     private String description;
     private Boolean deleted = false;
-
+    private BigDecimal priceEmployee;
+    private BigDecimal fees;
+    private BigDecimal totalPrice;
     @OneToMany(mappedBy = "service")
     private List<EmployeeServiceGeneral> employeeServiceGeneralList;
 
     @OneToMany(mappedBy = "service")
+    private List<Cart> carts;
 
-    private List<CartServiceGeneral> cartServices;
     public ServiceGeneral(String id) {
         this.id = id;
     }

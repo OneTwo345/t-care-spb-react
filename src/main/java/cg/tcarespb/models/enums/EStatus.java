@@ -2,9 +2,8 @@ package cg.tcarespb.models.enums;
 
 public enum EStatus {
     ACTIVE("Hoạt động"),
-    WAITING("Đang chờ"),
-    LOCKED("Đã khóa"),
-    BUSY("Đang bận");
+    BAN("Khóa"),
+    WAITING("Đang chờ");
 
     private String name;
 
