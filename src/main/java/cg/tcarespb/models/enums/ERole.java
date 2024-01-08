@@ -1,8 +1,9 @@
 package cg.tcarespb.models.enums;
 
 public enum ERole {
-    USER("Người thuê"),
-    EMPLOYEE("Người hỗ trợ");
+    ROLE_USER("Người thuê"),
+    ROLE_EMPLOYEE("Người hỗ trợ"),
+    ROLE_ADMIN("Người quản lí");
 
     private String name;
 

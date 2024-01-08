@@ -1,12 +1,9 @@
 package cg.tcarespb.service.schedule.request;
 
-import cg.tcarespb.models.enums.EJobType;
-import cg.tcarespb.models.enums.ESessionOfDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 
 @Getter
 @Setter

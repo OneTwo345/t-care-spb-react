@@ -1,13 +1,9 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 import cg.tcarespb.models.Cart;
-import cg.tcarespb.models.User;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
-import cg.tcarespb.service.employee.EmployeeService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +37,11 @@ public class CartRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/jobTypes/{id}")
-    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody CartJobTypeSaveRequest req) {
-        cartService.updateJobType(req, id);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping("/jobTypes/{id}")
+//    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody CartJobTypeSaveRequest req) {
+//        cartService.updateJobType(req, id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @PutMapping("/infoPatient/{id}")
     public ResponseEntity<?> updateInfoPatient(@PathVariable("id") String id, @RequestBody CartInfoPatientSaveRequest req) {
@@ -59,11 +55,11 @@ public class CartRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/priceRange/{id}")
-    public ResponseEntity<?> updatePriceRange(@PathVariable("id") String id, @RequestBody CartPriceMinMaxSaveRequest req) {
-        cartService.updatePriceMinMax(req, id);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping("/priceRange/{id}")
+//    public ResponseEntity<?> updatePriceRange(@PathVariable("id") String id, @RequestBody CartPriceMinMaxSaveRequest req) {
+//        cartService.updatePriceMinMax(req, id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @PutMapping("/locations/{id}")
     public ResponseEntity<?> updateLocation(@PathVariable("id") String id, @RequestBody CartLocationSaveRequest req) {
@@ -95,13 +91,13 @@ public class CartRestController {
         return new ResponseEntity<>(cart.getId(), HttpStatus.OK);
     }
 
-    @GetMapping("/filter/{id}")
-    public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 5) Pageable pageable){
-        return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
-    }
-    @GetMapping("/filterTest/{id}")
-    public ResponseEntity<?> filterList(@PathVariable("id") String id){
-        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
-    }
+//    @GetMapping("/filter/{id}")
+//    public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 5) Pageable pageable){
+//        return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
+//    }
+//    @GetMapping("/filterTest/{id}")
+//    public ResponseEntity<?> filterList(@PathVariable("id") String id){
+//        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
+//    }
 
 }

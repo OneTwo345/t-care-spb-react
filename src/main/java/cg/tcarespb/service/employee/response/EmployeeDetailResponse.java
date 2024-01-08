@@ -1,10 +1,9 @@
 package cg.tcarespb.service.employee.response;
 
-import cg.tcarespb.models.enums.*;
-import cg.tcarespb.service.employee.request.EmployeeDateSessionSaveRequest;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Getter

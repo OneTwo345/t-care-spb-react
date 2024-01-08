@@ -1,16 +1,11 @@
 package cg.tcarespb.controller.RESTcontroller;
 
-import cg.tcarespb.models.AddInfo;
 import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.addInfo.request.AddInfoEditRequest;
 import cg.tcarespb.service.addInfo.request.AddInfoSaveRequest;
 import cg.tcarespb.service.addInfo.response.AddInfoDetailResponse;
 import cg.tcarespb.service.addInfo.response.AddInfoListResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

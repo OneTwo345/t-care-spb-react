@@ -1,7 +1,5 @@
 package cg.tcarespb.controller.RESTcontroller;
 
-import cg.tcarespb.service.skill.request.SkillSaveRequest;
-import cg.tcarespb.service.skill.response.SkillListResponse;
 import cg.tcarespb.service.user.UserService;
 import cg.tcarespb.service.user.request.UserFavoriteListSaveRequest;
 import cg.tcarespb.service.user.request.UserSaveRequest;
