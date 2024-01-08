@@ -33,10 +33,8 @@ public class ContractService {
                         .namePatient(contract.getNamePatient())
                         .agePatient(contract.getAgePatient())
                         .content(contract.getContent())
-                        .pricePerHour(contract.getPricePerHour())
                         .totalPrice(contract.getTotalPrice())
                         .dateQuantity(contract.getDateQuantity())
-                        .hourPerDay(contract.getHourPerDay())
                         .employeeName(contract.getEmployee().getFirstName())
                         .build())
                 .collect(Collectors.toList());
@@ -72,10 +70,8 @@ public class ContractService {
         contract.setNamePatient(request.getNamePatient());
         contract.setAgePatient(Integer.valueOf(request.getAgePatient()));
         contract.setContent(request.getContent());
-        contract.setPricePerHour(new BigDecimal(request.getPricePerHour()));
         contract.setTotalPrice(new BigDecimal(request.getTotalPrice()));
         contract.setDateQuantity(Integer.valueOf(request.getDateQuantity()));
-        contract.setHourPerDay(Integer.valueOf(request.getHourPerDay()));
         Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
         contract.setEmployee(employee.get());
         contractRepository.save(contract);

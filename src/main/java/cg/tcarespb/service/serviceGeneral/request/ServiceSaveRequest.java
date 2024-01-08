@@ -1,6 +1,8 @@
 package cg.tcarespb.service.serviceGeneral.request;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

@@ -1,6 +1,5 @@
 package cg.tcarespb.service.employee.response;
 
-import cg.tcarespb.models.Schedule;
 import cg.tcarespb.models.enums.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +33,6 @@ public class EmployeeListResponse {
     private BigDecimal priceMin;
     private BigDecimal priceMax;
     private Integer minHourPerJob;
-    private EJobType jobType;
 
 
 

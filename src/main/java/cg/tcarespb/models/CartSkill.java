@@ -9,8 +9,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.UUID;
-
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
