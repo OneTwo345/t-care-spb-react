@@ -2,7 +2,6 @@ package cg.tcarespb.service.location;
 
 import cg.tcarespb.models.LocationPlace;
 import cg.tcarespb.repository.LocationPalaceRepository;
-import cg.tcarespb.service.employee.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

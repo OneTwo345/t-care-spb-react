@@ -1,6 +1,5 @@
 package cg.tcarespb.models;
 
-import cg.tcarespb.models.enums.EJobType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +25,6 @@ public class Schedule {
     private BigDecimal priceMin;
     private BigDecimal priceMax;
     private Integer minHourPerJob;
-    private EJobType jobType;
     private Boolean deleted = false;
 
     @OneToOne

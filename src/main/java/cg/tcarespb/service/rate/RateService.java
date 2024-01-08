@@ -3,16 +3,13 @@ package cg.tcarespb.service.rate;
 
 import cg.tcarespb.models.Employee;
 import cg.tcarespb.models.Rate;
-import cg.tcarespb.models.Skill;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.RateRepository;
-import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
 import cg.tcarespb.service.rate.request.RateEditRequest;
 import cg.tcarespb.service.rate.request.RateSaveRequest;
 import cg.tcarespb.service.rate.response.RateDetailsResponse;
 import cg.tcarespb.service.rate.response.RateListResponse;
-import cg.tcarespb.service.skill.request.SkillSaveRequest;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;

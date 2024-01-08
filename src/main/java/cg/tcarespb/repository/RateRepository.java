@@ -1,10 +1,6 @@
 package cg.tcarespb.repository;
 
-import cg.tcarespb.models.Cart;
-import cg.tcarespb.models.Employee;
 import cg.tcarespb.models.Rate;
-import cg.tcarespb.service.employee.response.EmployeeListResponse;
-import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

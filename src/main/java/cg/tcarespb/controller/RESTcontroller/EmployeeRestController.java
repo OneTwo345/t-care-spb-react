@@ -9,8 +9,7 @@ import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,11 +48,11 @@ public class EmployeeRestController {
         employeeService.createScheduleEmployee(request);
     }
 
-    @PostMapping("/account")
-    public ResponseEntity<?> createEmployeeAccount(@RequestBody EmployeeAccountSaveRequest request){
-      String employeeId =  employeeService.createAccountEmployee(request);
-         return new ResponseEntity<>(employeeId, HttpStatus.CREATED);
-    }
+//    @PostMapping("/account")
+//    public ResponseEntity<?> createEmployeeAccount(@RequestBody EmployeeAccountSaveRequest request){
+//      String employeeId =  employeeService.createAccountEmployee(request);
+//         return new ResponseEntity<>(employeeId, HttpStatus.CREATED);
+//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody EmployeeEditRequest request) {
@@ -70,22 +69,22 @@ public class EmployeeRestController {
         employeeService.updateExperienceEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("/schedule/{id}")
-    public ResponseEntity<?> updateSchedule(@PathVariable("id") String id, @RequestBody EmployeeScheduleSaveRequest req) {
-        employeeService.updateScheduleEmployee(req, id);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping("/schedule/{id}")
+//    public ResponseEntity<?> updateSchedule(@PathVariable("id") String id, @RequestBody EmployeeScheduleSaveRequest req) {
+//        employeeService.updateScheduleEmployee(req, id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @PutMapping("/bio/{id}")
     public ResponseEntity<?> updateBio(@PathVariable("id") String id, @RequestBody EmployeeBioSaveRequest req) {
         employeeService.updateBioEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("/jobType/{id}")
-    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody EmployeeJobTypeSaveRequest req) {
-        employeeService.updateJobType(req, id);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping("/jobType/{id}")
+//    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody EmployeeJobTypeSaveRequest req) {
+//        employeeService.updateJobType(req, id);
+//        return ResponseEntity.noContent().build();
+//    }
 
     @PutMapping("/location/{id}")
     public ResponseEntity<?> updateLocation(@PathVariable("id") String id, @RequestBody EmployeeLocationSaveRequest req) {

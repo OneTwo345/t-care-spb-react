@@ -20,7 +20,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,12 +56,6 @@ public class EmployeeService {
                         .status(service.getStatus())
                         .education(service.getEducation())
                         .experience(service.getExperience())
-                        .hourPerWeekMin(service.getHourPerWeekMin())
-                        .hourPerWeekMax(service.getHourPerWeekMax())
-                        .priceMin(service.getPriceMin())
-                        .priceMax(service.getPriceMax())
-                        .minHourPerJob(service.getMinHourPerJob())
-                        .jobType(service.getJobType())
 
                         .skills(service.getEmployeeSkills()
                                 .stream()
@@ -182,25 +175,25 @@ public class EmployeeService {
 
     }
 
-    public String createAccountEmployee(EmployeeAccountSaveRequest request) {
-
-        Account account = new Account();
-        // validate
-        account.setEmail(request.getEmail());
-        account.setPassword(request.getPassword());
-        account.setERole(ERole.EMPLOYEE);
-        accountRepository.save(account);
-        Employee employee = new Employee();
-        employee.setGender(EGender.valueOf(request.getGender()));
-        employee.setFirstName(request.getFirstName());
-        employee.setLastName(request.getLastName());
-        employee.setPersonID(request.getPersonID());
-        employee.setStatus(EStatus.WAITING);
-        employeeRepository.save(employee);
-        account.setEmployee(employee);
-        accountRepository.save(account);
-        return employee.getId();
-    }
+//    public String createAccountEmployee(EmployeeAccountSaveRequest request) {
+//
+//        Account account = new Account();
+//        // validate
+//        account.setEmail(request.getEmail());
+//        account.setPassword(request.getPassword());
+//        account.setERole(ERole.ROLE_EMPLOYEE);
+//        accountRepository.save(account);
+//        Employee employee = new Employee();
+//        employee.setGender(EGender.valueOf(request.getGender()));
+//        employee.setFirstName(request.getFirstName());
+//        employee.setLastName(request.getLastName());
+//        employee.setPersonID(request.getPersonID());
+//        employee.setStatus(EStatus.WAITING);
+//        employeeRepository.save(employee);
+//        account.setEmployee(employee);
+//        accountRepository.save(account);
+//        return employee.getId();
+//    }
 
     public void updateBioEmployee(EmployeeBioSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
@@ -210,16 +203,7 @@ public class EmployeeService {
 
     }
 
-    public void updateScheduleEmployee(EmployeeScheduleSaveRequest request, String employeeId) {
-        Employee employee = findById(employeeId);
-        employee.setHourPerWeekMin(Integer.valueOf(request.getHourPerWeekMin()));
-        employee.setHourPerWeekMax(Integer.valueOf(request.getHourPerWeekMax()));
-        employee.setPriceMin(new BigDecimal(request.getPriceMin()));
-        employee.setPriceMax(new BigDecimal(request.getPriceMax()));
-        employee.setJobType(EJobType.valueOf(request.getJobType()));
-        employeeRepository.save(employee);
 
-    }
 
 
     public EmployeeDetailResponse findDetailEmployeeById(String id) {
@@ -268,12 +252,6 @@ public class EmployeeService {
         employee.setStatus(EStatus.valueOf(request.getStatus()));
         employee.setExperience(EExperience.valueOf(request.getExperience()));
         employee.setEducation(EEducation.valueOf(request.getEducation()));
-        employee.setHourPerWeekMin(Integer.valueOf(request.getHourPerWeekMin()));
-        employee.setHourPerWeekMax(Integer.valueOf(request.getHourPerWeekMax()));
-        employee.setPriceMin(new BigDecimal(request.getPriceMin()));
-        employee.setPriceMax(new BigDecimal(request.getPriceMax()));
-        employee.setMinHourPerJob(Integer.valueOf(request.getMinHourPerJob()));
-        employee.setJobType(EJobType.valueOf(request.getJobType()));
         employeeRepository.save(employee);
 
         employeeSkillRepository.deleteAllById(employee.getEmployeeSkills().stream()
@@ -307,13 +285,6 @@ public class EmployeeService {
         employeeServiceGeneralRepository.saveAll(employeeServices);
     }
 
-    public void updateJobType(EmployeeJobTypeSaveRequest req, String employeeId) {
-        Employee employee = findById(employeeId);
-        EJobType eJobType = EJobType.valueOf(req.getJobType());
-        employee.setJobType(eJobType);
-        employeeRepository.save(employee);
-
-    }
 
     public void createEmployeeFilter(EmployeeSaveFilterRequest req) {
         Employee employee = new Employee();
@@ -343,9 +314,6 @@ public class EmployeeService {
             employeeServiceGeneralRepository.save(employeeServiceGeneral);
             return employeeServiceGeneral;
         }).collect(Collectors.toList()));
-        employee.setJobType(EJobType.valueOf(req.getJobType()));
-        employee.setPriceMax(req.getPriceMax());
-        employee.setPriceMin(req.getPriceMin());
         employee.setStatus(EStatus.valueOf(req.getStatus()));
         LocationPlace locationPlace = new LocationPlace();
         locationPlace.setLongitude(Double.valueOf(req.getLongitude()));
@@ -386,8 +354,6 @@ public class EmployeeService {
         employeeDetail.setSkillName(employee.getEmployeeSkills().stream().map(e -> e.getSkill().getName()).collect(Collectors.toList()));
         employeeDetail.setFirstName(employee.getFirstName());
         employeeDetail.setLastName(employee.getLastName());
-        employeeDetail.setPriceMax(employee.getPriceMax());
-        employeeDetail.setPriceMin(employee.getPriceMin());
         employeeDetail.setDescriptionAboutMySelf(employee.getDescriptionAboutMySelf());
         employeeDetail.setDistanceToWork(locationPalaceService.getDistance(employee.getLocationPlace().getLatitude(),
                 employee.getLocationPlace().getLongitude(),
