@@ -1,9 +1,11 @@
 package cg.tcarespb.repository;
 
 import cg.tcarespb.models.Employee;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmployeeRepository extends JpaRepository<Employee,String> {
+
 //    @Query("SELECT e.id FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
 //            "JOIN EmployeeServiceGeneral esg ON e.id = esg.employee.id " +
 //            "JOIN EmployeeInfo ei ON e.id = ei.employee.id " +
