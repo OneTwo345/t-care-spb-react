@@ -10,6 +10,7 @@ import cg.tcarespb.service.cartInfo.CartInfoService;
 import cg.tcarespb.service.cartService.CartServiceService;
 import cg.tcarespb.service.cartSkill.CartSkillService;
 import cg.tcarespb.service.dateSession.DateSessionService;
+import cg.tcarespb.service.employee.response.EmployeeFilterResponse;
 import cg.tcarespb.service.location.LocationPalaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
@@ -189,12 +190,11 @@ public class CartService {
         Page<String> employeeList = employeeRepository.filter(request, pageable);
         return employeeList;
     }
+
     public List<String> filterTest(String idCart) {
         Cart cart = findById(idCart);
         CartSkillFilterRequest req = new CartSkillFilterRequest();
         req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
-
-
         CartFilterRequest request = new CartFilterRequest();
         request.setCartServiceIdList(cart.getCartServices().stream().map(e -> e.getService().getId()).collect(Collectors.joining(",")));
         request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
@@ -207,6 +207,24 @@ public class CartService {
         request.setJobType(cart.getEJobType());
         request.setStatus(EStatus.ACTIVE);
         List<String> employeeList = employeeRepository.filterTest(request);
+        return employeeList;
+    }
+
+    public Page<EmployeeFilterResponse> filterAllInfoEmployee(String idCart, Pageable pageable) {
+        Cart cart = findById(idCart);
+        CartFilterRequest request = new CartFilterRequest();
+        request.setCartServiceIdList(cart.getCartServices().stream().map(e -> e.getService().getId()).collect(Collectors.joining(",")));
+        request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
+        request.setCartInfoIdList(cart.getCartInfos().stream().map(e -> e.getAddInfo().getId()).collect(Collectors.joining(",")));
+        request.setDistance(cart.getLocationPlace().getDistanceForWork());
+        request.setLatitude(cart.getLocationPlace().getLatitude());
+        request.setLongitude(cart.getLocationPlace().getLongitude());
+        request.setPriceMax(cart.getPriceMax());
+        request.setPriceMin(cart.getPriceMin());
+        request.setJobType(cart.getEJobType());
+        request.setStatus(EStatus.ACTIVE);
+        Page<EmployeeFilterResponse> employeeList = employeeRepository.filterAllInfoEmployee(request, pageable);
+        employeeList.stream().forEach(e->e.setDistanceToWork(locationPalaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
         return employeeList;
     }
 }

@@ -4,9 +4,11 @@ import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.*;
 import cg.tcarespb.service.addInfo.AddInfoService;
+import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
+import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.service.location.LocationPalaceService;
@@ -37,6 +39,7 @@ public class EmployeeService {
     private final ServiceGeneralService serviceGeneralService;
     private final LocationPalaceService locationPalaceService;
     private final LocationPalaceRepository locationPalaceRepository;
+    private final CartService cartService;
 
 
     public List<EmployeeListResponse> getEmployeeList() {
@@ -369,6 +372,28 @@ public class EmployeeService {
         locationPalaceRepository.save(locationPalace);
         employee.setLocationPlace(locationPalace);
         employeeRepository.save(employee);
+    }
+
+    public EmployeeDetailInFilterListResponse findEmployeeDetailById(String idEmployee, String idCart) {
+        Employee employee = findById(idEmployee);
+        Cart cart = cartService.findById(idCart);
+        EmployeeDetailInFilterListResponse employeeDetail = new EmployeeDetailInFilterListResponse();
+        employeeDetail.setId(idEmployee);
+        employeeDetail.setAddress(employee.getLocationPlace().getName());
+        employeeDetail.setExperience(employee.getExperience());
+        employeeDetail.setInfoName(employee.getEmployeeInfos().stream().map(e -> e.getAddInfo().getName()).collect(Collectors.toList()));
+        employeeDetail.setServiceName(employee.getEmployeeServiceGenerals().stream().map(e -> e.getService().getName()).collect(Collectors.toList()));
+        employeeDetail.setSkillName(employee.getEmployeeSkills().stream().map(e -> e.getSkill().getName()).collect(Collectors.toList()));
+        employeeDetail.setFirstName(employee.getFirstName());
+        employeeDetail.setLastName(employee.getLastName());
+        employeeDetail.setPriceMax(employee.getPriceMax());
+        employeeDetail.setPriceMin(employee.getPriceMin());
+        employeeDetail.setDescriptionAboutMySelf(employee.getDescriptionAboutMySelf());
+        employeeDetail.setDistanceToWork(locationPalaceService.getDistance(employee.getLocationPlace().getLatitude(),
+                employee.getLocationPlace().getLongitude(),
+                cart.getLocationPlace().getLatitude(),
+                cart.getLocationPlace().getLongitude()));
+        return employeeDetail;
     }
 
 }

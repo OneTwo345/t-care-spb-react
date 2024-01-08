@@ -1,12 +1,15 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 
+import cg.tcarespb.service.customMail.EmailSenderService;
 import cg.tcarespb.service.employee.EmployeeService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
+import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class EmployeeRestController {
     private final EmployeeService employeeService;
+
+    private  final EmailSenderService emailSenderService;
 
     @GetMapping
     public ResponseEntity<List<EmployeeListResponse>> getEmployeeList(){
@@ -96,10 +101,15 @@ public class EmployeeRestController {
 
     @PostMapping("/filterCreate")
     public  ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req){
+        emailSenderService.sendEmail("quochuy248@gmail.com","this is subject","this is body");
         employeeService.createEmployeeFilter(req);
         return ResponseEntity.noContent().build();
     }
-
+    @GetMapping("/detail/{idEmployee}")
+    public ResponseEntity<EmployeeDetailInFilterListResponse> getEmployeeDetailInFilter(@PathVariable("idEmployee") String idEmployee, @RequestBody String idCart){
+        EmployeeDetailInFilterListResponse employee = employeeService.findEmployeeDetailById(idEmployee,idCart);
+        return ResponseEntity.ok(employee);
+    }
 
     // Cho phép các phương thức liên quan tới CORS
     @RequestMapping(method = RequestMethod.OPTIONS)
