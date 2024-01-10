@@ -20,6 +20,9 @@ public class ServiceGeneralService {
         ServiceGeneral serviceGeneral = new ServiceGeneral();
         serviceGeneral.setName(req.getName());
         serviceGeneral.setDescription(req.getDescription());
+        serviceGeneral.setFees(req.getFees());
+        serviceGeneral.setPriceEmployee(req.getPriceEmployee());
+        serviceGeneral.setTotalPrice(req.getTotalPrice());
         serviceGeneralRepository.save(serviceGeneral);
     }
 

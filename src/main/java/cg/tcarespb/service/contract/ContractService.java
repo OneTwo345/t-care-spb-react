@@ -3,6 +3,7 @@ package cg.tcarespb.service.contract;
 import cg.tcarespb.models.*;
 import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
+import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
 import cg.tcarespb.service.contract.response.ContractDetailResponse;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class ContractService {
     private final ContractRepository contractRepository;
     private final EmployeeRepository employeeRepository;
+    private final CartService cartService;
     public List<ContractListResponse> getContractList(){
         return contractRepository.findAll()
                 .stream()
@@ -34,7 +36,6 @@ public class ContractService {
                         .agePatient(contract.getAgePatient())
                         .content(contract.getContent())
                         .totalPrice(contract.getTotalPrice())
-                        .dateQuantity(contract.getDateQuantity())
                         .employeeName(contract.getEmployee().getFirstName())
                         .build())
                 .collect(Collectors.toList());
@@ -44,6 +45,20 @@ public class ContractService {
         Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
         contract.setEmployee(employee.get());
          contractRepository.save(contract);
+    }
+    public String createContract(String idCart, String idEmployee){
+        Cart cart = cartService.findById(idCart);
+        Employee employee= employeeRepository.findById(idEmployee).get();
+        Contract contract  = new Contract();
+        contract.setTimeStart(cart.getTimeStart());
+        contract.setTimeEnd(cart.getTimeEnd());
+        contract.setEmployee(employee);
+        contract.setNameService(cart.getService().getName());
+        contract.setPriceService(cart.getService().getPriceEmployee());
+        contract.setNamePatient(cart.getNamePatient());
+        contract.setAgePatient(cart.getAgePatient());
+        contract.setTotalPrice(cart.getService().getTotalPrice());
+  return null;
     }
 
     public Contract findById(String id) {
@@ -71,10 +86,11 @@ public class ContractService {
         contract.setAgePatient(Integer.valueOf(request.getAgePatient()));
         contract.setContent(request.getContent());
         contract.setTotalPrice(new BigDecimal(request.getTotalPrice()));
-        contract.setDateQuantity(Integer.valueOf(request.getDateQuantity()));
         Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
         contract.setEmployee(employee.get());
         contractRepository.save(contract);
-
+    }
+    public Contract create(Contract contract){
+        return contractRepository.save(contract);
     }
 }

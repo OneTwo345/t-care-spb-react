@@ -97,7 +97,7 @@ public class EmployeeRestController {
 
     @PostMapping("/filterCreate")
     public  ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req){
-        emailSenderService.sendEmail("quochuy248@gmail.com","this is subject","this is body");
+//        emailSenderService.sendEmail("quochuy248@gmail.com","this is subject","this is body");
         employeeService.createEmployeeFilter(req);
         return ResponseEntity.noContent().build();
     }
