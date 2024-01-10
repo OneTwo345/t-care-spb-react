@@ -16,14 +16,14 @@ public class CartRestController {
     private final CartService cartService;
 
 
-    @PostMapping
-    public ResponseEntity<?> create() {
-        Cart cart = new Cart();
-//        User user = new User();
-//        cart.setUser(user);
-        cartService.create(cart);
-        return new ResponseEntity<>(cart.getId(), HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<?> create() {
+//        Cart cart = new Cart();
+////        User user = new User();
+////        cart.setUser(user);
+//        cartService.create(cart);
+//        return new ResponseEntity<>(cart.getId(), HttpStatus.CREATED);
+//    }
 
     @PostMapping("/createFilter")
     public ResponseEntity<?> createAllPropertiesCart(@RequestBody CartSaveFilterRequest req) {

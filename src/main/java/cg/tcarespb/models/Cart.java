@@ -60,7 +60,7 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart")
     private List<DateSession> dateSessions;
-    @OneToOne(mappedBy = "cart")
+    @OneToOne
     private LocationPlace locationPlace;
     @OneToMany(mappedBy = "cart")
     private List<HistoryWorking> historyWorking;
