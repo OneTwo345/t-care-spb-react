@@ -67,7 +67,7 @@ public class Employee {
 
     @OneToMany(mappedBy = "employee")
     private List<DateSession> dateSessions;
-    @OneToOne(mappedBy = "employee")
+    @OneToOne
     private LocationPlace locationPlace;
     @OneToMany(mappedBy = "employee")
     private List<HistoryWorking> historyWorking;

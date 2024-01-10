@@ -40,5 +40,6 @@ public class Contract {
     private User user;
     @OneToMany(mappedBy = "contract")
     private List<HistoryWorking> historyWorking;
-
+    @OneToOne
+    private LocationPlace locationPlace;
 }

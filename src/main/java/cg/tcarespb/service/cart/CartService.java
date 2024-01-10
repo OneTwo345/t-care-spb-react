@@ -4,6 +4,7 @@ import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.CartRepository;
 import cg.tcarespb.repository.EmployeeRepository;
+import cg.tcarespb.repository.LocationPalaceRepository;
 import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.cart.request.*;
 import cg.tcarespb.service.cartInfo.CartInfoService;
@@ -34,6 +35,7 @@ public class CartService {
     private final CartInfoService cartInfoService;
     private final AddInfoService addInfoService;
     private final EmployeeRepository employeeRepository;
+    private final LocationPalaceRepository locationPalaceRepository;
 
     public Cart create(Cart cart) {
         return cartRepository.save(cart);
@@ -105,7 +107,6 @@ public class CartService {
         locationPalace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
         locationPalace.setLatitude(Double.valueOf(req.getLatitude()));
         locationPalace.setLongitude(Double.valueOf(req.getLongitude()));
-        locationPalace.setCart(cart);
         locationPalaceService.create(locationPalace);
         cart.setLocationPlace(locationPalace);
         cartRepository.save(cart);
