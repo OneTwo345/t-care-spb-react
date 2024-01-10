@@ -29,11 +29,6 @@ public class LocationPlace {
     private Double distanceToWork;
     private Boolean deleted = false;
 
-    @OneToOne
-    private Employee employee;
-    @OneToOne
-    private Contract contract;
-    @OneToOne
-    private Cart cart;
+
 
 }

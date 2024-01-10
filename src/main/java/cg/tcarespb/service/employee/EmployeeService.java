@@ -155,6 +155,9 @@ public class EmployeeService {
 
 
     public void updateExperienceEmployee(EmployeeExperienceSaveRequest request, String employeeId) {
+        employeeAddInfoRepository.deleteAllByEmployeeId(employeeId);
+        employeeSkillRepository.deleteAllByEmployeeId(employeeId);
+        employeeServiceGeneralRepository.deleteAllByEmployeeId(employeeId);
         Employee employee = findById(employeeId);
         employee.setExperience(EExperience.valueOf(request.getExperience()));
         employee.setEducation(EEducation.valueOf(request.getEducation()));
@@ -333,7 +336,6 @@ public class EmployeeService {
         locationPlace.setLatitude(Double.valueOf(req.getLatitude()));
         locationPlace.setName(req.getNameLocation());
         locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
-        locationPlace.setEmployee(employee);
         employee.setLocationPlace(locationPalaceService.create(locationPlace));
         employeeRepository.save(employee);
     }
@@ -349,7 +351,6 @@ public class EmployeeService {
         locationPalace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
         locationPalace.setLatitude(Double.valueOf(request.getLatitude()));
         locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
-        locationPalace.setEmployee(employee);
         locationPalaceRepository.save(locationPalace);
         employee.setLocationPlace(locationPalace);
         employeeRepository.save(employee);
