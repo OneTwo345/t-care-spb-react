@@ -10,6 +10,8 @@ import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import lombok.AllArgsConstructor;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,32 +24,30 @@ import java.util.List;
 public class EmployeeRestController {
     private final EmployeeService employeeService;
 
-    private  final EmailSenderService emailSenderService;
+    private final EmailSenderService emailSenderService;
 
     @GetMapping
-    public ResponseEntity<List<EmployeeListResponse>> getEmployeeList(){
+    public ResponseEntity<List<EmployeeListResponse>> getEmployeeList() {
         List<EmployeeListResponse> employeeListResponseList = employeeService.getEmployeeList();
         return ResponseEntity.ok(employeeListResponseList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDetailResponse> getEmployeeDetail(@PathVariable("id") String id){
+    public ResponseEntity<EmployeeDetailResponse> getEmployeeDetail(@PathVariable("id") String id) {
         EmployeeDetailResponse employee = employeeService.findDetailEmployeeById(id);
         return ResponseEntity.ok(employee);
     }
 
 
-
     @PostMapping
-    public void create(@RequestBody EmployeeSaveRequest request){
+    public void create(@RequestBody EmployeeSaveRequest request) {
         employeeService.create(request);
     }
 
     @PostMapping("/schedule")
-    public void createEmployeeSchedule(@RequestBody EmployeeScheduleSaveRequest request){
+    public void createEmployeeSchedule(@RequestBody EmployeeScheduleSaveRequest request) {
         employeeService.createScheduleEmployee(request);
     }
-
 
 
     @PutMapping("/{id}")
@@ -55,11 +55,13 @@ public class EmployeeRestController {
         employeeService.edit(request, id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/dateSessions/{id}")
     public ResponseEntity<?> updateDateSession(@PathVariable("id") String id, @RequestBody EmployeeDateSessionListResponse req) {
         employeeService.updateDateSessionEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/experience/{id}")
     public ResponseEntity<?> updateExperience(@PathVariable("id") String id, @RequestBody EmployeeExperienceSaveRequest req) {
         employeeService.updateExperienceEmployee(req, id);
@@ -76,6 +78,7 @@ public class EmployeeRestController {
         employeeService.updateBioEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/photo/{id}")
     public ResponseEntity<?> updatePhoto(@PathVariable("id") String id, @RequestBody EmployeeAvatarSaveRequest req) {
         employeeService.updatePhotoEmployee(req, id);
@@ -96,14 +99,15 @@ public class EmployeeRestController {
     }
 
     @PostMapping("/filterCreate")
-    public  ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req){
+    public ResponseEntity<?> createFilterEmployee(@RequestBody EmployeeSaveFilterRequest req) {
 //        emailSenderService.sendEmail("quochuy248@gmail.com","this is subject","this is body");
-        employeeService.createEmployeeFilter(req);
-        return ResponseEntity.noContent().build();
+        String idEmployee = employeeService.createEmployeeFilter(req);
+        return new ResponseEntity<>(idEmployee, HttpStatus.CREATED);
     }
+
     @GetMapping("/detail/{idEmployee}")
-    public ResponseEntity<EmployeeDetailInFilterListResponse> getEmployeeDetailInFilter(@PathVariable("idEmployee") String idEmployee, @RequestBody String idCart){
-        EmployeeDetailInFilterListResponse employee = employeeService.findEmployeeDetailById(idEmployee,idCart);
+    public ResponseEntity<EmployeeDetailInFilterListResponse> getEmployeeDetailInFilter(@PathVariable("idEmployee") String idEmployee, @RequestBody String idCart) {
+        EmployeeDetailInFilterListResponse employee = employeeService.findEmployeeDetailById(idEmployee, idCart);
         return ResponseEntity.ok(employee);
     }
 
@@ -112,7 +116,6 @@ public class EmployeeRestController {
     public ResponseEntity<?> options() {
         return ResponseEntity.ok().build();
     }
-
 
 
 }

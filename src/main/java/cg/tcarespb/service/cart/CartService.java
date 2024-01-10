@@ -151,6 +151,63 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public void createCartForFilter(CartSaveFilterRequest req){
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        cart.setService(serviceGeneralService.findById(req.getService()));
+
+        cart.setTimeStart(LocalDate.parse(req.getTimeStart(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        cart.setTimeEnd(LocalDate.parse(req.getTimeEnd(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+
+        LocationPlace locationPalace = new LocationPlace();
+        locationPalace.setName(req.getNameLocation());
+        locationPalace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
+        locationPalace.setLatitude(Double.valueOf(req.getLatitude()));
+        locationPalace.setLongitude(Double.valueOf(req.getLongitude()));
+        locationPalace.setCart(cart);
+        locationPalaceService.create(locationPalace);
+        cart.setLocationPlace(locationPalace);
+
+        List<CartInfo> cartInfoList = new ArrayList<>();
+        for (var infoElemId : req.getListInfoId()) {
+            AddInfo info = addInfoService.findByIdForEdit(infoElemId);
+            CartInfo cartInfo = new CartInfo();
+            cartInfo.setAddInfo(info);
+            cartInfo.setCart(cart);
+            cartInfoService.create(cartInfo);
+            cartInfoList.add(cartInfo);
+        }
+        cart.setCartInfos(cartInfoList);
+
+        List<CartSkill> cartSkillList = new ArrayList<>();
+        for (var skillElemId : req.getListSkillId()) {
+            Skill skill = skillService.findByIdForEdit(skillElemId);
+            CartSkill cartSkill = new CartSkill();
+            cartSkill.setSkill(skill);
+            cartSkill.setCart(cart);
+            cartSkillService.create(cartSkill);
+            cartSkillList.add(cartSkill);
+        }
+        cart.setCartSkills(cartSkillList);
+
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : req.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setCart(cart);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        cart.setDateSessions(dateSessionList);
+
+        cartRepository.save(cart);
+
+    }
 
 
 //    public Page<String> filter(String idCart, Pageable pageable) {

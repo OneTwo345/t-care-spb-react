@@ -25,6 +25,12 @@ public class CartRestController {
         return new ResponseEntity<>(cart.getId(), HttpStatus.CREATED);
     }
 
+    @PostMapping("/createFilter")
+    public ResponseEntity<?> createAllPropertiesCart(@RequestBody CartSaveFilterRequest req) {
+        cartService.createCartForFilter(req);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @PutMapping("/services/{id}")
     public ResponseEntity<?> updateServiceGeneral(@PathVariable("id") String id, @RequestBody CartServiceListSaveRequest req) {
         cartService.updateCartService(req, id);
@@ -90,7 +96,6 @@ public class CartRestController {
         Cart cart = cartService.findById(id);
         return new ResponseEntity<>(cart.getId(), HttpStatus.OK);
     }
-
 
 
 //    @GetMapping("/filter/{id}")

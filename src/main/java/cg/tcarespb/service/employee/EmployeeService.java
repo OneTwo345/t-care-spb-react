@@ -299,7 +299,7 @@ public class EmployeeService {
     }
 
 
-    public void createEmployeeFilter(EmployeeSaveFilterRequest req) {
+    public String createEmployeeFilter(EmployeeSaveFilterRequest req) {
         Employee employee = new Employee();
         employeeRepository.save(employee);
         employee.setEmployeeInfos(req.getListInfoId().stream().map(e -> {
@@ -335,7 +335,22 @@ public class EmployeeService {
         locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
         locationPlace.setEmployee(employee);
         employee.setLocationPlace(locationPalaceService.create(locationPlace));
-        employeeRepository.save(employee);
+
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : req.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setEmployee(employee);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        employee.setDateSessions(dateSessionList);
+     return   employeeRepository.save(employee).getId();
     }
 
     public void delete(String id) {
