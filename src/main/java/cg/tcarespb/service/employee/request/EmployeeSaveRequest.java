@@ -1,11 +1,9 @@
 package cg.tcarespb.service.employee.request;
 
-import cg.tcarespb.models.enums.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Getter

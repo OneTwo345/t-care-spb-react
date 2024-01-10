@@ -4,9 +4,11 @@ import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.*;
 import cg.tcarespb.service.addInfo.AddInfoService;
+import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.*;
 import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
+import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.service.location.LocationPalaceService;
@@ -18,8 +20,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +39,9 @@ public class EmployeeService {
     private final ServiceGeneralService serviceGeneralService;
     private final LocationPalaceService locationPalaceService;
     private final LocationPalaceRepository locationPalaceRepository;
+    private final DateSessionRepository dateSessionRepository;
+    private final CartService cartService;
+    private final PhotoRepository photoRepository;
 
 
     public List<EmployeeListResponse> getEmployeeList() {
@@ -54,12 +59,6 @@ public class EmployeeService {
                         .status(service.getStatus())
                         .education(service.getEducation())
                         .experience(service.getExperience())
-                        .hourPerWeekMin(service.getHourPerWeekMin())
-                        .hourPerWeekMax(service.getHourPerWeekMax())
-                        .priceMin(service.getPriceMin())
-                        .priceMax(service.getPriceMax())
-                        .minHourPerJob(service.getMinHourPerJob())
-                        .jobType(service.getJobType())
 
                         .skills(service.getEmployeeSkills()
                                 .stream()
@@ -132,8 +131,10 @@ public class EmployeeService {
         employee = employeeRepository.save(employee);
     }
 
-
+    @Transactional
     public void updateDateSessionEmployee(EmployeeDateSessionListResponse req, String employeeId) {
+        dateSessionRepository.deleteAllByEmployeeId(employeeId);
+
         Employee employee = findById(employeeId);
         List<DateSession> dateSessionList = new ArrayList<>();
         for (var dateSession : req.getListDateSession()) {
@@ -179,25 +180,25 @@ public class EmployeeService {
 
     }
 
-    public String createAccountEmployee(EmployeeAccountSaveRequest request) {
-
-        Account account = new Account();
-        // validate
-        account.setEmail(request.getEmail());
-        account.setPassword(request.getPassword());
-        account.setERole(ERole.EMPLOYEE);
-        accountRepository.save(account);
-        Employee employee = new Employee();
-        employee.setGender(EGender.valueOf(request.getGender()));
-        employee.setFirstName(request.getFirstName());
-        employee.setLastName(request.getLastName());
-        employee.setPersonID(request.getPersonID());
-        employee.setStatus(EStatus.WAITING);
-        employeeRepository.save(employee);
-        account.setEmployee(employee);
-        accountRepository.save(account);
-        return employee.getId();
-    }
+//    public String createAccountEmployee(EmployeeAccountSaveRequest request) {
+//
+//        Account account = new Account();
+//        // validate
+//        account.setEmail(request.getEmail());
+//        account.setPassword(request.getPassword());
+//        account.setERole(ERole.ROLE_EMPLOYEE);
+//        accountRepository.save(account);
+//        Employee employee = new Employee();
+//        employee.setGender(EGender.valueOf(request.getGender()));
+//        employee.setFirstName(request.getFirstName());
+//        employee.setLastName(request.getLastName());
+//        employee.setPersonID(request.getPersonID());
+//        employee.setStatus(EStatus.WAITING);
+//        employeeRepository.save(employee);
+//        account.setEmployee(employee);
+//        accountRepository.save(account);
+//        return employee.getId();
+//    }
 
     public void updateBioEmployee(EmployeeBioSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
@@ -206,17 +207,16 @@ public class EmployeeService {
         employeeRepository.save(employee);
 
     }
-
-    public void updateScheduleEmployee(EmployeeScheduleSaveRequest request, String employeeId) {
+    public void updatePhotoEmployee(EmployeeAvatarSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
-        employee.setHourPerWeekMin(Integer.valueOf(request.getHourPerWeekMin()));
-        employee.setHourPerWeekMax(Integer.valueOf(request.getHourPerWeekMax()));
-        employee.setPriceMin(new BigDecimal(request.getPriceMin()));
-        employee.setPriceMax(new BigDecimal(request.getPriceMax()));
-        employee.setJobType(EJobType.valueOf(request.getJobType()));
+        Photo image = photoRepository.findPhotoById(request.getAvatar()).get();
+        employee.setPhoto(image);
+//        employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
         employeeRepository.save(employee);
 
     }
+
+
 
 
     public EmployeeDetailResponse findDetailEmployeeById(String id) {
@@ -265,12 +265,6 @@ public class EmployeeService {
         employee.setStatus(EStatus.valueOf(request.getStatus()));
         employee.setExperience(EExperience.valueOf(request.getExperience()));
         employee.setEducation(EEducation.valueOf(request.getEducation()));
-        employee.setHourPerWeekMin(Integer.valueOf(request.getHourPerWeekMin()));
-        employee.setHourPerWeekMax(Integer.valueOf(request.getHourPerWeekMax()));
-        employee.setPriceMin(new BigDecimal(request.getPriceMin()));
-        employee.setPriceMax(new BigDecimal(request.getPriceMax()));
-        employee.setMinHourPerJob(Integer.valueOf(request.getMinHourPerJob()));
-        employee.setJobType(EJobType.valueOf(request.getJobType()));
         employeeRepository.save(employee);
 
         employeeSkillRepository.deleteAllById(employee.getEmployeeSkills().stream()
@@ -304,13 +298,6 @@ public class EmployeeService {
         employeeServiceGeneralRepository.saveAll(employeeServices);
     }
 
-    public void updateJobType(EmployeeJobTypeSaveRequest req, String employeeId) {
-        Employee employee = findById(employeeId);
-        EJobType eJobType = EJobType.valueOf(req.getJobType());
-        employee.setJobType(eJobType);
-        employeeRepository.save(employee);
-
-    }
 
     public void createEmployeeFilter(EmployeeSaveFilterRequest req) {
         Employee employee = new Employee();
@@ -340,9 +327,6 @@ public class EmployeeService {
             employeeServiceGeneralRepository.save(employeeServiceGeneral);
             return employeeServiceGeneral;
         }).collect(Collectors.toList()));
-        employee.setJobType(EJobType.valueOf(req.getJobType()));
-        employee.setPriceMax(req.getPriceMax());
-        employee.setPriceMin(req.getPriceMin());
         employee.setStatus(EStatus.valueOf(req.getStatus()));
         LocationPlace locationPlace = new LocationPlace();
         locationPlace.setLongitude(Double.valueOf(req.getLongitude()));
@@ -369,6 +353,26 @@ public class EmployeeService {
         locationPalaceRepository.save(locationPalace);
         employee.setLocationPlace(locationPalace);
         employeeRepository.save(employee);
+    }
+
+    public EmployeeDetailInFilterListResponse findEmployeeDetailById(String idEmployee, String idCart) {
+        Employee employee = findById(idEmployee);
+        Cart cart = cartService.findById(idCart);
+        EmployeeDetailInFilterListResponse employeeDetail = new EmployeeDetailInFilterListResponse();
+        employeeDetail.setId(idEmployee);
+        employeeDetail.setAddress(employee.getLocationPlace().getName());
+        employeeDetail.setExperience(employee.getExperience());
+        employeeDetail.setInfoName(employee.getEmployeeInfos().stream().map(e -> e.getAddInfo().getName()).collect(Collectors.toList()));
+        employeeDetail.setServiceName(employee.getEmployeeServiceGenerals().stream().map(e -> e.getService().getName()).collect(Collectors.toList()));
+        employeeDetail.setSkillName(employee.getEmployeeSkills().stream().map(e -> e.getSkill().getName()).collect(Collectors.toList()));
+        employeeDetail.setFirstName(employee.getFirstName());
+        employeeDetail.setLastName(employee.getLastName());
+        employeeDetail.setDescriptionAboutMySelf(employee.getDescriptionAboutMySelf());
+        employeeDetail.setDistanceToWork(locationPalaceService.getDistance(employee.getLocationPlace().getLatitude(),
+                employee.getLocationPlace().getLongitude(),
+                cart.getLocationPlace().getLatitude(),
+                cart.getLocationPlace().getLongitude()));
+        return employeeDetail;
     }
 
 }
