@@ -48,11 +48,7 @@ public class EmployeeRestController {
         employeeService.createScheduleEmployee(request);
     }
 
-//    @PostMapping("/account")
-//    public ResponseEntity<?> createEmployeeAccount(@RequestBody EmployeeAccountSaveRequest request){
-//      String employeeId =  employeeService.createAccountEmployee(request);
-//         return new ResponseEntity<>(employeeId, HttpStatus.CREATED);
-//    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody EmployeeEditRequest request) {
@@ -80,11 +76,12 @@ public class EmployeeRestController {
         employeeService.updateBioEmployee(req, id);
         return ResponseEntity.noContent().build();
     }
-//    @PutMapping("/jobType/{id}")
-//    public ResponseEntity<?> updateJobType(@PathVariable("id") String id, @RequestBody EmployeeJobTypeSaveRequest req) {
-//        employeeService.updateJobType(req, id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @PutMapping("/photo/{id}")
+    public ResponseEntity<?> updatePhoto(@PathVariable("id") String id, @RequestBody EmployeeAvatarSaveRequest req) {
+        employeeService.updatePhotoEmployee(req, id);
+        return ResponseEntity.noContent().build();
+    }
+
 
     @PutMapping("/location/{id}")
     public ResponseEntity<?> updateLocation(@PathVariable("id") String id, @RequestBody EmployeeLocationSaveRequest req) {

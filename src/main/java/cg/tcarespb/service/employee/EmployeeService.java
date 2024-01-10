@@ -21,6 +21,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +39,9 @@ public class EmployeeService {
     private final ServiceGeneralService serviceGeneralService;
     private final LocationPalaceService locationPalaceService;
     private final LocationPalaceRepository locationPalaceRepository;
+    private final DateSessionRepository dateSessionRepository;
     private final CartService cartService;
+    private final PhotoRepository photoRepository;
 
 
     public List<EmployeeListResponse> getEmployeeList() {
@@ -128,8 +131,10 @@ public class EmployeeService {
         employee = employeeRepository.save(employee);
     }
 
-
+    @Transactional
     public void updateDateSessionEmployee(EmployeeDateSessionListResponse req, String employeeId) {
+        dateSessionRepository.deleteAllByEmployeeId(employeeId);
+
         Employee employee = findById(employeeId);
         List<DateSession> dateSessionList = new ArrayList<>();
         for (var dateSession : req.getListDateSession()) {
@@ -199,6 +204,14 @@ public class EmployeeService {
         Employee employee = findById(employeeId);
         employee.setBioTitle(request.getBioTitle());
         employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
+        employeeRepository.save(employee);
+
+    }
+    public void updatePhotoEmployee(EmployeeAvatarSaveRequest request, String employeeId) {
+        Employee employee = findById(employeeId);
+        Photo image = photoRepository.findPhotoById(request.getAvatar()).get();
+        employee.setPhoto(image);
+//        employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
         employeeRepository.save(employee);
 
     }
