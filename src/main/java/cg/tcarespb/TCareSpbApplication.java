@@ -19,9 +19,9 @@ public class TCareSpbApplication {
         SpringApplication.run(TCareSpbApplication.class, args);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void sendEmail() {
-        emailSenderService.sendEmail("quochuy248@gmail.com","this is subject","this is body");
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void sendEmail() {
+//        emailSenderService.sendEmail("quochuy248@gmail.com","this is subject","this is body");
+//    }
 }
 
