@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.time.LocalDate;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,11 +23,17 @@ public class HistoryWorking {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-   @ManyToOne
+    @ManyToOne
     private Contract contract;
+
     @ManyToOne
     private Employee employee;
+
+    @Enumerated(EnumType.STRING)
     private EDateInWeek dateInWeek;
+
+    @Enumerated(EnumType.STRING)
     private ESessionOfDate sessionOfDate;
-    private String dateTime;
+
+    private LocalDate date;
 }
