@@ -16,8 +16,6 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @Getter
 @Setter
-@SQLDelete(sql = "UPDATE date_session SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 @Table( name = "date_session")
 public class DateSession {
     @Id
@@ -29,7 +27,6 @@ public class DateSession {
     private EDateInWeek dateInWeek;
     @Enumerated(EnumType.STRING)
     private ESessionOfDate sessionOfDate;
-    private Boolean deleted = false;
 
     @ManyToOne
     private Cart cart;
