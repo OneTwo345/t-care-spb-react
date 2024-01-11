@@ -23,6 +23,8 @@ public class EmployeeFilterResponse {
     private Double latitude;
     private Double distanceToWork;
     private String address;
+    private Float starAverage;
+    private Integer rateQuantity;
     private List<String> skillName;
     private List<String> serviceName;
     private List<String> infoName;
