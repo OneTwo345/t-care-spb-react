@@ -235,6 +235,7 @@ public class CartService {
         request.setDistance(cart.getLocationPlace().getDistanceForWork());
         request.setLatitude(cart.getLocationPlace().getLatitude());
         request.setLongitude(cart.getLocationPlace().getLongitude());
+        request.setNameLocation(cart.getLocationPlace().getName());
         request.setStatus(EStatus.ACTIVE);
         Page<EmployeeFilterResponse> employeeList = employeeRepository.filter(request, pageable);
         employeeList.stream().forEach(e -> e.setDistanceToWork(locationPalaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
