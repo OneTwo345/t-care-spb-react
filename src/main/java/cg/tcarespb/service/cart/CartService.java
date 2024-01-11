@@ -238,17 +238,30 @@ public class CartService {
         request.setStatus(EStatus.ACTIVE);
         Page<EmployeeFilterResponse> employeeList = employeeRepository.filter(request, pageable);
         employeeList.stream().forEach(e -> e.setDistanceToWork(locationPalaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
-        employeeList.forEach(e -> {
+
+        for (var e : employeeList) {
             Employee employee = employeeRepository.findById(e.getId()).orElse(null);
+            Photo photo = employee.getPhoto();
+            if (photo == null) {
+                e.setPhotoUrl("abc");
+            } else {
+                e.setPhotoUrl(photo.getUrl());
+            }
+            e.setSkillName(employee.getEmployeeSkills().stream().map(elem -> elem.getSkill().getName()).collect(Collectors.toList()));
+            e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
+            e.setServiceName(employee.getEmployeeServiceGenerals().stream().map(elem -> elem.getService().getName()).collect(Collectors.toList()));
             List<Rate> rateList = (employee != null) ? employee.getRates() : null;
             if (rateList == null) {
                 e.setRateQuantity(0);
             } else {
-                float totalStar = (float) rateList.stream().mapToInt(Rate::getRateQuantity).sum();
+                Float totalStar = 0F;
+                for (var rate : rateList) {
+                    totalStar += rate.getStarQuantity();
+                }
                 e.setStarAverage(totalStar / rateList.size());
                 e.setRateQuantity(rateList.size());
             }
-        });
+        }
         return employeeList;
     }
 
