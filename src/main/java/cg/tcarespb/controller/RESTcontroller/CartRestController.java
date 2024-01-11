@@ -4,6 +4,8 @@ import cg.tcarespb.models.Cart;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,8 @@ public class CartRestController {
 
     @PostMapping("/createFilter")
     public ResponseEntity<?> createAllPropertiesCart(@RequestBody CartSaveFilterRequest req) {
-        cartService.createCartForFilter(req);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+      String id =  cartService.createCartForFilter(req);
+        return new ResponseEntity<>(id,HttpStatus.CREATED);
     }
 
     @PutMapping("/services/{id}")
@@ -98,14 +100,14 @@ public class CartRestController {
     }
 
 
-//    @GetMapping("/filter/{id}")
-//    public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 5) Pageable pageable){
-//        return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
-//    }
-//    @GetMapping("/filterTest/{id}")
-//    public ResponseEntity<?> filterList(@PathVariable("id") String id){
-//        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
-//    }
+    @GetMapping("/filter/{id}")
+    public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 5) Pageable pageable){
+        return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
+    }
+    @GetMapping("/filterTest/{id}")
+    public ResponseEntity<?> filterList(@PathVariable("id") String id){
+        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
+    }
 
 
 }
