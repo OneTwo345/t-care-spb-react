@@ -17,6 +17,7 @@ import cg.tcarespb.service.location.LocationPalaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.util.AppMessage;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,10 +69,12 @@ public class CartService {
         cart.setService(serviceGeneral);
         cartRepository.save(cart);
     }
-
+@Transactional
     public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
         dateSessionRepository.deleteAllByCartId(cartId);
         Cart cart = findById(cartId);
+        cart.setTimeStart(null);
+        cart.setTimeEnd(null);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate startDate = LocalDate.parse(req.getTimeStart(), dateTimeFormatter);
         LocalDate endDate = LocalDate.parse(req.getTimeEnd(), dateTimeFormatter);
