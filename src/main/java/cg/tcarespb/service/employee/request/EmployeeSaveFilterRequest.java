@@ -1,5 +1,7 @@
 package cg.tcarespb.service.employee.request;
 
+import cg.tcarespb.service.cart.request.CartDateSessionSaveRequest;
+import cg.tcarespb.service.rate.request.RateSaveForFilter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,8 +20,9 @@ public class EmployeeSaveFilterRequest {
     private List<String> listSkillId;
     private List<String> listServiceId;
     private List<String> listInfoId;
-    private String jobType;
     private BigDecimal priceMin;
     private BigDecimal priceMax;
     private String status;
+    List<CartDateSessionSaveRequest> listDateSession;
+    List<RateSaveForFilter> listRate;
 }

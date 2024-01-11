@@ -4,12 +4,14 @@ package cg.tcarespb.controller.RESTcontroller.authentication;
 import cg.tcarespb.config.JwtUtil;
 import cg.tcarespb.controller.RESTcontroller.authentication.response.AuthResponse;
 import cg.tcarespb.models.Account;
+import cg.tcarespb.models.Cart;
 import cg.tcarespb.models.Employee;
 import cg.tcarespb.models.User;
 import cg.tcarespb.models.enums.EGender;
 import cg.tcarespb.models.enums.ERole;
 import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.repository.AccountRepository;
+import cg.tcarespb.repository.CartRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.UserRepository;
 import cg.tcarespb.service.account.request.AccountSaveRequest;
@@ -49,6 +51,7 @@ public class AuthResController {
     private final UserRepository userRepository;
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private  final CartRepository cartRepository;
 
     private final JwtUtil jwtUtil;
 
@@ -75,8 +78,11 @@ public class AuthResController {
             account.setUser(user);
             accountRepository.save(account);
         String userId =  user.getId();
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
 
-        return new ResponseEntity<>(userId, HttpStatus.CREATED);
+        return new ResponseEntity<>(cart.getId(), HttpStatus.CREATED);
     }
     @PostMapping("/employees/account")
     public ResponseEntity<?> registerEmployees(@RequestBody AccountSaveRequest request){
@@ -114,6 +120,7 @@ public class AuthResController {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setJwt(token);
                 authResponse.setIsAdmin(account.get().getERole().equals(ROLE_ADMIN));
+                authResponse.setIdUser(account.get().getUser().getId());
                 return ResponseEntity.ok(authResponse);
             }
         }

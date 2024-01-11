@@ -28,9 +28,8 @@ public class Contract {
     private String namePatient;
     private Integer agePatient;
     private String content;
-    private BigDecimal totalPrice;
-    private Integer dateQuantity;
     private Boolean deleted = false;
+    private BigDecimal totalPrice;
     private String nameService;
     private BigDecimal priceService;
     @Enumerated(EnumType.STRING)
@@ -41,5 +40,6 @@ public class Contract {
     private User user;
     @OneToMany(mappedBy = "contract")
     private List<HistoryWorking> historyWorking;
-
+    @OneToOne
+    private LocationPlace locationPlace;
 }

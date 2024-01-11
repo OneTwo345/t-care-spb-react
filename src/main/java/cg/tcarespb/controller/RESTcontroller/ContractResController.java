@@ -2,6 +2,7 @@ package cg.tcarespb.controller.RESTcontroller;
 
 import cg.tcarespb.service.contract.ContractService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
+import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
 import cg.tcarespb.service.contract.response.ContractDetailResponse;
 import cg.tcarespb.service.contract.response.ContractListResponse;
@@ -19,17 +20,18 @@ public class ContractResController {
     private final ContractService contractService;
 
     @GetMapping
-    public ResponseEntity<List<ContractListResponse>> getContractList(){
+    public ResponseEntity<List<ContractListResponse>> getContractList() {
         List<ContractListResponse> contractListResponses = contractService.getContractList();
         return ResponseEntity.ok(contractListResponses);
     }
+
     @PostMapping
-    public void create(@RequestBody ContractSaveRequest request){
+    public void create(@RequestBody ContractSaveRequest request) {
         contractService.create(request);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ContractDetailResponse> getContractDetail(@PathVariable("id") String id){
+    public ResponseEntity<ContractDetailResponse> getContractDetail(@PathVariable("id") String id) {
         ContractDetailResponse contract = contractService.findDetailContractById(id);
         return ResponseEntity.ok(contract);
     }
@@ -40,4 +42,9 @@ public class ContractResController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/createContract")
+    public ResponseEntity<?> create(@RequestBody ContractSaveFromCartRequest req) {
+        contractService.createContract(req);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -23,21 +23,20 @@ public class EmployeeFilterResponse {
     private Double latitude;
     private Double distanceToWork;
     private String address;
+    private Float starAverage;
+    private Integer rateQuantity;
     private List<String> skillName;
     private List<String> serviceName;
     private List<String> infoName;
 
-    public EmployeeFilterResponse(String id, String firstName, String lastName, String descriptionAboutMySelf, BigDecimal priceMin, BigDecimal priceMax, EExperience experience, Double longitude, Double latitude, Double distanceToWork, String address) {
+    public EmployeeFilterResponse(String id, String firstName, String lastName, String descriptionAboutMySelf, EExperience experience, Double longitude, Double latitude, String address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.descriptionAboutMySelf = descriptionAboutMySelf;
-        this.priceMin = priceMin;
-        this.priceMax = priceMax;
         this.experience = experience;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.distanceToWork = distanceToWork;
         this.address = address;
     }
 }

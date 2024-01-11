@@ -30,7 +30,6 @@ public class Cart {
     private String id;
     private LocalDate timeStart;
     private LocalDate timeEnd;
-    private String namePatient;
     private Integer agePatient;
     private String noteForPatient;
     private String noteForEmployee;
@@ -60,7 +59,8 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart")
     private List<DateSession> dateSessions;
-    @OneToOne(mappedBy = "cart")
+    @OneToOne
     private LocationPlace locationPlace;
-
+    @OneToMany(mappedBy = "cart")
+    private List<HistoryWorking> historyWorking;
 }

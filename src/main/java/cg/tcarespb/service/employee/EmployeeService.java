@@ -14,6 +14,7 @@ import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.service.location.LocationPalaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
+import cg.tcarespb.service.user.UserService;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import jakarta.transaction.Transactional;
@@ -42,6 +43,8 @@ public class EmployeeService {
     private final DateSessionRepository dateSessionRepository;
     private final CartService cartService;
     private final PhotoRepository photoRepository;
+    private final UserRepository userRepository;
+    private final RateRepository rateRepository;
 
 
     public List<EmployeeListResponse> getEmployeeList() {
@@ -155,6 +158,9 @@ public class EmployeeService {
 
 
     public void updateExperienceEmployee(EmployeeExperienceSaveRequest request, String employeeId) {
+        employeeAddInfoRepository.deleteAllByEmployeeId(employeeId);
+        employeeSkillRepository.deleteAllByEmployeeId(employeeId);
+        employeeServiceGeneralRepository.deleteAllByEmployeeId(employeeId);
         Employee employee = findById(employeeId);
         employee.setExperience(EExperience.valueOf(request.getExperience()));
         employee.setEducation(EEducation.valueOf(request.getEducation()));
@@ -299,7 +305,7 @@ public class EmployeeService {
     }
 
 
-    public void createEmployeeFilter(EmployeeSaveFilterRequest req) {
+    public String createEmployeeFilter(EmployeeSaveFilterRequest req) {
         Employee employee = new Employee();
         employeeRepository.save(employee);
         employee.setEmployeeInfos(req.getListInfoId().stream().map(e -> {
@@ -333,9 +339,35 @@ public class EmployeeService {
         locationPlace.setLatitude(Double.valueOf(req.getLatitude()));
         locationPlace.setName(req.getNameLocation());
         locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
-        locationPlace.setEmployee(employee);
         employee.setLocationPlace(locationPalaceService.create(locationPlace));
-        employeeRepository.save(employee);
+
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : req.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setEmployee(employee);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        List<Rate> rateList = new ArrayList<>();
+        for (var rateRecord :req.getListRate()){
+            Rate rate = new Rate();
+            rate.setEmployee(employee);
+            rate.setStarQuantity(rateRecord.getQuantityStar());
+            rate.setContent(rateRecord.getContent());
+            User user = userRepository.findById(rateRecord.getIdUser()).orElse(null);
+            rate.setUser(user);
+            rateRepository.save(rate);
+            rateList.add(rate);
+        }
+        employee.setRates(rateList);
+        employee.setDateSessions(dateSessionList);
+     return   employeeRepository.save(employee).getId();
     }
 
     public void delete(String id) {
@@ -349,7 +381,6 @@ public class EmployeeService {
         locationPalace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
         locationPalace.setLatitude(Double.valueOf(request.getLatitude()));
         locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
-        locationPalace.setEmployee(employee);
         locationPalaceRepository.save(locationPalace);
         employee.setLocationPlace(locationPalace);
         employeeRepository.save(employee);
