@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "history_working")
+@Table(name = "history_workings")
 public class HistoryWorking {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -28,6 +28,9 @@ public class HistoryWorking {
 
     @ManyToOne
     private Employee employee;
+
+    @ManyToOne
+    private Cart cart;
 
     @Enumerated(EnumType.STRING)
     private EDateInWeek dateInWeek;
