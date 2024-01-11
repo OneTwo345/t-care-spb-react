@@ -5,9 +5,11 @@ import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
+import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
 import cg.tcarespb.service.contract.response.ContractDetailResponse;
 import cg.tcarespb.service.contract.response.ContractListResponse;
+import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
@@ -25,7 +27,9 @@ public class ContractService {
     private final ContractRepository contractRepository;
     private final EmployeeRepository employeeRepository;
     private final CartService cartService;
-    public List<ContractListResponse> getContractList(){
+    private final HistoryWorkingService historyWorkingService;
+
+    public List<ContractListResponse> getContractList() {
         return contractRepository.findAll()
                 .stream()
                 .map(contract -> ContractListResponse.builder()
@@ -40,16 +44,19 @@ public class ContractService {
                         .build())
                 .collect(Collectors.toList());
     }
+
     public void create(ContractSaveRequest request) {
         var contract = AppUtil.mapper.map(request, Contract.class);
         Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
         contract.setEmployee(employee.get());
-         contractRepository.save(contract);
+        contractRepository.save(contract);
     }
-    public String createContract(String idCart, String idEmployee){
-        Cart cart = cartService.findById(idCart);
-        Employee employee= employeeRepository.findById(idEmployee).get();
-        Contract contract  = new Contract();
+
+    public String createContract(ContractSaveFromCartRequest req) {
+        Cart cart = cartService.findById(req.getCartId());
+        Employee employee = employeeRepository.findById(req.getEmployeeId()).get();
+        Contract contract = new Contract();
+        contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
         contract.setTimeEnd(cart.getTimeEnd());
         contract.setEmployee(employee);
@@ -57,7 +64,10 @@ public class ContractService {
         contract.setPriceService(cart.getService().getPriceEmployee());
         contract.setAgePatient(cart.getAgePatient());
         contract.setTotalPrice(cart.getService().getTotalPrice());
-  return null;
+        List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract);
+        contract.setHistoryWorking(historyWorkingList);
+        contractRepository.save(contract);
+        return contract.getId();
     }
 
     public Contract findById(String id) {
@@ -65,18 +75,18 @@ public class ContractService {
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Contract", id)));
     }
 
-    public ContractDetailResponse findDetailContractById(String id){
+    public ContractDetailResponse findDetailContractById(String id) {
         var contract = contractRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Contract", id)));
 
-        var result = AppUtil.mapper.map(contract,ContractDetailResponse.class);
+        var result = AppUtil.mapper.map(contract, ContractDetailResponse.class);
         Optional<Employee> employee = employeeRepository.findById(contract.getEmployee().getId());
         result.setEmployeeName(employee.get().getFirstName());
 
         return result;
     }
 
-    public void edit(ContractEditRequest request, String id){
+    public void edit(ContractEditRequest request, String id) {
         Contract contract = contractRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Contract", id)));
         contract.setTimeStart(LocalDate.parse(request.getTimeStart()));
@@ -89,7 +99,9 @@ public class ContractService {
         contract.setEmployee(employee.get());
         contractRepository.save(contract);
     }
-    public Contract create(Contract contract){
+
+    public Contract create(Contract contract) {
         return contractRepository.save(contract);
     }
+
 }

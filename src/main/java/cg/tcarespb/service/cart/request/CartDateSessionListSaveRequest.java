@@ -10,4 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CartDateSessionListSaveRequest {
     List<CartDateSessionSaveRequest> listDateSession;
+    private String timeStart;
+    private String timeEnd;
 }

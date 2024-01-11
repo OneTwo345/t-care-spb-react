@@ -21,12 +21,12 @@ import java.util.Map;
 public class HistoryWorkingRestController {
     private final HistoryWorkingService historyWorkingService;
 
-    @PostMapping
-    public ResponseEntity<?> createTest(@RequestBody HistoryWorkingSaveRequest req) {
-        return new ResponseEntity<>(historyWorkingService.createTest(req).size(), HttpStatus.OK);
-    }
-    @PostMapping("/cart")
-    public ResponseEntity<?> createTestForCart(@RequestBody HistoryWorkingForCartRequest req) {
-        return new ResponseEntity<>(historyWorkingService.createHistoryWorkingForCart(req), HttpStatus.OK);
-    }
+//    @PostMapping
+//    public ResponseEntity<?> createTest(@RequestBody HistoryWorkingSaveRequest req) {
+//        return new ResponseEntity<>(historyWorkingService.createTest(req).size(), HttpStatus.OK);
+//    }
+//    @PostMapping("/cart")
+//    public ResponseEntity<?> createTestForCart(@RequestBody HistoryWorkingForCartRequest req) {
+//        return new ResponseEntity<>(historyWorkingService.createHistoryWorkingForCart(req), HttpStatus.OK);
+//    }
 }

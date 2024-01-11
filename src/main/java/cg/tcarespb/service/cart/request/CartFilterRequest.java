@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class CartFilterRequest {
+    private String cartId;
     private String cartServiceId;
     private String cartInfoIdList;
     private String cartSkillIdList;

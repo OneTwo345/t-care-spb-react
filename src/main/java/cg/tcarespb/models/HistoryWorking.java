@@ -38,5 +38,5 @@ public class HistoryWorking {
     @Enumerated(EnumType.STRING)
     private ESessionOfDate sessionOfDate;
 
-    private LocalDate date;
+    private LocalDate dateWork;
 }
