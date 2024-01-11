@@ -30,7 +30,6 @@ public class Cart {
     private String id;
     private LocalDate timeStart;
     private LocalDate timeEnd;
-    private String namePatient;
     private Integer agePatient;
     private String noteForPatient;
     private String noteForEmployee;

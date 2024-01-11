@@ -3,6 +3,7 @@ package cg.tcarespb.service.cart;
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.CartRepository;
+import cg.tcarespb.repository.DateSessionRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.LocationPalaceRepository;
 import cg.tcarespb.service.addInfo.AddInfoService;
@@ -35,6 +36,7 @@ public class CartService {
     private final CartInfoService cartInfoService;
     private final AddInfoService addInfoService;
     private final EmployeeRepository employeeRepository;
+    private final DateSessionRepository dateSessionRepository;
     private final LocationPalaceRepository locationPalaceRepository;
 
     public Cart create(Cart cart) {
@@ -62,6 +64,7 @@ public class CartService {
     }
 
     public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
+        dateSessionRepository.deleteAllByCartId(cartId);
         Cart cart = findById(cartId);
         List<DateSession> dateSessionList = new ArrayList<>();
         for (var dateSession : req.getListDateSession()) {
@@ -86,7 +89,6 @@ public class CartService {
 
     public void updateInfoPatient(CartInfoPatientSaveRequest req, String cardId) {
         Cart cart = findById(cardId);
-        cart.setNamePatient(req.getNamePatient());
         cart.setNoteForPatient(req.getNoteForPatient());
         cart.setGender(EGender.valueOf(req.getGender()));
         cart.setEDecade(EDecade.valueOf(req.getDecade()));

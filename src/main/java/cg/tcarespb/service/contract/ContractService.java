@@ -55,7 +55,6 @@ public class ContractService {
         contract.setEmployee(employee);
         contract.setNameService(cart.getService().getName());
         contract.setPriceService(cart.getService().getPriceEmployee());
-        contract.setNamePatient(cart.getNamePatient());
         contract.setAgePatient(cart.getAgePatient());
         contract.setTotalPrice(cart.getService().getTotalPrice());
   return null;

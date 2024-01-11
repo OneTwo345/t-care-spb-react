@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DateSessionRepository  extends JpaRepository<DateSession,String> {
     void deleteAllByEmployeeId(String employee_id);
+    void deleteAllByCartId(String cart_id);
 }
