@@ -10,7 +10,6 @@ import lombok.Setter;
 public class CartInfoPatientSaveRequest {
 
 private String memberOfFamily;
-private String namePatient;
 private String gender;
 private String decade;
 private String noteForPatient;
