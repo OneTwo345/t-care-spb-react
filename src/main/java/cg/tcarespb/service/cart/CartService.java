@@ -3,6 +3,7 @@ package cg.tcarespb.service.cart;
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
 import cg.tcarespb.repository.CartRepository;
+import cg.tcarespb.repository.DateSessionRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.LocationPalaceRepository;
 import cg.tcarespb.service.addInfo.AddInfoService;
@@ -40,6 +41,9 @@ public class CartService {
     private final AddInfoService addInfoService;
     private final EmployeeRepository employeeRepository;
     private final HistoryWorkingService historyWorkingService;
+    private final DateSessionRepository dateSessionRepository;
+    private final LocationPalaceRepository locationPalaceRepository;
+
 
     public Cart create(Cart cart) {
         return cartRepository.save(cart);
@@ -66,6 +70,7 @@ public class CartService {
     }
 
     public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
+        dateSessionRepository.deleteAllByCartId(cartId);
         Cart cart = findById(cartId);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate startDate = LocalDate.parse(req.getTimeStart(), dateTimeFormatter);
@@ -93,7 +98,6 @@ public class CartService {
 
     public void updateInfoPatient(CartInfoPatientSaveRequest req, String cardId) {
         Cart cart = findById(cardId);
-        cart.setNamePatient(req.getNamePatient());
         cart.setNoteForPatient(req.getNoteForPatient());
         cart.setGender(EGender.valueOf(req.getGender()));
         cart.setEDecade(EDecade.valueOf(req.getDecade()));
@@ -212,7 +216,7 @@ public class CartService {
         }
         cart.setDateSessions(dateSessionList);
         cart.setHistoryWorking(historyWorkingService.createHistoryWorkingForCart(cart));
-      return   cartRepository.save(cart).getId();
+        return cartRepository.save(cart).getId();
 
     }
 
@@ -230,11 +234,11 @@ public class CartService {
         request.setLongitude(cart.getLocationPlace().getLongitude());
         request.setStatus(EStatus.ACTIVE);
         Page<EmployeeFilterResponse> employeeList = employeeRepository.filter(request, pageable);
-        employeeList.stream().forEach(e->e.setDistanceToWork(locationPalaceService.getDistance(request.getLatitude(),request.getLongitude(),e.getLatitude(),e.getLongitude())));
+        employeeList.stream().forEach(e -> e.setDistanceToWork(locationPalaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
         return employeeList;
     }
 
-//    public List<String> filterTest(String idCart) {
+    //    public List<String> filterTest(String idCart) {
 //        Cart cart = findById(idCart);
 //        CartSkillFilterRequest req = new CartSkillFilterRequest();
 //        req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
@@ -249,20 +253,20 @@ public class CartService {
 //        List<String> employeeList = employeeRepository.filterTest(request);
 //        return employeeList;
 //    }
-public List<String> filterTest(String idCart) {
-    Cart cart = findById(idCart);
-    CartSkillFilterRequest req = new CartSkillFilterRequest();
-    req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
-    CartFilterRequest request = new CartFilterRequest();
-    request.setCartServiceId(cart.getService().getId());
-    request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
-    request.setCartInfoIdList(cart.getCartInfos().stream().map(e -> e.getAddInfo().getId()).collect(Collectors.joining(",")));
-    request.setDistance(cart.getLocationPlace().getDistanceForWork());
-    request.setLatitude(cart.getLocationPlace().getLatitude());
-    request.setLongitude(cart.getLocationPlace().getLongitude());
-    request.setStatus(EStatus.ACTIVE);
-    List<String> employeeList = employeeRepository.filterTest(request);
-    return employeeList;
-}
+    public List<String> filterTest(String idCart) {
+        Cart cart = findById(idCart);
+        CartSkillFilterRequest req = new CartSkillFilterRequest();
+        req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
+        CartFilterRequest request = new CartFilterRequest();
+        request.setCartServiceId(cart.getService().getId());
+        request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
+        request.setCartInfoIdList(cart.getCartInfos().stream().map(e -> e.getAddInfo().getId()).collect(Collectors.joining(",")));
+        request.setDistance(cart.getLocationPlace().getDistanceForWork());
+        request.setLatitude(cart.getLocationPlace().getLatitude());
+        request.setLongitude(cart.getLocationPlace().getLongitude());
+        request.setStatus(EStatus.ACTIVE);
+        List<String> employeeList = employeeRepository.filterTest(request);
+        return employeeList;
+    }
 
 }

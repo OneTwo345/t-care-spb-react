@@ -120,6 +120,7 @@ public class AuthResController {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setJwt(token);
                 authResponse.setIsAdmin(account.get().getERole().equals(ROLE_ADMIN));
+                authResponse.setIdUser(account.get().getUser().getId());
                 return ResponseEntity.ok(authResponse);
             }
         }
