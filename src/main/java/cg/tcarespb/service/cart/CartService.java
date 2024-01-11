@@ -250,9 +250,10 @@ public class CartService {
             e.setSkillName(employee.getEmployeeSkills().stream().map(elem -> elem.getSkill().getName()).collect(Collectors.toList()));
             e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
             e.setServiceName(employee.getEmployeeServiceGenerals().stream().map(elem -> elem.getService().getName()).collect(Collectors.toList()));
-            List<Rate> rateList = (employee != null) ? employee.getRates() : null;
-            if (rateList == null) {
-                e.setRateQuantity(0);
+            List<Rate> rateList = employee.getRates();
+            if (rateList.size()== 0) {
+                e.setRateQuantity(5);
+                e.setStarAverage(5F);
             } else {
                 Float totalStar = 0F;
                 for (var rate : rateList) {
