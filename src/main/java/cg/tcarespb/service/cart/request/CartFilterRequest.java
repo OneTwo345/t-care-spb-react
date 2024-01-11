@@ -16,5 +16,6 @@ public class CartFilterRequest {
     private Double distance;
     private Double longitude;
     private Double latitude;
+    private String nameLocation;
     private EStatus status;
 }
