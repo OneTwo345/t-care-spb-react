@@ -14,6 +14,7 @@ import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.service.location.LocationPalaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
+import cg.tcarespb.service.user.UserService;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import jakarta.transaction.Transactional;
@@ -42,6 +43,8 @@ public class EmployeeService {
     private final DateSessionRepository dateSessionRepository;
     private final CartService cartService;
     private final PhotoRepository photoRepository;
+    private final UserRepository userRepository;
+    private final RateRepository rateRepository;
 
 
     public List<EmployeeListResponse> getEmployeeList() {
@@ -351,6 +354,18 @@ public class EmployeeService {
                 dateSessionService.create(newDateSession);
             }
         }
+        List<Rate> rateList = new ArrayList<>();
+        for (var rateRecord :req.getListRate()){
+            Rate rate = new Rate();
+            rate.setEmployee(employee);
+            rate.setStarQuantity(rateRecord.getQuantityStar());
+            rate.setContent(rateRecord.getContent());
+            User user = userRepository.findById(rateRecord.getIdUser()).orElse(null);
+            rate.setUser(user);
+            rateRepository.save(rate);
+            rateList.add(rate);
+        }
+        employee.setRates(rateList);
         employee.setDateSessions(dateSessionList);
      return   employeeRepository.save(employee).getId();
     }

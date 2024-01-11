@@ -235,6 +235,17 @@ public class CartService {
         request.setStatus(EStatus.ACTIVE);
         Page<EmployeeFilterResponse> employeeList = employeeRepository.filter(request, pageable);
         employeeList.stream().forEach(e -> e.setDistanceToWork(locationPalaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
+        employeeList.forEach(e -> {
+            Employee employee = employeeRepository.findById(e.getId()).orElse(null);
+            List<Rate> rateList = (employee != null) ? employee.getRates() : null;
+            if (rateList == null) {
+                e.setRateQuantity(0);
+            } else {
+                float totalStar = (float) rateList.stream().mapToInt(Rate::getRateQuantity).sum();
+                e.setStarAverage(totalStar / rateList.size());
+                e.setRateQuantity(rateList.size());
+            }
+        });
         return employeeList;
     }
 
