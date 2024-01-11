@@ -3,6 +3,8 @@ package cg.tcarespb.repository;
 import cg.tcarespb.models.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface PhotoRepository extends JpaRepository<Photo,String> {
 //    void deleteAllByProductId(Long id);
 ////    @Modifying
@@ -16,4 +18,5 @@ public interface PhotoRepository extends JpaRepository<Photo,String> {
 //    List<Photo> findCuaTao(List<String> myId);
 
 
+    Optional<Photo> findPhotoById(String id);
 }
