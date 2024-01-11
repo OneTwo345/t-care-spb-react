@@ -26,7 +26,7 @@ public interface EmployeeRepository extends JpaRepository<Employee,String> {
 //            "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id  ")
 //    Page<String> filter(@Param("reqFilter") CartFilterRequest reqFilter, Pageable pageable);
 //
-    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
+    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.locationPlace.name,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
             "JOIN EmployeeServiceGeneral esg ON e.id = esg.employee.id " +
             "JOIN EmployeeInfo ei ON e.id = ei.employee.id " +
             "WHERE check_list_intersection((SELECT GROUP_CONCAT(eskill.skill.id) FROM EmployeeSkill eskill WHERE e.id = eskill.employee.id), :#{#reqFilter.cartSkillIdList}) > 0 " +
@@ -47,7 +47,7 @@ public interface EmployeeRepository extends JpaRepository<Employee,String> {
 //            "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id ")
 //    List<String> filterTest(@Param("reqFilter") CartFilterRequest reqFilter);
 
-    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
+    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.locationPlace.name,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
             "JOIN EmployeeServiceGeneral esg ON e.id = esg.employee.id " +
             "JOIN EmployeeInfo ei ON e.id = ei.employee.id " +
             "WHERE check_list_intersection((SELECT GROUP_CONCAT(eskill.skill.id) FROM EmployeeSkill eskill WHERE e.id = eskill.employee.id), :#{#reqFilter.cartSkillIdList}) > 0 " +

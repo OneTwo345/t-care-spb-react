@@ -1,6 +1,7 @@
 package cg.tcarespb.service.employee.response;
 
 import cg.tcarespb.models.enums.EExperience;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmployeeFilterResponse {
+public class  EmployeeFilterResponse {
     private String id;
     private String firstName;
     private String lastName;
@@ -20,6 +21,7 @@ public class EmployeeFilterResponse {
     private EExperience experience;
     private Double longitude;
     private Double latitude;
+    private String nameLocation;
     private Double distanceToWork;
     private String address;
     private Float starAverage;
@@ -29,8 +31,9 @@ public class EmployeeFilterResponse {
     private List<String> serviceName;
     private List<String> infoName;
 
-    public EmployeeFilterResponse(String id, String firstName, String lastName,String bio, String descriptionAboutMySelf, EExperience experience, Double longitude, Double latitude, String address) {
+    public EmployeeFilterResponse(String id,String nameLocation, String firstName, String lastName,String bio, String descriptionAboutMySelf, EExperience experience, Double longitude, Double latitude, String address) {
         this.id = id;
+        this.nameLocation = nameLocation;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bio =bio;
@@ -40,4 +43,5 @@ public class EmployeeFilterResponse {
         this.latitude = latitude;
         this.address = address;
     }
+
 }
