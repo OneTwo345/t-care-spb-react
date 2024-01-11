@@ -304,7 +304,7 @@ public class EmployeeService {
         employeeServiceGeneralRepository.saveAll(employeeServices);
     }
 
-
+@Transactional
     public String createEmployeeFilter(EmployeeSaveFilterRequest req) {
         Employee employee = new Employee();
         employeeRepository.save(employee);
