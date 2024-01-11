@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class RateSaveForFilter {
-    private Float quantity;
+    private Float quantityStar;
     private String content;
     private String idUser;
 }
