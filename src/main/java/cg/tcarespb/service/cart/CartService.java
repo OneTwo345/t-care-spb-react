@@ -17,6 +17,7 @@ import cg.tcarespb.service.location.LocationPalaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.util.AppMessage;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,10 +69,12 @@ public class CartService {
         cart.setService(serviceGeneral);
         cartRepository.save(cart);
     }
-
+@Transactional
     public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
         dateSessionRepository.deleteAllByCartId(cartId);
         Cart cart = findById(cartId);
+        cart.setTimeStart(null);
+        cart.setTimeEnd(null);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate startDate = LocalDate.parse(req.getTimeStart(), dateTimeFormatter);
         LocalDate endDate = LocalDate.parse(req.getTimeEnd(), dateTimeFormatter);
@@ -247,9 +250,10 @@ public class CartService {
             e.setSkillName(employee.getEmployeeSkills().stream().map(elem -> elem.getSkill().getName()).collect(Collectors.toList()));
             e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
             e.setServiceName(employee.getEmployeeServiceGenerals().stream().map(elem -> elem.getService().getName()).collect(Collectors.toList()));
-            List<Rate> rateList = (employee != null) ? employee.getRates() : null;
-            if (rateList == null) {
-                e.setRateQuantity(0);
+            List<Rate> rateList = employee.getRates();
+            if (rateList.size()== 0) {
+                e.setRateQuantity(5);
+                e.setStarAverage(5F);
             } else {
                 Float totalStar = 0F;
                 for (var rate : rateList) {
