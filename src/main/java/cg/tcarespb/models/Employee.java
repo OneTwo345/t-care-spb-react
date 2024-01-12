@@ -73,7 +73,6 @@ public class Employee {
     private List<HistoryWorking> historyWorking;
     @OneToOne
     private Photo photo;
-
     public Employee(String id) {
         this.id = id;
     }

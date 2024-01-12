@@ -11,9 +11,8 @@ import cg.tcarespb.service.cartSkill.CartSkillService;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.EmployeeSaveRequest;
 import cg.tcarespb.service.employee.response.EmployeeFilterResponse;
-import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.service.historyWorking.HistoryWorkingService;
-import cg.tcarespb.service.location.LocationPalaceService;
+import cg.tcarespb.service.location.LocationPlaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.util.AppMessage;
@@ -37,7 +36,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ServiceGeneralService serviceGeneralService;
     private final DateSessionService dateSessionService;
-    private final LocationPalaceService locationPalaceService;
+    private final LocationPlaceService locationPlaceService;
     private final CartSkillService cartSkillService;
     private final SkillService skillService;
     private final CartInfoService cartInfoService;
@@ -48,6 +47,8 @@ public class CartService {
     private final HistoryWorkingRepository historyWorkingRepository;
     private final LocationPalaceRepository locationPalaceRepository;
     private final SalerRepository salerRepository;
+    private final CartSkillRepository cartSkillRepository;
+    private final CartInfoRepository cartInfoRepository;
 
 
     public Cart create(Cart cart) {
@@ -100,7 +101,6 @@ public class CartService {
             }
         }
         cart.setDateSessions(dateSessionList);
-
         historyWorkingService.createHistoryWorkingForCart(cart);
         cartRepository.save(cart);
     }
@@ -123,18 +123,19 @@ public class CartService {
 
     public void updateLocationForCart(CartLocationSaveRequest req, String cardId) {
         Cart cart = findById(cardId);
-        LocationPlace locationPalace = new LocationPlace();
-        locationPalace.setName(req.getNameLocation());
-        locationPalace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
-        locationPalace.setLatitude(Double.valueOf(req.getLatitude()));
-        locationPalace.setLongitude(Double.valueOf(req.getLongitude()));
-        locationPalaceService.create(locationPalace);
-        cart.setLocationPlace(locationPalace);
+        LocationPlace locationPlace = new LocationPlace();
+        locationPlace.setName(req.getNameLocation());
+        locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
+        locationPlace.setLatitude(Double.valueOf(req.getLatitude()));
+        locationPlace.setLongitude(Double.valueOf(req.getLongitude()));
+        locationPlaceService.create(locationPlace);
+        cart.setLocationPlace(locationPlace);
         cartRepository.save(cart);
     }
 
     public void updateCartSkill(CartSkillSaveRequest req, String cartId) {
         Cart cart = findById(cartId);
+        cartSkillRepository.deleteAllByCartId(cartId);
         List<CartSkill> cartSkillList = new ArrayList<>();
         for (var skillElemId : req.getCartSkillIdList()) {
             Skill skill = skillService.findByIdForEdit(skillElemId);
@@ -150,6 +151,7 @@ public class CartService {
 
     public void updateCartInfo(CartInfoSaveRequest req, String cartId) {
         Cart cart = findById(cartId);
+        cartInfoRepository.deleteAllByCartId(cartId);
         List<CartInfo> cartInfoList = new ArrayList<>();
         for (var infoElemId : req.getInfoIdList()) {
             AddInfo info = addInfoService.findByIdForEdit(infoElemId);
@@ -186,7 +188,7 @@ public class CartService {
         locationPalace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
         locationPalace.setLatitude(Double.valueOf(req.getLatitude()));
         locationPalace.setLongitude(Double.valueOf(req.getLongitude()));
-        locationPalaceService.create(locationPalace);
+        locationPlaceService.create(locationPalace);
         cart.setLocationPlace(locationPalace);
 
         List<CartInfo> cartInfoList = new ArrayList<>();
@@ -245,7 +247,7 @@ public class CartService {
         request.setNameLocation(cart.getLocationPlace().getName());
         request.setStatus(EStatus.ACTIVE);
         Page<EmployeeFilterResponse> employeeList = employeeRepository.filterTestCase(request, pageable);
-        employeeList.stream().forEach(e -> e.setDistanceToWork(locationPalaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
+        employeeList.stream().forEach(e -> e.setDistanceToWork(locationPlaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
 
         for (var e : employeeList) {
             Employee employee = employeeRepository.findById(e.getId()).orElse(null);
@@ -337,9 +339,126 @@ public class CartService {
         locationPalace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
         locationPalace.setLatitude(Double.valueOf(request.getLatitude()));
         locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
-        locationPalaceService.create(locationPalace);
+        locationPalaceRepository.save(locationPalace);
         cart.setLocationPlace(locationPalace);
         cart = cartRepository.save(cart);
+    }
+    public void updateAllFieldCart(CartAllFieldRequest req, String cartId) {
+        Cart cart = findById(cartId);
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        if (req.getTimeStart() != null
+                && req.getTimeEnd() != null
+                && !req.getTimeEnd().isEmpty()
+                && !req.getTimeStart().isEmpty()) {
+            LocalDate startDate = LocalDate.parse(req.getTimeStart(), dateTimeFormatter);
+            LocalDate endDate = LocalDate.parse(req.getTimeEnd(), dateTimeFormatter);
+            cart.setTimeStart(startDate);
+            cart.setTimeEnd(endDate);
+            if (req.getListDateSession().size() != 0) {
+                dateSessionRepository.deleteAllByCartId(cartId);
+                historyWorkingRepository.deleteAllByCartId(cartId);
+                List<DateSession> dateSessionList = new ArrayList<>();
+                for (var dateSession : req.getListDateSession()) {
+                    EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+                    for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                        ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                        DateSession newDateSession = new DateSession();
+                        newDateSession.setSessionOfDate(sessionDate);
+                        newDateSession.setDateInWeek(date);
+                        newDateSession.setCart(cart);
+                        dateSessionList.add(newDateSession);
+                        dateSessionService.create(newDateSession);
+                    }
+                }
+                cart.setDateSessions(dateSessionList);
+                historyWorkingService.createHistoryWorkingForCart(cart);
+            }
+        }
+        if (req.getService() != null && !req.getService().isEmpty()) {
+            ServiceGeneral serviceGeneral = serviceGeneralService.findById(req.getService());
+            cart.setService(serviceGeneral);
+        }
+        if (req.getListInfoId() != null && !req.getListInfoId().isEmpty()) {
+            cartInfoRepository.deleteAllByCartId(cartId);
+            List<CartInfo> cartInfoList = new ArrayList<>();
+            for (var infoElemId : req.getListInfoId()) {
+                AddInfo info = addInfoService.findByIdForEdit(infoElemId);
+                if (info != null) { // Make sure the info exists
+                    CartInfo cartInfo = new CartInfo();
+                    cartInfo.setAddInfo(info);
+                    cartInfo.setCart(cart);
+                    cartInfoService.create(cartInfo);
+                    cartInfoList.add(cartInfo);
+                }
+            }
+            cart.setCartInfos(cartInfoList);
+        }
+        if (req.getListSkillId() != null && !req.getListSkillId().isEmpty()) {
+            cartSkillRepository.deleteAllByCartId(cartId);
+            List<CartSkill> cartSkillList = new ArrayList<>();
+            for (var skillElemId : req.getListSkillId()) {
+                Skill skill = skillService.findByIdForEdit(skillElemId);
+                if (skill != null) { // Make sure the skill exists
+                    CartSkill cartSkill = new CartSkill();
+                    cartSkill.setSkill(skill);
+                    cartSkill.setCart(cart);
+                    cartSkillService.create(cartSkill);
+                    cartSkillList.add(cartSkill);
+                }
+            }
+            cart.setCartSkills(cartSkillList);
+        }
+//        if (req.getLatitude() != null
+//                && req.getLongitude() != null
+//                && req.getNameLocation() != null
+//                && req.getDistanceForWork() != null) {
+//            if (!req.getLatitude().isEmpty()
+//                    && !req.getLongitude().isEmpty()
+//                    && !req.getNameLocation().isEmpty()
+//                    && !req.getDistanceForWork().isEmpty()) {
+//                LocationPlace locationPlace = new LocationPlace();
+//                locationPlace.setName(req.getNameLocation());
+//                locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
+//                locationPlace.setLatitude(Double.valueOf(req.getLatitude()));
+//                locationPlace.setLongitude(Double.valueOf(req.getLongitude()));
+//                locationPlaceService.create(locationPlace);
+//                cart.setLocationPlace(locationPlace);
+//            }
+//        } else if ((req.getLatitude().isEmpty()
+//                || req.getLatitude() == null)
+//                || (req.getLongitude() == null
+//                || req.getLongitude().isEmpty())
+//                || req.getNameLocation() == null
+//                || req.getNameLocation().isEmpty()
+//                && req.getDistanceForWork() != null
+//                && !req.getDistanceForWork().isEmpty()) {
+//            LocationPlace locationPlace = cart.getLocationPlace();
+//            locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
+//            locationPlaceService.create(locationPlace);
+//        }
+        if (req.getLatitude() != null && !req.getLatitude().isEmpty()
+                && req.getLongitude() != null && !req.getLongitude().isEmpty()
+                && req.getNameLocation() != null && !req.getNameLocation().isEmpty()
+                && req.getDistanceForWork() != null && !req.getDistanceForWork().isEmpty()) {
+
+            LocationPlace locationPlace = new LocationPlace();
+            locationPlace.setName(req.getNameLocation());
+            locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
+            locationPlace.setLatitude(Double.valueOf(req.getLatitude()));
+            locationPlace.setLongitude(Double.valueOf(req.getLongitude()));
+            locationPlaceService.create(locationPlace);
+            cart.setLocationPlace(locationPlace);
+
+        } else if (((req.getLatitude() == null || req.getLatitude().isEmpty())
+                || (req.getLongitude() == null || req.getLongitude().isEmpty())
+                || (req.getNameLocation() == null || req.getNameLocation().isEmpty()))
+                && (req.getDistanceForWork() != null && !req.getDistanceForWork().isEmpty())) {
+
+            LocationPlace locationPlace = cart.getLocationPlace();
+            locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
+            locationPlaceService.create(locationPlace);
+        }
+        cartRepository.save(cart);
     }
 
 }
