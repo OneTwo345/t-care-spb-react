@@ -70,7 +70,8 @@ public class CartService {
         cart.setService(serviceGeneral);
         cartRepository.save(cart);
     }
-@Transactional
+
+    @Transactional
     public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
         dateSessionRepository.deleteAllByCartId(cartId);
         Cart cart = findById(cartId);
@@ -253,7 +254,7 @@ public class CartService {
             e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
             e.setServiceName(employee.getEmployeeServiceGenerals().stream().map(elem -> elem.getService().getName()).collect(Collectors.toList()));
             List<Rate> rateList = employee.getRates();
-            if (rateList.size()== 0) {
+            if (rateList.size() == 0) {
                 e.setRateQuantity(5);
                 e.setStarAverage(5F);
             } else {
@@ -299,22 +300,22 @@ public class CartService {
 //        return employeeList;
 //    }
 
-    public List<CartListResponse> findCartBySaler(String id){
-       Optional<Saler> saler =  salerRepository.findById(id);
-       Saler saler1 = saler.get();
-       return saler1.getCarts().stream().map(
-               service -> CartListResponse.builder()
-                       .id(service.getId())
-                       .timeStart(String.valueOf(service.getTimeStart()))
-                       .timeEnd(String.valueOf(service.getTimeEnd()))
-                       .noteForPatient(service.getNoteForPatient())
-                       .noteForEmployee(service.getNoteForEmployee())
-                       .memberOfFamily(String.valueOf(service.getMemberOfFamily()))
-                       .gender(String.valueOf(service.getGender()))
-                       .eDecade(String.valueOf(service.getEDecade()))
-                       .locationPlace(service.getLocationPlace().getName())
-                       .build())
-               .collect(Collectors.toList());
+    public List<CartListResponse> findCartBySaler(String id) {
+        Optional<Saler> saler = salerRepository.findById(id);
+        Saler saler1 = saler.get();
+        return saler1.getCarts().stream().map(
+                        service -> CartListResponse.builder()
+                                .id(service.getId())
+                                .timeStart(String.valueOf(service.getTimeStart()))
+                                .timeEnd(String.valueOf(service.getTimeEnd()))
+                                .noteForPatient(service.getNoteForPatient())
+                                .noteForEmployee(service.getNoteForEmployee())
+                                .memberOfFamily(String.valueOf(service.getMemberOfFamily()))
+                                .gender(String.valueOf(service.getGender()))
+                                .eDecade(String.valueOf(service.getEDecade()))
+                                .locationPlace(service.getLocationPlace().getName())
+                                .build())
+                .collect(Collectors.toList());
     }
 
 }
