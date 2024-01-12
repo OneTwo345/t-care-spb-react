@@ -58,6 +58,17 @@ public class AuthResController {
     private final AuthenticationManager authenticationManager;
     private final String SECRET = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
+    @PostMapping("/check-mail")
+    public ResponseEntity<?> checkEmail(@RequestBody AccountSaveRequest request) {
+        if (!accountRepository.existsByEmailIgnoreCase(request.getEmail())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email không tồn tại");
+        } else {
+            return ResponseEntity.ok("Email oke");
+        }
+    }
+
+
+@Transactional
     @PostMapping("/users/account")
     public ResponseEntity<?> register(@RequestBody AccountSaveRequest request){
 
@@ -77,7 +88,6 @@ public class AuthResController {
             userRepository.save(user);
             account.setUser(user);
             accountRepository.save(account);
-        String userId =  user.getId();
         Cart cart = new Cart();
         cart.setUser(user);
         cartRepository.save(cart);

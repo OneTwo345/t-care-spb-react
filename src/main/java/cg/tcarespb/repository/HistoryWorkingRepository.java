@@ -5,4 +5,5 @@ import cg.tcarespb.models.LocationPlace;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HistoryWorkingRepository extends JpaRepository<HistoryWorking,String> {
+    void deleteAllByCartId(String cart_id);
 }

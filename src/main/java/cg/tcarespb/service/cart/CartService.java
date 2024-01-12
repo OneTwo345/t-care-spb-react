@@ -2,10 +2,7 @@ package cg.tcarespb.service.cart;
 
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
-import cg.tcarespb.repository.CartRepository;
-import cg.tcarespb.repository.DateSessionRepository;
-import cg.tcarespb.repository.EmployeeRepository;
-import cg.tcarespb.repository.LocationPalaceRepository;
+import cg.tcarespb.repository.*;
 import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.cart.request.*;
 import cg.tcarespb.service.cartInfo.CartInfoService;
@@ -43,6 +40,7 @@ public class CartService {
     private final EmployeeRepository employeeRepository;
     private final HistoryWorkingService historyWorkingService;
     private final DateSessionRepository dateSessionRepository;
+    private final HistoryWorkingRepository historyWorkingRepository;
     private final LocationPalaceRepository locationPalaceRepository;
 
 
@@ -72,6 +70,7 @@ public class CartService {
 @Transactional
     public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
         dateSessionRepository.deleteAllByCartId(cartId);
+        historyWorkingRepository.deleteAllByCartId(cartId);
         Cart cart = findById(cartId);
         cart.setTimeStart(null);
         cart.setTimeEnd(null);
@@ -94,6 +93,7 @@ public class CartService {
             }
         }
         cart.setDateSessions(dateSessionList);
+
         historyWorkingService.createHistoryWorkingForCart(cart);
         cartRepository.save(cart);
     }
