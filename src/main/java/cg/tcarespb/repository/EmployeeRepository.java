@@ -26,7 +26,7 @@ public interface EmployeeRepository extends JpaRepository<Employee,String> {
 //            "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id  ")
 //    Page<String> filter(@Param("reqFilter") CartFilterRequest reqFilter, Pageable pageable);
 //
-    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
+    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.locationPlace.name,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
             "JOIN EmployeeServiceGeneral esg ON e.id = esg.employee.id " +
             "JOIN EmployeeInfo ei ON e.id = ei.employee.id " +
             "WHERE check_list_intersection((SELECT GROUP_CONCAT(eskill.skill.id) FROM EmployeeSkill eskill WHERE e.id = eskill.employee.id), :#{#reqFilter.cartSkillIdList}) > 0 " +
@@ -36,18 +36,18 @@ public interface EmployeeRepository extends JpaRepository<Employee,String> {
             "AND get_distance(e.locationPlace.latitude,e.locationPlace.longitude,:#{#reqFilter.latitude},:#{#reqFilter.longitude})<= :#{#reqFilter.distance}  "+
             "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id ")
     Page<EmployeeFilterResponse> filter(@Param("reqFilter") CartFilterRequest reqFilter, Pageable pageable);
-    @Query("SELECT e.id FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
-            "JOIN EmployeeServiceGeneral esg ON e.id = esg.employee.id " +
-            "JOIN EmployeeInfo ei ON e.id = ei.employee.id " +
-            "WHERE check_list_intersection((SELECT GROUP_CONCAT(eskill.skill.id) FROM EmployeeSkill eskill WHERE e.id = eskill.employee.id), :#{#reqFilter.cartSkillIdList}) > 0 " +
-            "AND check_list_intersection((SELECT GROUP_CONCAT(eser.service.id) FROM EmployeeServiceGeneral eser WHERE e.id = eser.employee.id), :#{#reqFilter.cartServiceId}) > 0 " +
-            "AND check_list_intersection((SELECT GROUP_CONCAT(ein.addInfo.id) FROM EmployeeInfo ein WHERE e.id = ein.employee.id), :#{#reqFilter.cartInfoIdList}) > 0 "+
-            "AND count_matching_records(e.id, :#{#reqFilter.cartId}) = 0 "+
-            "AND get_distance(e.locationPlace.latitude,e.locationPlace.longitude,:#{#reqFilter.latitude},:#{#reqFilter.longitude})<= :#{#reqFilter.distance}  "+
-            "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id ")
-    List<String> filterTest(@Param("reqFilter") CartFilterRequest reqFilter);
+//    @Query("SELECT e.id FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
+//            "JOIN EmployeeServiceGeneral esg ON e.id = esg.employee.id " +
+//            "JOIN EmployeeInfo ei ON e.id = ei.employee.id " +
+//            "WHERE check_list_intersection((SELECT GROUP_CONCAT(eskill.skill.id) FROM EmployeeSkill eskill WHERE e.id = eskill.employee.id), :#{#reqFilter.cartSkillIdList}) > 0 " +
+//            "AND check_list_intersection((SELECT GROUP_CONCAT(eser.service.id) FROM EmployeeServiceGeneral eser WHERE e.id = eser.employee.id), :#{#reqFilter.cartServiceId}) > 0 " +
+//            "AND check_list_intersection((SELECT GROUP_CONCAT(ein.addInfo.id) FROM EmployeeInfo ein WHERE e.id = ein.employee.id), :#{#reqFilter.cartInfoIdList}) > 0 "+
+//            "AND count_matching_records(e.id, :#{#reqFilter.cartId}) = 0 "+
+//            "AND get_distance(e.locationPlace.latitude,e.locationPlace.longitude,:#{#reqFilter.latitude},:#{#reqFilter.longitude})<= :#{#reqFilter.distance}  "+
+//            "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id ")
+//    List<String> filterTest(@Param("reqFilter") CartFilterRequest reqFilter);
 
-    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
+    @Query("SELECT new cg.tcarespb.service.employee.response.EmployeeFilterResponse(e.id,e.locationPlace.name,e.firstName,e.lastName,e.bioTitle,e.descriptionAboutMySelf,e.experience,e.locationPlace.longitude,e.locationPlace.latitude,e.address)  FROM Employee e JOIN EmployeeSkill es ON e.id = es.employee.id " +
             "JOIN EmployeeServiceGeneral esg ON e.id = esg.employee.id " +
             "JOIN EmployeeInfo ei ON e.id = ei.employee.id " +
             "WHERE check_list_intersection((SELECT GROUP_CONCAT(eskill.skill.id) FROM EmployeeSkill eskill WHERE e.id = eskill.employee.id), :#{#reqFilter.cartSkillIdList}) > 0 " +
