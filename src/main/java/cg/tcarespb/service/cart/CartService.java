@@ -2,16 +2,15 @@ package cg.tcarespb.service.cart;
 
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.*;
-import cg.tcarespb.repository.CartRepository;
-import cg.tcarespb.repository.DateSessionRepository;
-import cg.tcarespb.repository.EmployeeRepository;
-import cg.tcarespb.repository.LocationPalaceRepository;
+import cg.tcarespb.repository.*;
 import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.cart.request.*;
+import cg.tcarespb.service.cart.response.CartListResponse;
 import cg.tcarespb.service.cartInfo.CartInfoService;
 import cg.tcarespb.service.cartSkill.CartSkillService;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.response.EmployeeFilterResponse;
+import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.service.location.LocationPalaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
@@ -27,6 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -44,6 +44,7 @@ public class CartService {
     private final HistoryWorkingService historyWorkingService;
     private final DateSessionRepository dateSessionRepository;
     private final LocationPalaceRepository locationPalaceRepository;
+    private final SalerRepository salerRepository;
 
 
     public Cart create(Cart cart) {
@@ -295,6 +296,24 @@ public class CartService {
         request.setStatus(EStatus.ACTIVE);
         List<String> employeeList = employeeRepository.filterTest(request);
         return employeeList;
+    }
+
+    public List<CartListResponse> findCartBySaler(String id){
+       Optional<Saler> saler =  salerRepository.findById(id);
+       Saler saler1 = saler.get();
+       return saler1.getCarts().stream().map(
+               service -> CartListResponse.builder()
+                       .id(service.getId())
+                       .timeStart(String.valueOf(service.getTimeStart()))
+                       .timeEnd(String.valueOf(service.getTimeEnd()))
+                       .noteForPatient(service.getNoteForPatient())
+                       .noteForEmployee(service.getNoteForEmployee())
+                       .memberOfFamily(String.valueOf(service.getMemberOfFamily()))
+                       .gender(String.valueOf(service.getGender()))
+                       .eDecade(String.valueOf(service.getEDecade()))
+                       .locationPlace(service.getLocationPlace().getName())
+                       .build())
+               .collect(Collectors.toList());
     }
 
 }
