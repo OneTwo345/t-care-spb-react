@@ -1,14 +1,13 @@
-package cg.tcarespb.service.cart.response;
+package cg.tcarespb.service.cart.request;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-public class CartListResponse {
-    private String id;
+@NoArgsConstructor
+public class CartSaveRequest {
     private String timeStart;
     private String timeEnd;
     private String noteForPatient;
@@ -17,8 +16,10 @@ public class CartListResponse {
     private String gender;
     private String eDecade;
     private String locationPlace;
+    private String distanceForWork;
+    private String longitude;
+    private String latitude;
     private String firstName;
     private String lastName;
     private String saleNote;
-    private String phone;
 }
