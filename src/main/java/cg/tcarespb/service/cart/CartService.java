@@ -9,12 +9,14 @@ import cg.tcarespb.service.cart.response.CartListResponse;
 import cg.tcarespb.service.cartInfo.CartInfoService;
 import cg.tcarespb.service.cartSkill.CartSkillService;
 import cg.tcarespb.service.dateSession.DateSessionService;
+import cg.tcarespb.service.employee.request.EmployeeSaveRequest;
 import cg.tcarespb.service.employee.response.EmployeeFilterResponse;
 import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.service.location.LocationPlaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
 import cg.tcarespb.util.AppMessage;
+import cg.tcarespb.util.AppUtil;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -318,11 +320,29 @@ public class CartService {
                                 .memberOfFamily(String.valueOf(service.getMemberOfFamily()))
                                 .gender(String.valueOf(service.getGender()))
                                 .eDecade(String.valueOf(service.getEDecade()))
+                                .firstName(service.getFirstName())
+                                .lastName(service.getLastName())
+                                .saleNote(service.getSaleNote())
+                                .phone(service.getPhone())
                                 .locationPlace(service.getLocationPlace().getName())
                                 .build())
                 .collect(Collectors.toList());
     }
 
+    public void createCartBySale(CartSaveRequest request,String id) {
+        var cart = AppUtil.mapper.map(request, Cart.class);
+        Optional<Saler> saler = salerRepository.findById(id);
+        Saler saler1 = saler.get();
+        cart.setSaler(saler1);
+        LocationPlace locationPalace = new LocationPlace();
+        locationPalace.setName(request.getLocationPlace());
+        locationPalace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
+        locationPalace.setLatitude(Double.valueOf(request.getLatitude()));
+        locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
+        locationPalaceRepository.save(locationPalace);
+        cart.setLocationPlace(locationPalace);
+        cart = cartRepository.save(cart);
+    }
     public void updateAllFieldCart(CartAllFieldRequest req, String cartId) {
         Cart cart = findById(cartId);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

@@ -35,6 +35,8 @@ public class Cart {
     private String noteForEmployee;
     private String firstName;
     private String lastName;
+    private String saleNote;
+    private String phone;
     private Boolean deleted = false;
     @Enumerated(EnumType.STRING)
     private EMemberOfFamily memberOfFamily;
