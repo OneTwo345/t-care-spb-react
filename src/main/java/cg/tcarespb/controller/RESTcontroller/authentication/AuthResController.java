@@ -10,17 +10,24 @@ import cg.tcarespb.models.User;
 import cg.tcarespb.models.enums.EGender;
 import cg.tcarespb.models.enums.ERole;
 import cg.tcarespb.models.enums.EStatus;
+import cg.tcarespb.registration.event.listener.RegistrationCompleteEventListener;
+import cg.tcarespb.registration.password.PasswordResetRequest;
+import cg.tcarespb.registration.token.VerificationToken;
 import cg.tcarespb.repository.AccountRepository;
 import cg.tcarespb.repository.CartRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.UserRepository;
+import cg.tcarespb.service.account.AccountService;
 import cg.tcarespb.service.account.request.AccountSaveRequest;
 import cg.tcarespb.service.account.request.LoginSaveRequest;
+import cg.tcarespb.service.user.UserService;
 import cg.tcarespb.util.AppUtil;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -28,12 +35,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.AccountNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
 
 import static cg.tcarespb.models.enums.ERole.ROLE_ADMIN;
 import static cg.tcarespb.models.enums.ERole.ROLE_USER;
@@ -51,11 +63,15 @@ public class AuthResController {
     private final UserRepository userRepository;
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
-    private  final CartRepository cartRepository;
+    private final CartRepository cartRepository;
+    private final AccountService accountService;
 
     private final JwtUtil jwtUtil;
 
     private final AuthenticationManager authenticationManager;
+
+    private final RegistrationCompleteEventListener eventListener;
+    private final HttpServletRequest servletRequest;
     private final String SECRET = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
     @PostMapping("/check-mail")
@@ -70,9 +86,9 @@ public class AuthResController {
 
 @Transactional
     @PostMapping("/users/account")
-    public ResponseEntity<?> register(@RequestBody AccountSaveRequest request){
+    public ResponseEntity<?> register(@RequestBody AccountSaveRequest request) {
 
-        if(accountRepository.existsByEmailIgnoreCase(request.getEmail()))
+        if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email Đã Tồn Tại");
 
 
@@ -88,16 +104,18 @@ public class AuthResController {
             userRepository.save(user);
             account.setUser(user);
             accountRepository.save(account);
+
         Cart cart = new Cart();
         cart.setUser(user);
         cartRepository.save(cart);
 
         return new ResponseEntity<>(cart.getId(), HttpStatus.CREATED);
     }
-    @PostMapping("/employees/account")
-    public ResponseEntity<?> registerEmployees(@RequestBody AccountSaveRequest request){
 
-        if(accountRepository.existsByEmailIgnoreCase(request.getEmail()))
+    @PostMapping("/employees/account")
+    public ResponseEntity<?> registerEmployees(@RequestBody AccountSaveRequest request) {
+
+        if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email Đã Tồn Tại");
 
         Account account = new Account();
@@ -111,10 +129,10 @@ public class AuthResController {
         employee.setLastName(request.getLastName());
         employee.setPersonID(request.getPersonId());
         employee.setStatus(EStatus.WAITING);
-      employeeRepository.save(employee);
+        employeeRepository.save(employee);
         account.setEmployee(employee);
         accountRepository.save(account);
-        String employeeId =  employee.getId();
+        String employeeId = employee.getId();
 
         return new ResponseEntity<>(employeeId, HttpStatus.CREATED);
     }
@@ -134,10 +152,8 @@ public class AuthResController {
                 return ResponseEntity.ok(authResponse);
             }
         }
-
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tên Đăng Nhập Hoặc Mật Khẩu Không Đúng");
     }
-
 
 
 //    @PostMapping("/loginGoogle")
@@ -173,11 +189,13 @@ public class AuthResController {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-    public String getToken(String email){
+
+    public String getToken(String email) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         email,
@@ -188,5 +206,79 @@ public class AuthResController {
 
         return jwtUtil.generateToken(email, ROLE_USER.toString());
     }
+//    @GetMapping("/verifyEmail")
+//    public String sendVerificationToken(@RequestParam("token") String token){
+//
+//        String url = applicationUrl(servletRequest)+"/register/resend-verification-token?token="+token;
+//
+//        VerificationToken theToken = tokenRepository.findByToken(token);
+//        if (theToken.getUser().isEnabled()){
+//            return "This account has already been verified, please, login.";
+//        }
+//        String verificationResult = userService.validateToken(token);
+//        if (verificationResult.equalsIgnoreCase("valid")){
+//            return "Email verified successfully. Now you can login to your account";
+//        }
+//        return "Invalid verification link, <a href=\"" +url+"\"> Get a new verification link. </a>";
+//    }
+    @PostMapping("/password-reset-request")
+    public String resetPasswordRequest(@RequestBody PasswordResetRequest passwordResetRequest,
+                                       final HttpServletRequest servletRequest)
+            throws MessagingException, UnsupportedEncodingException {
+
+        Optional<Account> account = accountService.findByEmail(passwordResetRequest.getEmail());
+        String passwordResetUrl = "";
+        if (account.isPresent()) {
+            String passwordResetToken = UUID.randomUUID().toString();
+            accountService.createPasswordResetTokenForUser(account.get(), passwordResetToken);
+            passwordResetUrl = passwordResetEmailLink(account.get(),"http://localhost:3000", passwordResetToken);
+        }
+        return passwordResetUrl;
+    }
+
+    private String passwordResetEmailLink(Account account, String applicationUrl,
+                                          String passwordToken) throws MessagingException, UnsupportedEncodingException, MessagingException, UnsupportedEncodingException {
+        String url = applicationUrl + "/forgot-password?token=" + passwordToken;
+        eventListener.sendPasswordResetVerificationEmail(url,account);
+        return url;
+    }
+
+//    private void resendRegistrationVerificationTokenEmail(User theUser, String applicationUrl,
+//                                                          VerificationToken verificationToken) throws MessagingException, UnsupportedEncodingException {
+//        String url = applicationUrl + "/register/verifyEmail?token=" + verificationToken.getToken();
+//        eventListener.sendVerificationEmail(url);
+//        log.info("Click the link to verify your registration :  {}", url);
+//    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestBody PasswordResetRequest passwordResetRequest,
+                                @RequestParam("token") String token) {
+        String tokenVerificationResult = accountService.validateToken(token);
+        if (!tokenVerificationResult.equalsIgnoreCase("valid")) {
+            return "Invalid token password reset token";
+        }
+        Optional<Account> theAccount = Optional.ofNullable(accountService.findAccountByPasswordToken(token));
+        if (theAccount.isPresent()) {
+            accountService.changePassword(theAccount.get(), passwordResetRequest.getNewPassword());
+            return "Password has been reset successfully";
+        }
+        return "Invalid password reset token";
+    }
+
+    @PostMapping("/change-password")
+    public String changePassword(@RequestBody PasswordResetRequest passwordResetRequest) {
+        Account account = accountService.findByEmail(passwordResetRequest.getEmail()).get();
+        if (!accountService.oldPasswordIsValid(account, passwordResetRequest.getOldPassword())) {
+            return "Incorrect old password";
+        }
+        accountService.changePassword(account, passwordResetRequest.getNewPassword());
+        return "Password changed successfully";
+    }
+
+    public String applicationUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":"
+                + request.getServerPort() + request.getContextPath();
+    }
+
 
 }

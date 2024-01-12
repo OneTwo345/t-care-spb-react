@@ -3,8 +3,10 @@ package cg.tcarespb.service.rate;
 
 import cg.tcarespb.models.Employee;
 import cg.tcarespb.models.Rate;
+import cg.tcarespb.models.User;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.RateRepository;
+import cg.tcarespb.repository.UserRepository;
 import cg.tcarespb.service.employee.response.EmployeeListTop3Response;
 import cg.tcarespb.service.rate.request.RateEditRequest;
 import cg.tcarespb.service.rate.request.RateSaveRequest;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class RateService {
     private final RateRepository rateRepository;
     private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
 
     public List<RateListResponse> getRateListResponse(){
         return rateRepository.findAll()
@@ -42,6 +45,8 @@ public class RateService {
         var rate = AppUtil.mapper.map(request, Rate.class);
         Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
         rate.setEmployee(employee.get());
+        Optional<User> user = userRepository.findById(request.getUserId());
+        rate.setUser(user.get());
         rate = rateRepository.save(rate);
     }
 
