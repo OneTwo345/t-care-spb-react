@@ -74,6 +74,17 @@ public class AuthResController {
     private final HttpServletRequest servletRequest;
     private final String SECRET = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
+    @PostMapping("/check-mail")
+    public ResponseEntity<?> checkEmail(@RequestBody AccountSaveRequest request) {
+        if (!accountRepository.existsByEmailIgnoreCase(request.getEmail())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email không tồn tại");
+        } else {
+            return ResponseEntity.ok("Email oke");
+        }
+    }
+
+
+@Transactional
     @PostMapping("/users/account")
     public ResponseEntity<?> register(@RequestBody AccountSaveRequest request) {
 
@@ -85,15 +96,15 @@ public class AuthResController {
         account.setERole(ERole.valueOf(request.getRole()));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(account);
-        var user = AppUtil.mapper.map(request, User.class);
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setGender(EGender.valueOf(request.getGender()));
-        user.setPersonID(request.getPersonId());
-        userRepository.save(user);
-        account.setUser(user);
-        accountRepository.save(account);
-        String userId = user.getId();
+            var user = AppUtil.mapper.map(request, User.class);
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setGender(EGender.valueOf(request.getGender()));
+            user.setPersonID(request.getPersonId());
+            userRepository.save(user);
+            account.setUser(user);
+            accountRepository.save(account);
+
         Cart cart = new Cart();
         cart.setUser(user);
         cartRepository.save(cart);

@@ -43,6 +43,7 @@ public class CartService {
     private final EmployeeRepository employeeRepository;
     private final HistoryWorkingService historyWorkingService;
     private final DateSessionRepository dateSessionRepository;
+    private final HistoryWorkingRepository historyWorkingRepository;
     private final LocationPalaceRepository locationPalaceRepository;
     private final SalerRepository salerRepository;
 
@@ -73,6 +74,7 @@ public class CartService {
 @Transactional
     public void updateDateSessionCart(CartDateSessionListSaveRequest req, String cartId) {
         dateSessionRepository.deleteAllByCartId(cartId);
+        historyWorkingRepository.deleteAllByCartId(cartId);
         Cart cart = findById(cartId);
         cart.setTimeStart(null);
         cart.setTimeEnd(null);
@@ -95,6 +97,7 @@ public class CartService {
             }
         }
         cart.setDateSessions(dateSessionList);
+
         historyWorkingService.createHistoryWorkingForCart(cart);
         cartRepository.save(cart);
     }
