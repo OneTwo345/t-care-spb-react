@@ -11,10 +11,9 @@ import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
 import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
-import cg.tcarespb.service.location.LocationPalaceService;
+import cg.tcarespb.service.location.LocationPlaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
-import cg.tcarespb.service.user.UserService;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import jakarta.transaction.Transactional;
@@ -22,7 +21,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +36,7 @@ public class EmployeeService {
     private final AddInfoService addInfoService;
     private final SkillService skillService;
     private final ServiceGeneralService serviceGeneralService;
-    private final LocationPalaceService locationPalaceService;
+    private final LocationPlaceService locationPalaceService;
     private final LocationPalaceRepository locationPalaceRepository;
     private final DateSessionRepository dateSessionRepository;
     private final CartService cartService;
