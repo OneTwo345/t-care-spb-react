@@ -33,7 +33,8 @@ public class Cart {
     private Integer agePatient;
     private String noteForPatient;
     private String noteForEmployee;
-
+    private String firstName;
+    private String lastName;
     private Boolean deleted = false;
     @Enumerated(EnumType.STRING)
     private EMemberOfFamily memberOfFamily;
