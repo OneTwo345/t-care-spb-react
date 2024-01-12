@@ -3,12 +3,15 @@ package cg.tcarespb.controller.RESTcontroller;
 import cg.tcarespb.models.Cart;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
+import cg.tcarespb.service.cart.response.CartListResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/carts")
@@ -108,6 +111,12 @@ public class CartRestController {
 //    public ResponseEntity<?> filterList(@PathVariable("id") String id){
 //        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
 //    }
+
+    @GetMapping("/sale/{id}")
+    public ResponseEntity<List<CartListResponse>> getCartList(@PathVariable("id") String id) {
+        List<CartListResponse> cartListResponses = cartService.findCartBySaler(id);
+        return ResponseEntity.ok(cartListResponses);
+    }
 
 
 }
