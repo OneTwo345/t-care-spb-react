@@ -15,4 +15,5 @@ public class AuthResponse {
     private Boolean isAdmin;
     private String idUser;
 
+
 }

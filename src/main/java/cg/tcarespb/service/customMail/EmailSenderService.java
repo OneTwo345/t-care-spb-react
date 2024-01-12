@@ -1,5 +1,6 @@
 package cg.tcarespb.service.customMail;
 
+import cg.tcarespb.models.Account;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.AddressException;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 
@@ -36,6 +39,17 @@ public class EmailSenderService {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+    }
+
+
+    private SimpleMailMessage constructEmail(String subject, String body,
+                                             Account account) {
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setSubject(subject);
+        email.setText(body);
+        email.setTo(account.getEmail());
+        email.setFrom(senderEmail);
+        return email;
     }
 
 }
