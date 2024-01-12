@@ -12,4 +12,5 @@ public class RateSaveRequest {
     private String content;
     private String rateQuantity;
     private String employeeId;
+    private String userId;
 }
