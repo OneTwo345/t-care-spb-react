@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
 @Service
-public class LocationPalaceService {
+public class LocationPlaceService {
     private final LocationPalaceRepository locationPalaceRepository;
     public LocationPlace create (LocationPlace locationPalace){
         return locationPalaceRepository.save(locationPalace);

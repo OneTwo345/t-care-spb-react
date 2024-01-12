@@ -32,8 +32,8 @@ public class CartRestController {
 
     @PostMapping("/createFilter")
     public ResponseEntity<?> createAllPropertiesCart(@RequestBody CartSaveFilterRequest req) {
-      String id =  cartService.createCartForFilter(req);
-        return new ResponseEntity<>(id,HttpStatus.CREATED);
+        String id = cartService.createCartForFilter(req);
+        return new ResponseEntity<>(id, HttpStatus.CREATED);
     }
 
     @PutMapping("/services/{id}")
@@ -104,7 +104,7 @@ public class CartRestController {
 
 
     @GetMapping("/filter/{id}")
-    public ResponseEntity<?> filterList(@PathVariable("id") String id,@PageableDefault(size = 20) Pageable pageable){
+    public ResponseEntity<?> filterList(@PathVariable("id") String id, @PageableDefault(size = 20) Pageable pageable) {
         return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
     }
 //    @GetMapping("/filterTest/{id}")
@@ -118,5 +118,9 @@ public class CartRestController {
         return ResponseEntity.ok(cartListResponses);
     }
 
-
+    @PutMapping("/updateAllField/{id}")
+    public ResponseEntity<?> updateAllField(@PathVariable("id") String id, @RequestBody  CartAllFieldRequest req) {
+        cartService.updateAllFieldCart(req, id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
