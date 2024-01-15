@@ -136,6 +136,7 @@ public class CartRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @DeleteMapping("deleteCustomerBySale/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
         cartService.deleteCartBySale(id);
@@ -147,5 +148,6 @@ public class CartRestController {
         cartService.editCartBySale(request, id);
         return ResponseEntity.noContent().build();
     }
+
 
 }

@@ -409,34 +409,7 @@ public class CartService {
             }
             cart.setCartSkills(cartSkillList);
         }
-//        if (req.getLatitude() != null
-//                && req.getLongitude() != null
-//                && req.getNameLocation() != null
-//                && req.getDistanceForWork() != null) {
-//            if (!req.getLatitude().isEmpty()
-//                    && !req.getLongitude().isEmpty()
-//                    && !req.getNameLocation().isEmpty()
-//                    && !req.getDistanceForWork().isEmpty()) {
-//                LocationPlace locationPlace = new LocationPlace();
-//                locationPlace.setName(req.getNameLocation());
-//                locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
-//                locationPlace.setLatitude(Double.valueOf(req.getLatitude()));
-//                locationPlace.setLongitude(Double.valueOf(req.getLongitude()));
-//                locationPlaceService.create(locationPlace);
-//                cart.setLocationPlace(locationPlace);
-//            }
-//        } else if ((req.getLatitude().isEmpty()
-//                || req.getLatitude() == null)
-//                || (req.getLongitude() == null
-//                || req.getLongitude().isEmpty())
-//                || req.getNameLocation() == null
-//                || req.getNameLocation().isEmpty()
-//                && req.getDistanceForWork() != null
-//                && !req.getDistanceForWork().isEmpty()) {
-//            LocationPlace locationPlace = cart.getLocationPlace();
-//            locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
-//            locationPlaceService.create(locationPlace);
-//        }
+
         if (req.getLatitude() != null && !req.getLatitude().isEmpty()
                 && req.getLongitude() != null && !req.getLongitude().isEmpty()
                 && req.getNameLocation() != null && !req.getNameLocation().isEmpty()

@@ -32,6 +32,7 @@ public class Contract {
     private BigDecimal totalPrice;
     private String nameService;
     private BigDecimal priceService;
+    private LocalDate createAt;
     @Enumerated(EnumType.STRING)
     private EGender gender;
     @ManyToOne

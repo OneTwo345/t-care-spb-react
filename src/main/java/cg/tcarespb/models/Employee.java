@@ -20,7 +20,7 @@ import java.util.List;
 @Setter
 @SQLDelete(sql = "UPDATE employees SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-@Table( name = "employees")
+@Table(name = "employees")
 public class Employee {
     @Id
     @GeneratedValue(generator = "uuid")
@@ -33,6 +33,7 @@ public class Employee {
     private String bioTitle;
     private String personID;
     private Boolean deleted = false;
+    private String phoneNumber;
 
 
     @Enumerated(EnumType.STRING)
@@ -71,8 +72,11 @@ public class Employee {
     private LocationPlace locationPlace;
     @OneToMany(mappedBy = "employee")
     private List<HistoryWorking> historyWorking;
+    @OneToMany(mappedBy = "employee")
+    private List<ContactEmployee> contactEmployees;
     @OneToOne
     private Photo photo;
+
     public Employee(String id) {
         this.id = id;
     }

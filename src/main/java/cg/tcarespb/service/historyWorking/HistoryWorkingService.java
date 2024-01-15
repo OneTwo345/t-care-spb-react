@@ -3,12 +3,15 @@ package cg.tcarespb.service.historyWorking;
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.EDateInWeek;
 import cg.tcarespb.repository.HistoryWorkingRepository;
+import cg.tcarespb.service.historyWorking.response.HistoryWorkingResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -105,6 +108,13 @@ public class HistoryWorkingService {
             historyWorkingEmployee.addAll(historyWorkingList);
             return historyWorkingEmployee;
         }
+    }
 
+    public List<HistoryWorkingResponse> getHistoryWorkingByEmployeeId(String employeeId) {
+        return historyWorkingRepository.getAllByEmployeeId(employeeId).stream().map(e -> HistoryWorkingResponse.builder()
+                        .dateOfWeek(e.getDateInWeek().getName())
+                        .dateSession(e.getSessionOfDate().getName())
+                        .date(e.getDateWork().format(DateTimeFormatter.ofPattern("dd/mm/yyyy"))).build())
+                .collect(Collectors.toList());
     }
 }

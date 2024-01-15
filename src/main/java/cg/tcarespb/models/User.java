@@ -29,6 +29,7 @@ public class User {
     private String firstName;
     private String lastName;
     private EGender gender;
+    private String phoneNumber;
     private Boolean deleted = false;
 
     @OneToMany(mappedBy = "user")

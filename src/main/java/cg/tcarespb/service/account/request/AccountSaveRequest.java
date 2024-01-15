@@ -15,4 +15,5 @@ public class AccountSaveRequest {
     private String personId;
     private String email;
     private String gender;
+    private String phoneNumber;
 }

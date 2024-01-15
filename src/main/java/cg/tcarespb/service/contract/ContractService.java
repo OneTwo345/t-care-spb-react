@@ -1,6 +1,9 @@
 package cg.tcarespb.service.contract;
 
 import cg.tcarespb.models.*;
+import cg.tcarespb.models.enums.EContactStatus;
+import cg.tcarespb.models.enums.EPayStatus;
+import cg.tcarespb.repository.ContactEmployeeRepository;
 import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.service.cart.CartService;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,6 +32,7 @@ public class ContractService {
     private final EmployeeRepository employeeRepository;
     private final CartService cartService;
     private final HistoryWorkingService historyWorkingService;
+    private final ContactEmployeeRepository contactEmployeeRepository;
 
     public List<ContractListResponse> getContractList() {
         return contractRepository.findAll()
@@ -54,12 +59,16 @@ public class ContractService {
 
     public String createContract(ContractSaveFromCartRequest req) {
         Cart cart = cartService.findById(req.getCartId());
+        ContactEmployee contactEmployee = cart.getContactEmployees();
+        contactEmployee.setContactStatus(EContactStatus.MET);
+        contactEmployeeRepository.save(contactEmployee);
         Employee employee = employeeRepository.findById(req.getEmployeeId()).get();
         Contract contract = new Contract();
         contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
         contract.setTimeEnd(cart.getTimeEnd());
         contract.setEmployee(employee);
+        contract.setCreateAt(LocalDate.now());
         contract.setNameService(cart.getService().getName());
         contract.setPriceService(cart.getService().getPriceEmployee());
         contract.setAgePatient(cart.getAgePatient());

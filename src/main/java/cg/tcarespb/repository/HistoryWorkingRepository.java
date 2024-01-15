@@ -4,6 +4,10 @@ import cg.tcarespb.models.HistoryWorking;
 import cg.tcarespb.models.LocationPlace;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface HistoryWorkingRepository extends JpaRepository<HistoryWorking,String> {
+import java.util.List;
+
+public interface HistoryWorkingRepository extends JpaRepository<HistoryWorking, String> {
     void deleteAllByCartId(String cart_id);
+
+    List<HistoryWorking> getAllByEmployeeId(String employeeId);
 }

@@ -25,8 +25,8 @@ public class HistoryWorkingRestController {
 //    public ResponseEntity<?> createTest(@RequestBody HistoryWorkingSaveRequest req) {
 //        return new ResponseEntity<>(historyWorkingService.createTest(req).size(), HttpStatus.OK);
 //    }
-//    @PostMapping("/cart")
-//    public ResponseEntity<?> createTestForCart(@RequestBody HistoryWorkingForCartRequest req) {
-//        return new ResponseEntity<>(historyWorkingService.createHistoryWorkingForCart(req), HttpStatus.OK);
-//    }
+    @GetMapping("/cart/{id}")
+    public ResponseEntity<?> getAllHistoryWorkingByCartId(@PathVariable ("id") String id) {
+        return new ResponseEntity<>(historyWorkingService.getHistoryWorkingByEmployeeId(id), HttpStatus.OK);
+    }
 }
