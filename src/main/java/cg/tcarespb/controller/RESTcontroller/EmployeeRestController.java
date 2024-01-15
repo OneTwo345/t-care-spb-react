@@ -95,7 +95,7 @@ public class EmployeeRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
         employeeService.delete(id);
-        return ResponseEntity.ok("Employee deleted successfully");
+        return ResponseEntity.ok("Xóa nhân viên thành công");
     }
 
     @PostMapping("/filterCreate")
