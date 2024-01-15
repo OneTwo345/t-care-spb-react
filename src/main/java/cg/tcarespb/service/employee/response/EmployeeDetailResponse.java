@@ -23,6 +23,7 @@ public class EmployeeDetailResponse {
     private String status;
     private String experience;
     private String education;
+    private String photoUrl;
     private String hourPerWeekMin;
     private String hourPerWeekMax;
     private String priceMin;
