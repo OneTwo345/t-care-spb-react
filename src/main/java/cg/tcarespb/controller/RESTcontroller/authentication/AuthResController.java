@@ -101,6 +101,7 @@ public class AuthResController {
             user.setLastName(request.getLastName());
             user.setGender(EGender.valueOf(request.getGender()));
             user.setPersonID(request.getPersonId());
+            user.setPhoneNumber(request.getPhoneNumber());
             userRepository.save(user);
             account.setUser(user);
             accountRepository.save(account);
@@ -114,7 +115,6 @@ public class AuthResController {
 
     @PostMapping("/employees/account")
     public ResponseEntity<?> registerEmployees(@RequestBody AccountSaveRequest request) {
-
         if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email Đã Tồn Tại");
 
@@ -129,6 +129,7 @@ public class AuthResController {
         employee.setLastName(request.getLastName());
         employee.setPersonID(request.getPersonId());
         employee.setStatus(EStatus.WAITING);
+        employee.setPhoneNumber(request.getPhoneNumber());
         employeeRepository.save(employee);
         account.setEmployee(employee);
         accountRepository.save(account);

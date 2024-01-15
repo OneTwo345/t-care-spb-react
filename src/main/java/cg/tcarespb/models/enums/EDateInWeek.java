@@ -24,7 +24,6 @@ public enum EDateInWeek {
     private String name;
 
     EDateInWeek(String name) {
-
         this.name = name;
     }
 

@@ -16,7 +16,7 @@ import org.hibernate.annotations.Where;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table( name = "date_session")
+@Table( name = "date_sessions")
 public class DateSession {
     @Id
     @GeneratedValue(generator = "uuid")
