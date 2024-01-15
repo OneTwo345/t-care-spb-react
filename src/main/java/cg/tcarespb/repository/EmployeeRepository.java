@@ -2,6 +2,7 @@ package cg.tcarespb.repository;
 
 import cg.tcarespb.models.Employee;
 
+import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.service.admin.response.AdminEmployeeResponse;
 import cg.tcarespb.service.cart.request.CartFilterRequest;
 import cg.tcarespb.service.employee.response.EmployeeFilterResponse;
@@ -61,6 +62,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
 
     @Query("SELECT NEW  cg.tcarespb.service.admin.response.AdminEmployeeResponse(e.id,e.personID,e.firstName,e.lastName,e.gender)  FROM Employee e")
     Page<AdminEmployeeResponse> getAllEmployee(Pageable pageable);
+    @Query("SELECT NEW  cg.tcarespb.service.admin.response.AdminEmployeeResponse(e.id,e.personID,e.firstName,e.lastName,e.gender)  FROM Employee e where  e.status =: status ")
+    Page<AdminEmployeeResponse> getAllEmployeeByStatus(@Param("status") EStatus status, Pageable pageable);
 
 
 }

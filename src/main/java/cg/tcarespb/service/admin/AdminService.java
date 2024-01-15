@@ -1,5 +1,7 @@
 package cg.tcarespb.service.admin;
 
+import cg.tcarespb.models.Employee;
+import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.repository.HistoryWorkingRepository;
@@ -30,9 +32,29 @@ public class AdminService {
         return employeeRepository.getAllEmployee(pageable);
     }
 
-    public void banEmployee(String idEmpoyee) {
-        employeeRepository.deleteById(idEmpoyee);
+    public Page<AdminEmployeeResponse> getAllEmployeeWaiting(Pageable pageable) {
+        return employeeRepository.getAllEmployeeByStatus(EStatus.WAITING, pageable);
     }
+
+    public Page<AdminEmployeeResponse> getAllEmployeeActive(Pageable pageable) {
+        return employeeRepository.getAllEmployeeByStatus(EStatus.ACTIVE, pageable);
+    }
+
+    public Page<AdminEmployeeResponse> getAllEmployeeBan(Pageable pageable) {
+        return employeeRepository.getAllEmployeeByStatus(EStatus.BAN, pageable);
+    }
+
+    public void banEmployee(String idEmpoyee) {
+        Employee employee = employeeRepository.findById(idEmpoyee).orElse(null);
+        employee.setStatus(EStatus.BAN);
+        employeeRepository.save(employee);
+    }
+    public void activeEmployee(String idEmpoyee) {
+        Employee employee = employeeRepository.findById(idEmpoyee).orElse(null);
+        employee.setStatus(EStatus.ACTIVE);
+        employeeRepository.save(employee);
+    }
+
     public void banUser(String idUser) {
         userRepository.deleteById(idUser);
     }
