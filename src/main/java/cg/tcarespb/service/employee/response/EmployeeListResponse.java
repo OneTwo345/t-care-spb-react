@@ -21,18 +21,19 @@ public class EmployeeListResponse {
     private String personID;
     private EGender gender;
     private EStatus status;
-    private EExperience experience;
+    private String experience;
     private EEducation education;
     private List<String> skills;
     private List<String> addInfos;
     private List<String> dateSessions;
     private List<String> services;
-
+    private  String nameAddress;
     private Integer hourPerWeekMin;
     private Integer hourPerWeekMax;
     private BigDecimal priceMin;
     private BigDecimal priceMax;
     private Integer minHourPerJob;
+    private  String photoUrl;
 
 
 
