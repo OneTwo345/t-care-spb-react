@@ -4,6 +4,7 @@ import cg.tcarespb.models.Cart;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
 import cg.tcarespb.service.cart.response.CartListResponse;
+import cg.tcarespb.service.employee.request.EmployeeEditRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -118,10 +119,35 @@ public class CartRestController {
         return ResponseEntity.ok(cartListResponses);
     }
 
+    @PostMapping("/sale/{id}")
+    public void createCartBySale(@RequestBody CartSaveRequest request,@PathVariable String id) {
+        cartService.createCartBySale(request,id);
+    }
+
+    @PostMapping("/cartSale/{id}")
+    public ResponseEntity<?> createCartSale(@PathVariable String id) {
+       String cartId = cartService.createCartSale(id);
+        return new ResponseEntity<>(cartId, HttpStatus.CREATED);
+    }
+
     @PutMapping("/updateAllField/{id}")
     public ResponseEntity<?> updateAllField(@PathVariable("id") String id, @RequestBody  CartAllFieldRequest req) {
         cartService.updateAllFieldCart(req, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    @DeleteMapping("deleteCustomerBySale/{id}")
+    public ResponseEntity<String> deleteById(@PathVariable String id) {
+        cartService.deleteCartBySale(id);
+        return ResponseEntity.ok("Xóa khách hàng thành công");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody CartSaleEditRequest request) {
+        cartService.editCartBySale(request, id);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

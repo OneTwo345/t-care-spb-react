@@ -21,4 +21,5 @@ public class CartListResponse {
     private String lastName;
     private String saleNote;
     private String phone;
+    private String serviceGeneral;
 }
