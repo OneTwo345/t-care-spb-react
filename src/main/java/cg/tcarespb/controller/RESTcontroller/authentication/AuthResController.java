@@ -84,7 +84,7 @@ public class AuthResController {
     }
 
 
-@Transactional
+    @Transactional
     @PostMapping("/users/account")
     public ResponseEntity<?> register(@RequestBody AccountSaveRequest request) {
 
@@ -96,15 +96,15 @@ public class AuthResController {
         account.setERole(ERole.valueOf(request.getRole()));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
         accountRepository.save(account);
-            var user = AppUtil.mapper.map(request, User.class);
-            user.setFirstName(request.getFirstName());
-            user.setLastName(request.getLastName());
-            user.setGender(EGender.valueOf(request.getGender()));
-            user.setPersonID(request.getPersonId());
-            user.setPhoneNumber(request.getPhoneNumber());
-            userRepository.save(user);
-            account.setUser(user);
-            accountRepository.save(account);
+        var user = AppUtil.mapper.map(request, User.class);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setGender(EGender.valueOf(request.getGender()));
+        user.setPersonID(request.getPersonId());
+        user.setPhoneNumber(request.getPhoneNumber());
+        userRepository.save(user);
+        account.setUser(user);
+        accountRepository.save(account);
 
         Cart cart = new Cart();
         cart.setUser(user);
@@ -145,6 +145,9 @@ public class AuthResController {
         if (account.isPresent()) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             if (passwordEncoder.matches(request.getPassword(), account.get().getPassword())) {
+                if (account.get().getDeleted() == true) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Tài khoản của bạn hiện tại không thể đăng nhập");
+                }
                 String token = jwtToken(account.get().getEmail());
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setJwt(token);
@@ -207,7 +210,8 @@ public class AuthResController {
 
         return jwtUtil.generateToken(email, ROLE_USER.toString());
     }
-//    @GetMapping("/verifyEmail")
+
+    //    @GetMapping("/verifyEmail")
 //    public String sendVerificationToken(@RequestParam("token") String token){
 //
 //        String url = applicationUrl(servletRequest)+"/register/resend-verification-token?token="+token;
@@ -232,7 +236,7 @@ public class AuthResController {
         if (account.isPresent()) {
             String passwordResetToken = UUID.randomUUID().toString();
             accountService.createPasswordResetTokenForUser(account.get(), passwordResetToken);
-            passwordResetUrl = passwordResetEmailLink(account.get(),"http://localhost:3000", passwordResetToken);
+            passwordResetUrl = passwordResetEmailLink(account.get(), "http://localhost:3000", passwordResetToken);
         }
         return passwordResetUrl;
     }
@@ -240,7 +244,7 @@ public class AuthResController {
     private String passwordResetEmailLink(Account account, String applicationUrl,
                                           String passwordToken) throws MessagingException, UnsupportedEncodingException, MessagingException, UnsupportedEncodingException {
         String url = applicationUrl + "/forgot-password?token=" + passwordToken;
-        eventListener.sendPasswordResetVerificationEmail(url,account);
+        eventListener.sendPasswordResetVerificationEmail(url, account);
         return url;
     }
 
