@@ -7,10 +7,7 @@ import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.*;
-import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
-import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
-import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
-import cg.tcarespb.service.employee.response.EmployeeListResponse;
+import cg.tcarespb.service.employee.response.*;
 import cg.tcarespb.service.location.LocationPlaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
@@ -231,15 +228,22 @@ public class EmployeeService {
         var result = AppUtil.mapper.map(employee, EmployeeDetailResponse.class);
         result.setPhotoUrl(employee.getPhoto().getUrl());
         result.setAddress(employee.getLocationPlace().getName());
+        result.setEducation(employee.getEducation().getName());
         result.setExperience(employee.getExperience().getName());
         result.setIdSkills(employee
                 .getEmployeeSkills()
                 .stream().map(employeeSkill -> employeeSkill.getSkill().getName())
                 .collect(Collectors.toList()));
+
         result.setIdServices(employee
                 .getEmployeeServiceGenerals()
-                .stream().map(employeeServiceGeneral -> employeeServiceGeneral.getService().getName())
+                .stream()
+                .map(employeeServiceGeneral -> {
+                    ServiceGeneral service = employeeServiceGeneral.getService();
+                    return new EmployeeRenderServiceResponse(service.getName(), service.getDescription());
+                })
                 .collect(Collectors.toList()));
+
         result.setIdAddInfos(employee
                 .getEmployeeInfos()
                 .stream().map(employeeInfo -> employeeInfo.getAddInfo().getName())
