@@ -141,7 +141,6 @@ public class AuthResController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginSaveRequest request) {
         var account = accountRepository.findAccountByEmail(request.getUsername());
-
         if (account.isPresent()) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             if (passwordEncoder.matches(request.getPassword(), account.get().getPassword())) {
@@ -152,7 +151,7 @@ public class AuthResController {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setJwt(token);
                 authResponse.setIsAdmin(account.get().getERole().equals(ROLE_ADMIN));
-                authResponse.setIdUser(account.get().getUser().getId());
+                authResponse.setIdAccount(account.get().getId());
                 return ResponseEntity.ok(authResponse);
             }
         }
@@ -206,8 +205,6 @@ public class AuthResController {
                         email
                 )
         );
-
-
         return jwtUtil.generateToken(email, ROLE_USER.toString());
     }
 

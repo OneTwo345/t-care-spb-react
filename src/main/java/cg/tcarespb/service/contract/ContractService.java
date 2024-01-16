@@ -57,12 +57,12 @@ public class ContractService {
         contractRepository.save(contract);
     }
 
-    public String createContract(ContractSaveFromCartRequest req) {
-        Cart cart = cartService.findById(req.getCartId());
+    public String createContract(String cardId) {
+        Cart cart = cartService.findById(cardId);
         ContactEmployee contactEmployee = cart.getContactEmployees();
         contactEmployee.setContactStatus(EContactStatus.MET);
         contactEmployeeRepository.save(contactEmployee);
-        Employee employee = employeeRepository.findById(req.getEmployeeId()).get();
+        Employee employee = contactEmployee.getEmployee();
         Contract contract = new Contract();
         contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
