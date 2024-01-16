@@ -45,18 +45,18 @@ public class ContactEmployeeRestController {
     @GetMapping("employees/confirming/{idEmployee}")
     public ResponseEntity<?> getAllContactEmployeeConfirmingByEmployee(@PathVariable("idEmployee") String idEmployee, Pageable pageable) {
         contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.CONFIRMING);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.CONFIRMING), HttpStatus.OK);
     }
 
     @GetMapping("employees/notMetContact/{idEmployee}")
     public ResponseEntity<?> getAllContactEmployeeNotMetByEmployee(@PathVariable("idEmployee") String idEmployee, Pageable pageable) {
         contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.NOTMET);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.NOTMET), HttpStatus.OK);
     }
 
     @GetMapping("employees/metContact/{idEmployee}")
     public ResponseEntity<?> getAllContactEmployeeMetByEmployee(@PathVariable("idEmployee") String idEmployee, Pageable pageable) {
         contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.MET);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.MET), HttpStatus.OK);
     }
 }

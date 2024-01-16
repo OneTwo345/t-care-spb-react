@@ -8,6 +8,7 @@ import cg.tcarespb.models.enums.EContactStatus;
 import cg.tcarespb.models.enums.EPayStatus;
 import cg.tcarespb.repository.ContactEmployeeRepository;
 import cg.tcarespb.service.cart.CartService;
+import cg.tcarespb.service.cart.response.*;
 import cg.tcarespb.service.contactEmployee.request.ContactEmployeeByCartSaveRequest;
 import cg.tcarespb.service.contactEmployee.request.ContactEmployeeDateSaveRequest;
 import cg.tcarespb.service.contactEmployee.response.ContactEmployeeResponse;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -46,6 +49,8 @@ public class ContactEmployeeService {
         contactEmployee.setCart(cart);
         contactEmployee.setEmployee(employee);
         contactEmployee.setContactStatus(EContactStatus.CONFIRMING);
+        cart.setContactEmployees(contactEmployee);
+        cartService.saveCart(cart);
         contactEmployeeRepository.save(contactEmployee);
     }
 
@@ -94,6 +99,72 @@ public class ContactEmployeeService {
         Page<ContactEmployeeResponse> contactEmployeeResponses = contactEmployeeRepository.getContactEmployee(idEmployee, status, pageable);
         contactEmployeeResponses.stream().forEach(e -> {
             User user = cartService.findById(e.getIdCart()).getUser();
+            Cart cart = cartService.findById(e.getIdCart());
+            CartAllFieldResponse cartResponse = new CartAllFieldResponse();
+            cartResponse.setId(cart.getId());
+            cartResponse.setTimeStart(cart.getTimeStart());
+            cartResponse.setTimeEnd(cart.getTimeEnd());
+            cartResponse.setAgePatient(cart.getAgePatient());
+            cartResponse.setNoteForEmployee(cart.getNoteForEmployee());
+            cartResponse.setNoteForPatient(cart.getNoteForPatient());
+            cartResponse.setNoteForPatient(cart.getNoteForPatient());
+            cartResponse.setFirstName(cart.getFirstName());
+            cartResponse.setLastName(cart.getLastName());
+            cartResponse.setSaleNote(cart.getSaleNote());
+            cartResponse.setPhone(cart.getPhone());
+            cartResponse.setMemberOfFamily(cart.getMemberOfFamily());
+            cartResponse.setDecade(cart.getEDecade());
+            cartResponse.setGender(cart.getGender());
+
+            List<CartSkillInfoServiceResponse> infoList = new ArrayList<>();
+            for (var elem : cart.getCartInfos()) {
+                CartSkillInfoServiceResponse info = new CartSkillInfoServiceResponse();
+                info.setId(elem.getAddInfo().getId());
+                info.setName(elem.getAddInfo().getName());
+                infoList.add(info);
+            }
+            cartResponse.setInfoList(infoList);
+
+            List<CartSkillInfoServiceResponse> skillList = new ArrayList<>();
+            for (var elem : cart.getCartSkills()) {
+                CartSkillInfoServiceResponse skill = new CartSkillInfoServiceResponse();
+                skill.setId(elem.getSkill().getId());
+                skill.setName(elem.getSkill().getName());
+                skillList.add(skill);
+            }
+            cartResponse.setInfoList(skillList);
+
+            CartSkillInfoServiceResponse service = new CartSkillInfoServiceResponse();
+            service.setId(cart.getService().getId());
+            service.setName(cart.getService().getName());
+            service.setDesciption(cart.getService().getDescription());
+            cartResponse.setService(service);
+
+            CartLocationPlaceRepsonse location = new CartLocationPlaceRepsonse();
+            location.setName(cart.getLocationPlace().getName());
+            location.setDistanceForWork(cart.getLocationPlace().getDistanceForWork());
+            location.setLongitude(cart.getLocationPlace().getLongitude());
+            location.setLatitude(cart.getLocationPlace().getLatitude());
+            cartResponse.setLocationPlace(location);
+
+            List<CartDateSessionResponse> dateSessionResponseList = new ArrayList<>();
+            for (var elem : cart.getDateSessions()) {
+                CartDateSessionResponse dateSessionResponse = new CartDateSessionResponse();
+                dateSessionResponse.setSessionOfDate(elem.getSessionOfDate());
+                dateSessionResponse.setDateInWeek(elem.getDateInWeek());
+            }
+            cartResponse.setDateSessionResponseList(dateSessionResponseList);
+
+            List<CartHistoryWorkingResponse> historyWorkingResponseList = new ArrayList<>();
+            for (var elem : cart.getHistoryWorking()) {
+                CartHistoryWorkingResponse historyWorkingResponse = new CartHistoryWorkingResponse();
+                historyWorkingResponse.setSessionOfDate(elem.getSessionOfDate());
+                historyWorkingResponse.setDateInWeek(elem.getDateInWeek());
+                historyWorkingResponse.setDateWork(elem.getDateWork());
+            }
+            cartResponse.setHistoryWorkingResponseList(historyWorkingResponseList);
+            e.setCart(cartResponse);
+
             Employee employee = employeeService.findById(idEmployee);
             ContactRelativeResponse userResponse = new ContactRelativeResponse();
             userResponse.setId(user.getId());

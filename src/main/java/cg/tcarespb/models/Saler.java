@@ -19,7 +19,6 @@ import java.util.List;
 @Setter
 @Table(name = "salers")
 @SQLDelete(sql = "UPDATE salers SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
 public class Saler {
     @Id
     @GeneratedValue(generator = "uuid")
