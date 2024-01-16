@@ -98,8 +98,7 @@ public class CartRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCartById(@PathVariable("id") String id) {
-        Cart cart = cartService.findById(id);
-        return new ResponseEntity<>(cart.getId(), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.findCartById(id), HttpStatus.OK);
     }
 
 
@@ -119,7 +118,7 @@ public class CartRestController {
     }
 
     @PutMapping("/updateAllField/{id}")
-    public ResponseEntity<?> updateAllField(@PathVariable("id") String id, @RequestBody  CartAllFieldRequest req) {
+    public ResponseEntity<?> updateAllField(@PathVariable("id") String id, @RequestBody CartAllFieldRequest req) {
         cartService.updateAllFieldCart(req, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
