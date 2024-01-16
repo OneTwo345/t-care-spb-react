@@ -245,15 +245,22 @@ public class EmployeeService {
         var result = AppUtil.mapper.map(employee, EmployeeDetailResponse.class);
         result.setPhotoUrl(employee.getPhoto().getUrl());
         result.setAddress(employee.getLocationPlace().getName());
+        result.setEducation(employee.getEducation().getName());
         result.setExperience(employee.getExperience().getName());
         result.setIdSkills(employee
                 .getEmployeeSkills()
                 .stream().map(employeeSkill -> employeeSkill.getSkill().getName())
                 .collect(Collectors.toList()));
+
         result.setIdServices(employee
                 .getEmployeeServiceGenerals()
-                .stream().map(employeeServiceGeneral -> employeeServiceGeneral.getService().getName())
+                .stream()
+                .map(employeeServiceGeneral -> {
+                    ServiceGeneral service = employeeServiceGeneral.getService();
+                    return new EmployeeRenderServiceResponse(service.getName(), service.getDescription());
+                })
                 .collect(Collectors.toList()));
+
         result.setIdAddInfos(employee
                 .getEmployeeInfos()
                 .stream().map(employeeInfo -> employeeInfo.getAddInfo().getName())
