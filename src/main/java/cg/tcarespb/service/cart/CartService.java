@@ -392,8 +392,8 @@ public class CartService {
         return saler1.getCarts().stream().map(
                         service -> CartListResponse.builder()
                                 .id(service.getId())
-                                .timeStart(String.valueOf(service.getTimeStart()))
-                                .timeEnd(String.valueOf(service.getTimeEnd()))
+                                .timeStart(service.getTimeStart() != null ? String.valueOf(service.getTimeStart()) : "")
+                                .timeEnd(service.getTimeEnd() != null ? String.valueOf(service.getTimeEnd()) : "")
                                 .noteForPatient(service.getNoteForPatient())
                                 .noteForEmployee(service.getNoteForEmployee())
                                 .memberOfFamily(String.valueOf(service.getMemberOfFamily()))
@@ -403,7 +403,8 @@ public class CartService {
                                 .lastName(service.getLastName())
                                 .saleNote(service.getSaleNote())
                                 .phone(service.getPhone())
-                                .locationPlace(service.getLocationPlace().getName())
+                                .serviceGeneral(service.getService().getName() != null ? service.getService().getName() : "")
+                                .locationPlace(service.getLocationPlace() != null ? service.getLocationPlace().getName() : "")
                                 .build())
                 .collect(Collectors.toList());
     }
@@ -420,7 +421,7 @@ public class CartService {
         locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
         locationPalaceRepository.save(locationPalace);
         cart.setLocationPlace(locationPalace);
-        cart = cartRepository.save(cart);
+        cartRepository.save(cart);
     }
 
     public void updateAllFieldCart(CartAllFieldRequest req, String cartId) {
@@ -513,5 +514,31 @@ public class CartService {
         }
         cartRepository.save(cart);
     }
+
+    public String createCartSale(String id) {
+        Cart cart = new Cart();
+        Optional<Saler> saler = salerRepository.findById(id);
+        Saler saler1 = saler.get();
+        cart.setSaler(saler1);
+       cartRepository.save(cart);
+       return cart.getId();
+    }
+
+    public void deleteCartBySale(String id){
+        cartRepository.deleteById(id);
+    }
+
+    public void editCartBySale(CartSaleEditRequest request, String id) {
+        Cart cart = cartRepository.findById(id).orElseThrow(
+                () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Cart", id)));
+
+        cart.setFirstName(request.getFirstName());
+        cart.setLastName(request.getLastName());
+        cart.setPhone(request.getPhone());
+        cart.setSaleNote(request.getSaleNote());
+        cart.setTimeStart(LocalDate.parse(request.getTimeStart()));
+        cart.setTimeEnd(LocalDate.parse(request.getTimeEnd()));
+    }
+
 
 }
