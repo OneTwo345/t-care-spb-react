@@ -117,11 +117,13 @@ public class CartRestController {
     public ResponseEntity<List<CartListResponse>> getCartList(@PathVariable("id") String id) {
         List<CartListResponse> cartListResponses = cartService.findCartBySaler(id);
         return ResponseEntity.ok(cartListResponses);
+
     }
 
     @PostMapping("/sale/{id}")
-    public void createCartBySale(@RequestBody CartSaveRequest request,@PathVariable String id) {
-        cartService.createCartBySale(request,id);
+    public ResponseEntity<String> createCartBySale(@RequestBody CartSaveRequest request,@PathVariable String id) {
+      String cartId =  cartService.createCartBySale(request,id);
+        return ResponseEntity.ok(cartId);
     }
 
     @PostMapping("/cartSale/{id}")

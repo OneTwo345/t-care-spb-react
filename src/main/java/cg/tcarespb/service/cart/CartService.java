@@ -330,11 +330,14 @@ public class CartService {
                 .collect(Collectors.toList());
     }
 
-    public void createCartBySale(CartSaveRequest request,String id) {
+    @Transactional
+    public String createCartBySale(CartSaveRequest request,String id) {
         var cart = AppUtil.mapper.map(request, Cart.class);
         Optional<Saler> saler = salerRepository.findById(id);
         Saler saler1 = saler.get();
         cart.setSaler(saler1);
+        ServiceGeneral serviceGeneral = serviceGeneralService.findById(request.getServiceId());
+        cart.setService(serviceGeneral);
         LocationPlace locationPalace = new LocationPlace();
         locationPalace.setName(request.getLocationPlace());
         locationPalace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
@@ -342,7 +345,24 @@ public class CartService {
         locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
         locationPalaceRepository.save(locationPalace);
         cart.setLocationPlace(locationPalace);
+
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : request.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setCart(cart);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        cart.setDateSessions(dateSessionList);
+        cart.setHistoryWorking(historyWorkingService.createHistoryWorkingForCart(cart));
         cartRepository.save(cart);
+        return cart.getId();
     }
     public void updateAllFieldCart(CartAllFieldRequest req, String cartId) {
         Cart cart = findById(cartId);
