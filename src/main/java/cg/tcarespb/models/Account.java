@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 
+import java.time.LocalDate;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,7 +30,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private ERole eRole;
 
-
+    private LocalDate time;
     @OneToOne
     private User user;
 

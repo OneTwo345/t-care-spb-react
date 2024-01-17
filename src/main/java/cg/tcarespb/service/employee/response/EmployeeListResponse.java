@@ -19,7 +19,7 @@ public class EmployeeListResponse {
     private String personID;
     private EGender gender;
     private EStatus status;
-    private EExperience experience;
+    private String experience;
     private EEducation education;
     private List<EmployeeSkillServiceInfoResponse> skillList;
     private List<EmployeeSkillServiceInfoResponse> addInfoList;
@@ -39,7 +39,6 @@ public class EmployeeListResponse {
                                 String personID,
                                 EGender gender,
                                 EStatus status,
-                                EExperience experience,
                                 EEducation education,
                                 Double longitude,
                                 Double latitude,
@@ -53,7 +52,6 @@ public class EmployeeListResponse {
         this.personID = personID;
         this.gender = gender;
         this.status = status;
-        this.experience = experience;
         this.education = education;
         this.longitude = longitude;
         this.latitude = latitude;
