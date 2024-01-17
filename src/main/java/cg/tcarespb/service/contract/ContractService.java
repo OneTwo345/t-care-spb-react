@@ -6,6 +6,7 @@ import cg.tcarespb.models.enums.EPayStatus;
 import cg.tcarespb.repository.ContactEmployeeRepository;
 import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
+import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
 import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
@@ -57,10 +58,9 @@ public class ContractService {
         contractRepository.save(contract);
     }
 
-    public String createContract(String cardId) {
-        Cart cart = cartService.findById(cardId);
-        ContactEmployee contactEmployee = cart.getContactEmployees();
-        Employee employee = contactEmployee.getEmployee();
+    public String createContract(ContractSaveFromCartRequest req) {
+        Cart cart = cartService.findById(req.getCartId());
+        Employee employee = employeeRepository.findById(req.getEmployeeId()).orElse(null);
         Contract contract = new Contract();
         contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
@@ -68,12 +68,22 @@ public class ContractService {
         contract.setEmployee(employee);
         contract.setCreateAt(LocalDate.now());
         contract.setNameService(cart.getService().getName());
-        contract.setPriceService(cart.getService().getPriceEmployee());
         contract.setAgePatient(cart.getAgePatient());
+        contract.setPriceService(cart.getService().getPriceEmployee());
+        contract.setFeePrice(cart.getService().getFees());
         contract.setTotalPrice(cart.getService().getTotalPrice());
+        LocationPlace locationPlace = new LocationPlace();
+        locationPlace.setName(cart.getLocationPlace().getName());
+        locationPlace.setLatitude(cart.getLocationPlace().getLatitude());
+        locationPlace.setLongitude(cart.getLocationPlace().getLongitude());
+        locationPlace.setDistanceForWork(cart.getLocationPlace().getDistanceForWork());
         List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract);
         contract.setHistoryWorking(historyWorkingList);
+        contract.setFeeAmount(contract.getFeePrice().multiply(BigDecimal.valueOf(historyWorkingList.size())));
+        contract.setTotalAmount(contract.getTotalPrice().multiply(BigDecimal.valueOf(historyWorkingList.size())));
+        contract.setAmount(contract.getPriceService().multiply(BigDecimal.valueOf(historyWorkingList.size())));
         contractRepository.save(contract);
+        cartService.deleteById(req.getCartId());
         return contract.getId();
     }
 
@@ -111,4 +121,7 @@ public class ContractService {
         return contractRepository.save(contract);
     }
 
+    public BigDecimal calculateRevenue(AdminStartEndDayRequest req){
+        return contractRepository.getAllRevenue(req);
+    }
 }

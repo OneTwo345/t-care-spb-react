@@ -42,9 +42,10 @@ public class ContractResController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/createContract/{cartId}")
-    public ResponseEntity<?> create(@PathVariable("cartId") String cartId) {
-        contractService.createContract(cartId);
+    @PostMapping("/createContract")
+    public ResponseEntity<?> create(@RequestBody ContractSaveFromCartRequest req) {
+        contractService.createContract(req);
         return ResponseEntity.noContent().build();
     }
+
 }
