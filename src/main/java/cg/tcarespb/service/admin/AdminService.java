@@ -6,7 +6,9 @@ import cg.tcarespb.models.Saler;
 import cg.tcarespb.models.User;
 import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.repository.*;
+import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.admin.response.AdminEmployeeResponse;
+import cg.tcarespb.service.admin.response.AdminRevenueResponse;
 import cg.tcarespb.service.admin.response.AdminSalerResponse;
 import cg.tcarespb.service.admin.response.AdminUserResponse;
 import jakarta.transaction.Transactional;
@@ -96,5 +98,12 @@ public class AdminService {
         Employee employee = employeeRepository.findById(idEmpoyee).orElse(null);
         employee.setStatus(EStatus.ACTIVE);
         employeeRepository.save(employee);
+    }
+
+    public AdminRevenueResponse getRevenueFromContactAndContract(AdminStartEndDayRequest day) {
+
+
+
+        return null;
     }
 }

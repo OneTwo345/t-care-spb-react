@@ -2,6 +2,7 @@ package cg.tcarespb.service.historyWorking;
 
 import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.EDateInWeek;
+import cg.tcarespb.repository.CartRepository;
 import cg.tcarespb.repository.HistoryWorkingRepository;
 import cg.tcarespb.service.historyWorking.response.HistoryWorkingResponse;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class HistoryWorkingService {
     private final HistoryWorkingRepository historyWorkingRepository;
+    private final CartRepository cartRepository;
 
     public Map<DayOfWeek, LocalDate[]> create(LocalDate startDate, LocalDate endDate) {
         Map<DayOfWeek, LocalDate[]> dayOfWeekMap = new HashMap<>(); // Map để lưu trữ mảng ngày trong tuần cho mỗi ngày
@@ -106,6 +108,8 @@ public class HistoryWorkingService {
             return historyWorkingList;
         } else {
             historyWorkingEmployee.addAll(historyWorkingList);
+            cart.setHistoryWorking(historyWorkingEmployee);
+            cartRepository.save(cart);
             return historyWorkingEmployee;
         }
     }

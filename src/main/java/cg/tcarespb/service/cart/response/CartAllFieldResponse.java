@@ -37,4 +37,32 @@ public class CartAllFieldResponse {
     private List<CartDateSessionResponse> dateSessionResponseList;
     private List<CartHistoryWorkingResponse> historyWorkingResponseList;
 
+
+    public CartAllFieldResponse(String id,
+                                LocalDate timeStart,
+                                LocalDate timeEnd,
+                                Integer agePatient,
+                                String noteForPatient,
+                                String noteForEmployee,
+                                String firstName,
+                                String lastName,
+                                String saleNote,
+                                String phone,
+                                EMemberOfFamily memberOfFamily,
+                                EGender gender,
+                                EDecade decade) {
+        this.id = id;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
+        this.agePatient = agePatient;
+        this.noteForPatient = noteForPatient;
+        this.noteForEmployee = noteForEmployee;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.saleNote = saleNote;
+        this.phone = phone;
+        this.memberOfFamily = memberOfFamily;
+        this.gender = gender;
+        this.decade = decade;
+    }
 }

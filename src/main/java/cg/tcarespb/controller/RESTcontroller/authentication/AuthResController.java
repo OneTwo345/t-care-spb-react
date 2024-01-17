@@ -90,8 +90,6 @@ public class AuthResController {
 
         if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email Đã Tồn Tại");
-
-
         var account = AppUtil.mapper.map(request, Account.class);
         account.setERole(ERole.valueOf(request.getRole()));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
