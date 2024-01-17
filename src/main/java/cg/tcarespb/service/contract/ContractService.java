@@ -60,8 +60,6 @@ public class ContractService {
     public String createContract(String cardId) {
         Cart cart = cartService.findById(cardId);
         ContactEmployee contactEmployee = cart.getContactEmployees();
-        contactEmployee.setContactStatus(EContactStatus.MET);
-        contactEmployeeRepository.save(contactEmployee);
         Employee employee = contactEmployee.getEmployee();
         Contract contract = new Contract();
         contractRepository.save(contract);

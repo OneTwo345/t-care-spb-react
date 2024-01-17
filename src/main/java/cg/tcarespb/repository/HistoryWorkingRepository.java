@@ -10,4 +10,5 @@ public interface HistoryWorkingRepository extends JpaRepository<HistoryWorking, 
     void deleteAllByCartId(String cart_id);
 
     List<HistoryWorking> getAllByEmployeeId(String employeeId);
+    List<HistoryWorking> findAllByCartId(String cartId);
 }
