@@ -47,4 +47,5 @@ public class ContractResController {
         contractService.createContract(req);
         return ResponseEntity.noContent().build();
     }
+
 }

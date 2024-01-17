@@ -90,8 +90,6 @@ public class AuthResController {
 
         if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email Đã Tồn Tại");
-
-
         var account = AppUtil.mapper.map(request, Account.class);
         account.setERole(ERole.valueOf(request.getRole()));
         account.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -141,7 +139,6 @@ public class AuthResController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginSaveRequest request) {
         var account = accountRepository.findAccountByEmail(request.getUsername());
-
         if (account.isPresent()) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             if (passwordEncoder.matches(request.getPassword(), account.get().getPassword())) {
@@ -152,7 +149,7 @@ public class AuthResController {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setJwt(token);
                 authResponse.setIsAdmin(account.get().getERole().equals(ROLE_ADMIN));
-                authResponse.setIdUser(account.get().getUser().getId());
+                authResponse.setIdAccount(account.get().getId());
                 return ResponseEntity.ok(authResponse);
             }
         }
@@ -206,8 +203,6 @@ public class AuthResController {
                         email
                 )
         );
-
-
         return jwtUtil.generateToken(email, ROLE_USER.toString());
     }
 

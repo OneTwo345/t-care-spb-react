@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,4 +14,5 @@ import lombok.Setter;
 public class ContactEmployeeByCartSaveRequest {
     private String idCart;
     private String idEmployee;
+    private String dateTime;
 }

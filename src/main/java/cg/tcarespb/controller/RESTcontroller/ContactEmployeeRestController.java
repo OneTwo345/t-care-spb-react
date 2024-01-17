@@ -18,8 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class ContactEmployeeRestController {
     private final ContactEmployeeService contactEmployeeService;
 
-    @PostMapping
-    public ResponseEntity<?> create(@RequestBody ContactEmployeeByCartSaveRequest request) {
+    @PostMapping("/user")
+    public ResponseEntity<?> createByUser(@RequestBody ContactEmployeeByCartSaveRequest request) {
+        contactEmployeeService.createContactEmployeeByUser(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PostMapping("/saler")
+    public ResponseEntity<?> createBySaler(@RequestBody ContactEmployeeByCartSaveRequest request) {
         contactEmployeeService.createContactEmployee(request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -30,9 +35,9 @@ public class ContactEmployeeRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/employees/confirming/{idContact}")
+    @PutMapping("/employees/confirmed/{idContact}")
     public ResponseEntity<?> confirmContactEmployee(@PathVariable("idContact") String idContact) {
-        contactEmployeeService.updateContactStatus(idContact, EContactStatus.NOTMET);
+        contactEmployeeService.updateContactStatus(idContact, EContactStatus.CONFIRMED);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -42,21 +47,29 @@ public class ContactEmployeeRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping("employees/confirming/{idEmployee}")
+    @GetMapping("/employees/confirming/{idEmployee}")
     public ResponseEntity<?> getAllContactEmployeeConfirmingByEmployee(@PathVariable("idEmployee") String idEmployee, Pageable pageable) {
-        contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.CONFIRMING);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.CONFIRMING), HttpStatus.OK);
     }
 
-    @GetMapping("employees/notMetContact/{idEmployee}")
+    @GetMapping("/employees/confirmed/{idEmployee}")
     public ResponseEntity<?> getAllContactEmployeeNotMetByEmployee(@PathVariable("idEmployee") String idEmployee, Pageable pageable) {
-        contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.NOTMET);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.CONFIRMED), HttpStatus.OK);
     }
-
-    @GetMapping("employees/metContact/{idEmployee}")
-    public ResponseEntity<?> getAllContactEmployeeMetByEmployee(@PathVariable("idEmployee") String idEmployee, Pageable pageable) {
-        contactEmployeeService.getAllContactEmployeeByEmployeeId(pageable, idEmployee, EContactStatus.MET);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @GetMapping("/confirming")
+    public ResponseEntity<?> getAllConfirmingContact(Pageable pageable) {
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByStatus(pageable, EContactStatus.CONFIRMING), HttpStatus.OK);
+    }
+    @GetMapping("/confirmed")
+    public ResponseEntity<?> getAllConfirmedContact(Pageable pageable) {
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByStatus(pageable, EContactStatus.CONFIRMED), HttpStatus.OK);
+    }
+    @GetMapping("/canceled")
+    public ResponseEntity<?> getAllCanceledContact(Pageable pageable) {
+        return new ResponseEntity<>(contactEmployeeService.getAllContactEmployeeByStatus(pageable, EContactStatus.CANCELED), HttpStatus.OK);
+    }
+    @GetMapping
+    public ResponseEntity<?> getAllContact(Pageable pageable) {
+        return new ResponseEntity<>(contactEmployeeService.getAllContact(pageable), HttpStatus.OK);
     }
 }

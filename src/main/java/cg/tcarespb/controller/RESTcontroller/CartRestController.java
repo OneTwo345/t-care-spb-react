@@ -102,10 +102,19 @@ public class CartRestController {
         return new ResponseEntity<>(cartService.findCartById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/user/{idUser}")
+    public ResponseEntity<?> getCartById(@PathVariable("idUser") String idUser, Pageable pageable) {
+        return new ResponseEntity<>(cartService.findAllCartByUserId(idUser, pageable), HttpStatus.OK);
+    }
+
 
     @GetMapping("/filter/{id}")
     public ResponseEntity<?> filterList(@PathVariable("id") String id, @PageableDefault(size = 20) Pageable pageable) {
         return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
+    }
+    @PostMapping("/create-filter")
+    public ResponseEntity<?> createFilter( @RequestBody CartAllFieldRequest req, @PageableDefault(size = 20) Pageable pageable) {
+        return new ResponseEntity<>(cartService.createAndFilterCart(req, pageable), HttpStatus.OK);
     }
 //    @GetMapping("/filterTest/{id}")
 //    public ResponseEntity<?> filterList(@PathVariable("id") String id){
@@ -119,13 +128,13 @@ public class CartRestController {
     }
 
     @PostMapping("/sale/{id}")
-    public void createCartBySale(@RequestBody CartSaveRequest request,@PathVariable String id) {
-        cartService.createCartBySale(request,id);
+    public void createCartBySale(@RequestBody CartSaveRequest request, @PathVariable String id) {
+        cartService.createCartBySale(request, id);
     }
 
     @PostMapping("/cartSale/{id}")
     public ResponseEntity<?> createCartSale(@PathVariable String id) {
-       String cartId = cartService.createCartSale(id);
+        String cartId = cartService.createCartSale(id);
         return new ResponseEntity<>(cartId, HttpStatus.CREATED);
     }
 
@@ -138,7 +147,7 @@ public class CartRestController {
 
     @DeleteMapping("deleteCustomerBySale/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
-        cartService.deleteCartBySale(id);
+        cartService.deleteById(id);
         return ResponseEntity.ok("Xóa khách hàng thành công");
     }
 

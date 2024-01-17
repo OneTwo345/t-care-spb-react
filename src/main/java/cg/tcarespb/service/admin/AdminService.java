@@ -6,7 +6,9 @@ import cg.tcarespb.models.Saler;
 import cg.tcarespb.models.User;
 import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.repository.*;
+import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.admin.response.AdminEmployeeResponse;
+import cg.tcarespb.service.admin.response.AdminRevenueResponse;
 import cg.tcarespb.service.admin.response.AdminSalerResponse;
 import cg.tcarespb.service.admin.response.AdminUserResponse;
 import jakarta.transaction.Transactional;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,7 @@ public class AdminService {
     private final ContractRepository contractRepository;
     private final AccountRepository accountRepository;
     private final SalerRepository salerRepository;
+    private final ContactEmployeeRepository contactEmployeeRepository;
 
     public Page<AdminUserResponse> getAllUser(Pageable pageable, Boolean deleted) {
         return userRepository.getAllUser(pageable, deleted);
@@ -96,5 +100,15 @@ public class AdminService {
         Employee employee = employeeRepository.findById(idEmpoyee).orElse(null);
         employee.setStatus(EStatus.ACTIVE);
         employeeRepository.save(employee);
+    }
+
+    public AdminRevenueResponse getRevenueFromContactAndContract(AdminStartEndDayRequest day) {
+
+
+        return null;
+    }
+
+    public BigDecimal getAllRevenueContact(AdminStartEndDayRequest req) {
+        return contactEmployeeRepository.getAllRevenue(req);
     }
 }

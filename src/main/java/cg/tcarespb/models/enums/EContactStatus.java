@@ -1,9 +1,8 @@
 package cg.tcarespb.models.enums;
 
 public enum EContactStatus {
-    MET("Đã gặp mặt"),
+    CONFIRMED("Đã xác nhận"),
 
-    NOTMET("Chưa gặp mặt"),
     CONFIRMING("Đang chờ xác nhận"),
     CANCELED("Đã hủy");
 
