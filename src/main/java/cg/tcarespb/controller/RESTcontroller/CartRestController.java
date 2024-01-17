@@ -144,10 +144,10 @@ public class CartRestController {
         return ResponseEntity.ok("Xóa khách hàng thành công");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody CartSaleEditRequest request) {
-        cartService.editCartBySale(request, id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/sale/{id}")
+    public ResponseEntity<?> edit(@PathVariable("id") String id, @RequestBody CartSaleEditRequest request) {
+        String cartId = cartService.editCartBySale(request, id);
+        return new ResponseEntity<>(cartId, HttpStatus.OK);
     }
 
 

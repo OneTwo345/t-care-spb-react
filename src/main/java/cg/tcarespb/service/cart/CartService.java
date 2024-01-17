@@ -325,7 +325,7 @@ public class CartService {
         request.setLongitude(cart.getLocationPlace().getLongitude());
         request.setNameLocation(cart.getLocationPlace().getName());
         request.setStatus(EStatus.ACTIVE);
-        Page<EmployeeFilterResponse> employeeList = employeeRepository.filterTestCase(request, pageable);
+        Page<EmployeeFilterResponse> employeeList = employeeRepository.filter(request, pageable);
         employeeList.stream().forEach(e -> e.setDistanceToWork(locationPlaceService.getDistance(request.getLatitude(), request.getLongitude(), e.getLatitude(), e.getLongitude())));
 
         for (var e : employeeList) {
@@ -548,16 +548,48 @@ public class CartService {
         cartRepository.deleteById(id);
     }
 
-    public void editCartBySale(CartSaleEditRequest request, String id) {
+    @Transactional
+    public String editCartBySale(CartSaleEditRequest request, String id) {
         Cart cart = cartRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Cart", id)));
 
+        cart.setTimeStart(LocalDate.parse(request.getTimeStart()));
+        cart.setTimeEnd(LocalDate.parse(request.getTimeEnd()));
+        cart.setNoteForPatient(request.getNoteForPatient());
+        cart.setNoteForEmployee(request.getNoteForEmployee());
+        cart.setMemberOfFamily(EMemberOfFamily.valueOf(request.getMemberOfFamily()));
+        cart.setGender(EGender.valueOf(request.getGender()));
+        cart.setEDecade(EDecade.valueOf(request.getEDecade()));
+        LocationPlace locationPlace = new LocationPlace();
+        locationPlace.setName(request.getLocationPlace());
+        locationPlace.setLongitude(Double.valueOf(request.getLongitude()));
+        locationPlace.setLatitude(Double.valueOf(request.getLatitude()));
+        locationPlace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
+        locationPalaceRepository.save(locationPlace);
+        cart.setLocationPlace(locationPlace);
         cart.setFirstName(request.getFirstName());
         cart.setLastName(request.getLastName());
         cart.setPhone(request.getPhone());
         cart.setSaleNote(request.getSaleNote());
-        cart.setTimeStart(LocalDate.parse(request.getTimeStart()));
-        cart.setTimeEnd(LocalDate.parse(request.getTimeEnd()));
+        ServiceGeneral serviceGeneral = serviceGeneralService.findById(request.getServiceId());
+        cart.setService(serviceGeneral);
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : request.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setCart(cart);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        cart.setDateSessions(dateSessionList);
+        cartRepository.save(cart);
+        return cart.getId();
+
     }
 
 
