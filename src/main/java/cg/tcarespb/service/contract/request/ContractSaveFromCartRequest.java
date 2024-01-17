@@ -10,5 +10,4 @@ import lombok.Setter;
 public class ContractSaveFromCartRequest {
     private String cartId;
     private String employeeId;
-
 }

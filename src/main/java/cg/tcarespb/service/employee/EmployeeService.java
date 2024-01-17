@@ -409,6 +409,12 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
+    public void updateStatusForEmployee(String id, EStatus status) {
+        Employee employee = findById(id);
+        employee.setStatus(status);
+        employeeRepository.save(employee);
+    }
+
     public EmployeeDetailInFilterListResponse findEmployeeDetailById(String idEmployee, String idCart) {
         Employee employee = findById(idEmployee);
         Cart cart = cartService.findById(idCart);

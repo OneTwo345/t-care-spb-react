@@ -112,6 +112,10 @@ public class CartRestController {
     public ResponseEntity<?> filterList(@PathVariable("id") String id, @PageableDefault(size = 20) Pageable pageable) {
         return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
     }
+    @PostMapping("/create-filter")
+    public ResponseEntity<?> createFilter( @RequestBody CartAllFieldRequest req, @PageableDefault(size = 20) Pageable pageable) {
+        return new ResponseEntity<>(cartService.createAndFilterCart(req, pageable), HttpStatus.OK);
+    }
 //    @GetMapping("/filterTest/{id}")
 //    public ResponseEntity<?> filterList(@PathVariable("id") String id){
 //        return new ResponseEntity<>(cartService.filterTest(id), HttpStatus.OK);
@@ -143,7 +147,7 @@ public class CartRestController {
 
     @DeleteMapping("deleteCustomerBySale/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
-        cartService.deleteCartBySale(id);
+        cartService.deleteById(id);
         return ResponseEntity.ok("Xóa khách hàng thành công");
     }
 

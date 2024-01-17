@@ -25,14 +25,18 @@ public class Contract {
     private String id;
     private LocalDate timeStart;
     private LocalDate timeEnd;
+    private LocalDate createAt;
     private String namePatient;
     private Integer agePatient;
     private String content;
     private Boolean deleted = false;
-    private BigDecimal totalPrice;
     private String nameService;
+    private BigDecimal feePrice;
+    private BigDecimal totalPrice;
     private BigDecimal priceService;
-    private LocalDate createAt;
+    private BigDecimal totalAmount;;
+    private BigDecimal amount;
+    private BigDecimal feeAmount;
     @Enumerated(EnumType.STRING)
     private EGender gender;
     @ManyToOne

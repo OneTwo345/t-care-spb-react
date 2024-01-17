@@ -11,7 +11,9 @@ import cg.tcarespb.repository.AccountRepository;
 import cg.tcarespb.repository.SalerRepository;
 import cg.tcarespb.service.admin.AdminService;
 import cg.tcarespb.service.admin.request.AdminSaveSalerRequest;
+import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.cart.response.CartListResponse;
+import cg.tcarespb.service.contract.ContractService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,7 @@ public class AdminRestController {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final SalerRepository salerRepository;
+    private final ContractService contractService;
 
 
     @GetMapping("/users")
@@ -138,9 +141,8 @@ public class AdminRestController {
     }
 
     @GetMapping("/revenue/contract")
-    public ResponseEntity<?> getRevenueFromContract() {
-//        return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.BAN), HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> getRevenueFromContract(@RequestBody  AdminStartEndDayRequest req) {
+        return new ResponseEntity<>( contractService.calculateRevenue(req),HttpStatus.OK);
     }
     @GetMapping("/revenue")
     public ResponseEntity<?> getRevenue() {
