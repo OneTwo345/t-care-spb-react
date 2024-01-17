@@ -18,9 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "employees")
 @SQLDelete(sql = "UPDATE employees SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
-@Table(name = "employees")
 public class Employee {
     @Id
     @GeneratedValue(generator = "uuid")

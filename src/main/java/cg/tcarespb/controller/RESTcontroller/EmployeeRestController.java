@@ -1,6 +1,7 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 
+import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.service.customMail.EmailSenderService;
 import cg.tcarespb.service.employee.EmployeeService;
 import cg.tcarespb.service.employee.request.*;
@@ -10,6 +11,8 @@ import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
 import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +30,8 @@ public class EmployeeRestController {
     private final EmailSenderService emailSenderService;
 
     @GetMapping
-    public ResponseEntity<List<EmployeeListResponse>> getEmployeeList() {
-        List<EmployeeListResponse> employeeListResponseList = employeeService.getEmployeeList();
+    public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(Pageable pageable) {
+        Page<EmployeeListResponse> employeeListResponseList = employeeService.getEmployeeList(EStatus.ACTIVE,pageable);
         return ResponseEntity.ok(employeeListResponseList);
     }
 

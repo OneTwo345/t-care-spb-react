@@ -34,30 +34,67 @@ public class AdminRestController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUser(Pageable pageable) {
-        return new ResponseEntity<>(adminService.getAllUser(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(adminService.getAllUser(pageable, false), HttpStatus.OK);
     }
 
-    @GetMapping("/employees")
-    public ResponseEntity<?> getAllEmployee(Pageable pageable) {
-        return new ResponseEntity<>(adminService.getAllEmployee(pageable), HttpStatus.OK);
+    @GetMapping("/users/ban")
+    public ResponseEntity<?> getAllUserBan(Pageable pageable) {
+        return new ResponseEntity<>(adminService.getAllUser(pageable, true), HttpStatus.OK);
     }
 
-    @PutMapping("/users/ban/{id}")
-    public ResponseEntity<?> banUsers(@PathVariable("id") String id) {
-        adminService.banUser(id);
+    @PutMapping("/users/ban/{idUser}")
+    public ResponseEntity<?> banUsers(@PathVariable("idUser") String idUser) {
+        adminService.banUser(idUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/employees/ban/{id}")
-    public ResponseEntity<?> banEmployee(@PathVariable("id") String id) {
-        adminService.banEmployee(id);
+    @PutMapping("/users/unBan/{idUser}")
+    public ResponseEntity<?> unBanUsers(@PathVariable("idUser") String idUser) {
+        adminService.unBanUser(idUser);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @PutMapping("/employees/active/{id}")
-    public ResponseEntity<?> active(@PathVariable("id") String id) {
-        adminService.activeEmployee(id);
+
+    @PutMapping("/employees/ban/{idEmployee}")
+    public ResponseEntity<?> banEmployee(@PathVariable("idEmployee") String idEmployee) {
+        adminService.banEmployee(idEmployee);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping("/employees/unBan/{idEmployee}")
+    public ResponseEntity<?> unBanEmployee(@PathVariable("idEmployee") String idEmployee) {
+        adminService.unBanEmployee(idEmployee);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/salers")
+    public ResponseEntity<?> getAllSaler(Pageable pageable) {
+        return new ResponseEntity<>(adminService.getAllSaler(pageable, false), HttpStatus.OK);
+    }
+
+    @GetMapping("/salers/ban")
+    public ResponseEntity<?> getAllSalerBan(Pageable pageable) {
+        return new ResponseEntity<>(adminService.getAllSaler(pageable, true), HttpStatus.OK);
+    }
+
+    @PutMapping("/salers/ban/{idSaler}")
+    public ResponseEntity<?> banSaler(@PathVariable("idSaler") String idSaler) {
+        adminService.banSaler(idSaler);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/salers/unBan/{idSaler}")
+    public ResponseEntity<?> unBanSaler(@PathVariable("idSaler") String idSaler) {
+        adminService.unBanSaler(idSaler);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @PutMapping("/employees/active/{idEmployee}")
+    public ResponseEntity<?> active(@PathVariable("id") String idEmployee) {
+        adminService.activeEmployee(idEmployee);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PostMapping("/salers/account")
     public ResponseEntity<?> createSaler(@RequestBody AdminSaveSalerRequest req) {
         if (accountRepository.existsByEmailIgnoreCase(req.getEmail()))
@@ -79,17 +116,20 @@ public class AdminRestController {
         String salerId = saler.getId();
         return new ResponseEntity<>(salerId, HttpStatus.CREATED);
     }
+
     @GetMapping("/employees/waiting")
     public ResponseEntity<?> getAllEmployeeWaiting(Pageable pageable) {
-        return new ResponseEntity<>(adminService.getAllEmployeeWaiting(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.WAITING), HttpStatus.OK);
     }
+
     @GetMapping("/employees/active")
     public ResponseEntity<?> getAllEmployeeActive(Pageable pageable) {
-        return new ResponseEntity<>(adminService.getAllEmployeeActive(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.ACTIVE), HttpStatus.OK);
     }
+
     @GetMapping("/employees/ban")
     public ResponseEntity<?> getAllEmployeeBan(Pageable pageable) {
-        return new ResponseEntity<>(adminService.getAllEmployeeBan(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.BAN), HttpStatus.OK);
     }
 
 }

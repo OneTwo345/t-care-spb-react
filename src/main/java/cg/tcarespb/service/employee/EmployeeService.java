@@ -7,10 +7,7 @@ import cg.tcarespb.service.addInfo.AddInfoService;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.dateSession.DateSessionService;
 import cg.tcarespb.service.employee.request.*;
-import cg.tcarespb.service.employee.response.EmployeeDateSessionListResponse;
-import cg.tcarespb.service.employee.response.EmployeeDetailInFilterListResponse;
-import cg.tcarespb.service.employee.response.EmployeeDetailResponse;
-import cg.tcarespb.service.employee.response.EmployeeListResponse;
+import cg.tcarespb.service.employee.response.*;
 import cg.tcarespb.service.location.LocationPlaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
@@ -18,6 +15,8 @@ import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,44 +44,60 @@ public class EmployeeService {
     private final RateRepository rateRepository;
 
 
-    public List<EmployeeListResponse> getEmployeeList() {
-        return employeeRepository.findAll()
-                .stream()
-                .map(service -> EmployeeListResponse.builder()
-                        .id(service.getId())
-                        .address(service.getAddress())
-                        .firstName(service.getFirstName())
-                        .lastName(service.getLastName())
-                        .descriptionAboutMySelf(service.getDescriptionAboutMySelf())
-                        .bioTitle(service.getBioTitle())
-                        .personID(service.getPersonID())
-                        .gender(service.getGender())
-                        .status(service.getStatus())
-                        .education(service.getEducation())
-                        .experience(service.getExperience().getName())
-                        .photoUrl(service.getPhoto().getUrl())
-                        .nameAddress(service.getLocationPlace().getName())
-                        .skills(service.getEmployeeSkills()
-                                .stream()
-                                .map(employeeSkill -> employeeSkill.getSkill().getName())
-                                .collect(Collectors.toList()))
-                        .addInfos(service.getEmployeeInfos()
-                                .stream()
-                                .map(employeeInfo -> employeeInfo.getAddInfo().getName())
-                                .collect(Collectors.toList())
-                        )
-                        .services(service.getEmployeeServiceGenerals()
-                                .stream()
-                                .map(employeeServiceGeneral -> employeeServiceGeneral.getService().getName())
-                                .collect(Collectors.toList())
-                        )
-                        .dateSessions(service.getDateSessions()
-                                .stream()
-                                .map(dateSession -> dateSession.getDateInWeek().getName() + " : " + dateSession.getSessionOfDate().getName())
-                                .collect(Collectors.toList())
-                        )
-                        .build())
-                .collect(Collectors.toList());
+    public Page<EmployeeListResponse> getEmployeeList(EStatus status, Pageable pageable) {
+
+        Page<EmployeeListResponse> employeeList = employeeRepository.findAllByStatus(status, pageable);
+        employeeList.stream().forEach(e -> {
+            Employee employee = findById(e.getId());
+
+            List<EmployeeSkillServiceInfoResponse> skillList = new ArrayList<>();
+            for (var elem : employee.getEmployeeSkills()) {
+                EmployeeSkillServiceInfoResponse skill = new EmployeeSkillServiceInfoResponse();
+                skill.setId(elem.getSkill().getId());
+                skill.setName(elem.getSkill().getName());
+                skillList.add(skill);
+            }
+            e.setSkillList(skillList);
+
+            List<EmployeeSkillServiceInfoResponse> infoList = new ArrayList<>();
+            for (var elem : employee.getEmployeeInfos()) {
+                EmployeeSkillServiceInfoResponse info = new EmployeeSkillServiceInfoResponse();
+                info.setId(elem.getAddInfo().getId());
+                info.setName(elem.getAddInfo().getName());
+                infoList.add(info);
+            }
+            e.setAddInfoList(infoList);
+
+            List<EmployeeSkillServiceInfoResponse> serviceList = new ArrayList<>();
+            for (var elem : employee.getEmployeeServiceGenerals()) {
+                EmployeeSkillServiceInfoResponse service = new EmployeeSkillServiceInfoResponse();
+                service.setId(elem.getService().getId());
+                service.setName(elem.getService().getName());
+                service.setDesciption(elem.getService().getDescription());
+                serviceList.add(service);
+            }
+            e.setServiceList(serviceList);
+
+            List<EmployeeDateSessionResponse> dateSessionList = new ArrayList<>();
+            for (var elem : employee.getDateSessions()) {
+                EmployeeDateSessionResponse dateSession = new EmployeeDateSessionResponse();
+                dateSession.setDateInWeek(elem.getDateInWeek());
+                dateSession.setSessionOfDate(elem.getSessionOfDate());
+                dateSessionList.add(dateSession);
+            }
+            e.setDateSessionList(dateSessionList);
+
+            List<EmployeeHistoryWorkingResponse> historyWorkingList = new ArrayList<>();
+            for (var elem : employee.getHistoryWorking()) {
+                EmployeeHistoryWorkingResponse historyWorking = new EmployeeHistoryWorkingResponse();
+                historyWorking.setDateInWeek(elem.getDateInWeek());
+                historyWorking.setSessionOfDate(elem.getSessionOfDate());
+                historyWorking.setDateWork(elem.getDateWork());
+                historyWorkingList.add(historyWorking);
+            }
+            e.setHistoryWorkingList(historyWorkingList);
+        });
+        return employeeList;
     }
 
     public Employee saveEmployee(Employee employee) {
@@ -212,6 +227,7 @@ public class EmployeeService {
         employeeRepository.save(employee);
 
     }
+
     public void updatePhotoEmployee(EmployeeAvatarSaveRequest request, String employeeId) {
         Employee employee = findById(employeeId);
         Photo image = photoRepository.findPhotoById(request.getAvatar()).get();
@@ -222,8 +238,6 @@ public class EmployeeService {
     }
 
 
-
-
     public EmployeeDetailResponse findDetailEmployeeById(String id) {
         var employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
@@ -231,15 +245,22 @@ public class EmployeeService {
         var result = AppUtil.mapper.map(employee, EmployeeDetailResponse.class);
         result.setPhotoUrl(employee.getPhoto().getUrl());
         result.setAddress(employee.getLocationPlace().getName());
+        result.setEducation(employee.getEducation().getName());
         result.setExperience(employee.getExperience().getName());
         result.setIdSkills(employee
                 .getEmployeeSkills()
                 .stream().map(employeeSkill -> employeeSkill.getSkill().getName())
                 .collect(Collectors.toList()));
+
         result.setIdServices(employee
                 .getEmployeeServiceGenerals()
-                .stream().map(employeeServiceGeneral -> employeeServiceGeneral.getService().getName())
+                .stream()
+                .map(employeeServiceGeneral -> {
+                    ServiceGeneral service = employeeServiceGeneral.getService();
+                    return new EmployeeRenderServiceResponse(service.getName(), service.getDescription());
+                })
                 .collect(Collectors.toList()));
+
         result.setIdAddInfos(employee
                 .getEmployeeInfos()
                 .stream().map(employeeInfo -> employeeInfo.getAddInfo().getName())
@@ -306,7 +327,7 @@ public class EmployeeService {
         employeeServiceGeneralRepository.saveAll(employeeServices);
     }
 
-@Transactional
+    @Transactional
     public String createEmployeeFilter(EmployeeSaveFilterRequest req) {
         Employee employee = new Employee();
         employeeRepository.save(employee);
@@ -357,7 +378,7 @@ public class EmployeeService {
             }
         }
         List<Rate> rateList = new ArrayList<>();
-        for (var rateRecord :req.getListRate()){
+        for (var rateRecord : req.getListRate()) {
             Rate rate = new Rate();
             rate.setEmployee(employee);
             rate.setStarQuantity(rateRecord.getQuantityStar());
@@ -369,7 +390,7 @@ public class EmployeeService {
         }
         employee.setRates(rateList);
         employee.setDateSessions(dateSessionList);
-     return   employeeRepository.save(employee).getId();
+        return employeeRepository.save(employee).getId();
     }
 
     public void delete(String id) {

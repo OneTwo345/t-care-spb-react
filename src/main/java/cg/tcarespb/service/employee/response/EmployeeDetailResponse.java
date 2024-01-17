@@ -1,5 +1,6 @@
 package cg.tcarespb.service.employee.response;
 
+import cg.tcarespb.models.ServiceGeneral;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,7 +19,7 @@ public class EmployeeDetailResponse {
     private String personID;
     private List<String> idSkills;
     private List<String> idAddInfos;
-    private List<String> idServices;
+    private List<EmployeeRenderServiceResponse> idServices;
     private String gender;
     private String status;
     private String experience;

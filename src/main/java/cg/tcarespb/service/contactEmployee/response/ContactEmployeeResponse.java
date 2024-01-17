@@ -1,6 +1,7 @@
 package cg.tcarespb.service.contactEmployee.response;
 
 import cg.tcarespb.models.enums.EGender;
+import cg.tcarespb.service.cart.response.CartAllFieldResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class ContactEmployeeResponse {
     private String idCart;
     private String idUser;
     private String idEmployee;
+    private CartAllFieldResponse cart;
     private ContactRelativeResponse user;
     private ContactRelativeResponse employee;
 

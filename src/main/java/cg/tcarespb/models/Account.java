@@ -15,6 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 @Getter
 @Setter
 @Table(name = "accounts")
+@SQLDelete(sql = "UPDATE accounts SET deleted = true WHERE id=?")
 public class Account {
     @Id
     @GeneratedValue(generator = "uuid")

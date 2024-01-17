@@ -1,19 +1,17 @@
 package cg.tcarespb.service.employee.response;
 
 import cg.tcarespb.models.enums.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 @Setter
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeListResponse {
     private String id;
-    private String address;
     private String firstName;
     private String lastName;
     private String descriptionAboutMySelf;
@@ -21,20 +19,45 @@ public class EmployeeListResponse {
     private String personID;
     private EGender gender;
     private EStatus status;
-    private String experience;
+    private EExperience experience;
     private EEducation education;
-    private List<String> skills;
-    private List<String> addInfos;
-    private List<String> dateSessions;
-    private List<String> services;
-    private  String nameAddress;
-    private Integer hourPerWeekMin;
-    private Integer hourPerWeekMax;
-    private BigDecimal priceMin;
-    private BigDecimal priceMax;
-    private Integer minHourPerJob;
-    private  String photoUrl;
+    private List<EmployeeSkillServiceInfoResponse> skillList;
+    private List<EmployeeSkillServiceInfoResponse> addInfoList;
+    private List<EmployeeSkillServiceInfoResponse> serviceList;
+    private List<EmployeeDateSessionResponse> dateSessionList;
+    private List <EmployeeHistoryWorkingResponse> historyWorkingList;
+    private Double longitude;
+    private Double latitude;
+    private String nameLocation;
+    private String photoUrl;
 
-
-
+    public EmployeeListResponse(String id,
+                                String firstName,
+                                String lastName,
+                                String descriptionAboutMySelf,
+                                String bioTitle,
+                                String personID,
+                                EGender gender,
+                                EStatus status,
+                                EExperience experience,
+                                EEducation education,
+                                Double longitude,
+                                Double latitude,
+                                String nameLocation,
+                                String photoUrl) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.descriptionAboutMySelf = descriptionAboutMySelf;
+        this.bioTitle = bioTitle;
+        this.personID = personID;
+        this.gender = gender;
+        this.status = status;
+        this.experience = experience;
+        this.education = education;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.nameLocation = nameLocation;
+        this.photoUrl = photoUrl;
+    }
 }
