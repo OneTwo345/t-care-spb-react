@@ -12,6 +12,6 @@ public class UserSaveRequest {
     private String personID;
     private String firstName;
     private String fullName;
-    private EGender gender;
+    private String gender;
     private String phoneNumber;
 }
