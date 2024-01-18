@@ -30,6 +30,7 @@ public class  EmployeeFilterResponse {
     private List<String> skillName;
     private List<String> serviceName;
     private List<String> infoName;
+    private String cartId;
 
     public EmployeeFilterResponse(String id,String nameLocation, String firstName, String lastName,String bio, String descriptionAboutMySelf, EExperience experience, Double longitude, Double latitude, String address) {
         this.id = id;
