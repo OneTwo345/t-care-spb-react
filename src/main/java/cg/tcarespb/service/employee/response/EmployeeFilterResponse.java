@@ -19,6 +19,7 @@ public class  EmployeeFilterResponse {
     private String bio;
     private String descriptionAboutMySelf;
     private EExperience experience;
+    private String eExperience;
     private Double longitude;
     private Double latitude;
     private String nameLocation;
