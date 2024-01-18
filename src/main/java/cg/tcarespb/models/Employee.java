@@ -26,7 +26,6 @@ public class Employee {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    private String address;
     private String firstName;
     private String lastName;
     private String descriptionAboutMySelf;

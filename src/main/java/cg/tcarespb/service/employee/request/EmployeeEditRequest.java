@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class EmployeeEditRequest {
-    private String address;
     private String firstName;
     private String lastName;
     private String descriptionAboutMySelf;
