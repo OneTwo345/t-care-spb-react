@@ -151,8 +151,6 @@ public class CartService {
         cartResponse.setHistoryWorkingResponseList(historyWorkingResponseList);
 
 
-
-
         return cartResponse;
     }
 
@@ -348,6 +346,7 @@ public class CartService {
             } else {
                 e.setPhotoUrl(photo.getUrl());
             }
+            e.setEExperience(e.getExperience().getName());
             e.setSkillName(employee.getEmployeeSkills().stream().map(elem -> elem.getSkill().getName()).collect(Collectors.toList()));
             e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
             e.setServiceName(employee.getEmployeeServiceGenerals().stream().map(elem -> elem.getService().getName()).collect(Collectors.toList()));
@@ -366,6 +365,7 @@ public class CartService {
         }
         return employeeList;
     }
+
     public List<CartListResponse> findCartBySaler(String id) {
         Optional<Saler> saler = salerRepository.findById(id);
         Saler saler1 = saler.get();
@@ -499,7 +499,9 @@ public class CartService {
         }
         cartRepository.save(cart);
     }
-    public Page<EmployeeFilterResponse> createAndFilterCart(CartAllFieldRequest req, Pageable pageable,String idUser){
+
+    public Page<EmployeeFilterResponse> createAndFilterCart(CartAllFieldRequest req, Pageable pageable, String
+            idUser) {
         Cart cart = new Cart();
         var user = userRepository.findById(idUser).get();
         cart.setUser(user);
@@ -592,7 +594,7 @@ public class CartService {
         }
 
         cartRepository.save(cart);
-        Page<EmployeeFilterResponse> filterList = filter(cart.getId(),pageable);
+        Page<EmployeeFilterResponse> filterList = filter(cart.getId(), pageable);
         filterList.forEach(e -> e.setEExperience(e.getExperience().getName()));
         return filterList;
     }
