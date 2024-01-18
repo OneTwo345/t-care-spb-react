@@ -285,7 +285,6 @@ public class EmployeeService {
     public void edit(EmployeeEditRequest request, String id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
-        employee.setAddress(request.getAddress());
         employee.setFirstName(request.getFirstName());
         employee.setLastName(request.getLastName());
         employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
