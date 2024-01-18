@@ -51,7 +51,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             "e.personID," +
             "e.gender," +
             "e.status," +
-            "e.experience," +
             "e.education," +
             "e.locationPlace.longitude," +
             "e.locationPlace.latitude," +

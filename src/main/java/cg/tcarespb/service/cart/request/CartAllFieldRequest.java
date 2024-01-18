@@ -1,13 +1,12 @@
 package cg.tcarespb.service.cart.request;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CartAllFieldRequest {
     private String longitude;
     private String latitude;

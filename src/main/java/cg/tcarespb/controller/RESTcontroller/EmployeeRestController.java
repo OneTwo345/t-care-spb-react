@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,9 @@ public class EmployeeRestController {
     private final EmailSenderService emailSenderService;
 
     @GetMapping
-    public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(Pageable pageable) {
-        Page<EmployeeListResponse> employeeListResponseList = employeeService.getEmployeeList(EStatus.ACTIVE, pageable);
+    public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(@PageableDefault(size = 5)Pageable pageable) {
+        Page<EmployeeListResponse> employeeListResponseList = employeeService.getEmployeeList(EStatus.ACTIVE,pageable);
+
         return ResponseEntity.ok(employeeListResponseList);
     }
 

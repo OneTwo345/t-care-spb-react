@@ -49,6 +49,7 @@ public class EmployeeService {
         Page<EmployeeListResponse> employeeList = employeeRepository.findAllByStatus(status, pageable);
         employeeList.stream().forEach(e -> {
             Employee employee = findById(e.getId());
+            e.setExperience(employee.getExperience().getName());
 
             List<EmployeeSkillServiceInfoResponse> skillList = new ArrayList<>();
             for (var elem : employee.getEmployeeSkills()) {
@@ -237,7 +238,7 @@ public class EmployeeService {
 
     }
 
-
+@Transactional
     public EmployeeDetailResponse findDetailEmployeeById(String id) {
         var employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
