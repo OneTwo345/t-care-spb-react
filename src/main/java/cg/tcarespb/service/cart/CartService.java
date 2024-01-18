@@ -104,7 +104,7 @@ public class CartService {
             skill.setName(e.getSkill().getName());
             skillList.add(skill);
         }
-        cartResponse.setInfoList(skillList);
+        cartResponse.setSkillList(skillList);
 
         CartSkillInfoServiceResponse service = new CartSkillInfoServiceResponse();
         service.setId(cart.getService().getId());
@@ -225,6 +225,7 @@ public class CartService {
         Cart cart = findById(req.getCartId());
         Employee employee = employeeRepository.findById(req.getEmployeeId()).orElse(null);
         cart.setEmployee(employee);
+        cartRepository.save(cart);
     }
 
     public void updateNoteForEmployee(CartNoteForEmployeeSaveRequest req, String cardId) {
@@ -291,7 +292,6 @@ public class CartService {
         Cart cart = new Cart();
         cartRepository.save(cart);
         cart.setService(serviceGeneralService.findById(req.getService()));
-
         cart.setTimeStart(LocalDate.parse(req.getTimeStart(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         cart.setTimeEnd(LocalDate.parse(req.getTimeEnd(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
@@ -674,7 +674,7 @@ public class CartService {
                 skill.setName(e.getSkill().getName());
                 skillList.add(skill);
             }
-            elem.setInfoList(skillList);
+            elem.setSkillList(skillList);
 
             CartSkillInfoServiceResponse service = new CartSkillInfoServiceResponse();
             service.setId(cart.getService().getId());

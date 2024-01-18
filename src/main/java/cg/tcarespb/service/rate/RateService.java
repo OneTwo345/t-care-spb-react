@@ -83,7 +83,7 @@ public class RateService {
                                 .employeeId(service.getEmployee().getId())
                                 .employeeName(service.getEmployee().getFirstName())
                                 .employeeRateQuantity(String.valueOf(service.getRateQuantity()))
-                                .employeeLocation(service.getEmployee().getAddress())
+                                .employeeLocation(service.getEmployee().getLocationPlace().getName())
                                 .photoURL(service.getEmployee().getPhoto().getUrl())
                                 .content(service.getContent())
                                 .userName(service.getUser().getFirstName())

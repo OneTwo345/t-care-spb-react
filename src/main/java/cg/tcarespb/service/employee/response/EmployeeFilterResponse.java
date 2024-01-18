@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class  EmployeeFilterResponse {
+public class EmployeeFilterResponse {
     private String id;
     private String firstName;
     private String lastName;
@@ -23,7 +23,6 @@ public class  EmployeeFilterResponse {
     private Double latitude;
     private String nameLocation;
     private Double distanceToWork;
-    private String address;
     private Float starAverage;
     private Integer rateQuantity;
     private String photoUrl;
@@ -31,17 +30,16 @@ public class  EmployeeFilterResponse {
     private List<String> serviceName;
     private List<String> infoName;
 
-    public EmployeeFilterResponse(String id,String nameLocation, String firstName, String lastName,String bio, String descriptionAboutMySelf, EExperience experience, Double longitude, Double latitude, String address) {
+    public EmployeeFilterResponse(String id, String nameLocation, String firstName, String lastName, String bio, String descriptionAboutMySelf, EExperience experience, Double longitude, Double latitude) {
         this.id = id;
         this.nameLocation = nameLocation;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.bio =bio;
+        this.bio = bio;
         this.descriptionAboutMySelf = descriptionAboutMySelf;
         this.experience = experience;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.address = address;
     }
 
 }

@@ -42,8 +42,9 @@ public class CartRestController {
         cartService.updateCartService(req, id);
         return ResponseEntity.noContent().build();
     }
+
     @PutMapping("/employees")
-    public ResponseEntity<?> updateServiceGeneral( @RequestBody CartEmployeeSaveRequest req) {
+    public ResponseEntity<?> updateServiceGeneral(@RequestBody CartEmployeeSaveRequest req) {
         cartService.updateEmployeeForCart(req);
         return ResponseEntity.noContent().build();
     }
@@ -117,9 +118,10 @@ public class CartRestController {
     public ResponseEntity<?> filterList(@PathVariable("id") String id, @PageableDefault(size = 20) Pageable pageable) {
         return new ResponseEntity<>(cartService.filter(id, pageable), HttpStatus.OK);
     }
+
     @PostMapping("/create-filter/{idUser}")
-    public ResponseEntity<?> createFilter( @PathVariable("idUser") String idUser, @RequestBody CartAllFieldRequest req, @PageableDefault(size = 20) Pageable pageable) {
-        return new ResponseEntity<>(cartService.createAndFilterCart(req, pageable ,idUser), HttpStatus.OK);
+    public ResponseEntity<?> createFilter(@PathVariable("idUser") String idUser, @RequestBody CartAllFieldRequest req, @PageableDefault(size = 20) Pageable pageable) {
+        return new ResponseEntity<>(cartService.createAndFilterCart(req, pageable, idUser), HttpStatus.OK);
     }
 //    @GetMapping("/filterTest/{id}")
 //    public ResponseEntity<?> filterList(@PathVariable("id") String id){
