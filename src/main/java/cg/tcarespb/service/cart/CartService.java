@@ -14,6 +14,7 @@ import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.service.location.LocationPlaceService;
 import cg.tcarespb.service.serviceGeneral.ServiceGeneralService;
 import cg.tcarespb.service.skill.SkillService;
+import cg.tcarespb.service.user.UserService;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import jakarta.transaction.Transactional;
@@ -48,6 +49,7 @@ public class CartService {
     private final SalerRepository salerRepository;
     private final CartSkillRepository cartSkillRepository;
     private final CartInfoRepository cartInfoRepository;
+    private final UserRepository userRepository;
 
 
     public Cart create(Cart cart) {
@@ -517,8 +519,10 @@ public class CartService {
         }
         cartRepository.save(cart);
     }
-    public Page<EmployeeFilterResponse> createAndFilterCart(CartAllFieldRequest req, Pageable pageable){
+    public Page<EmployeeFilterResponse> createAndFilterCart(CartAllFieldRequest req, Pageable pageable,String idUser){
         Cart cart = new Cart();
+        var user = userRepository.findById(idUser).get();
+        cart.setUser(user);
         cartRepository.save(cart);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (req.getTimeStart() != null
@@ -606,8 +610,10 @@ public class CartService {
             locationPlace.setDistanceForWork(Double.valueOf(req.getDistanceForWork()));
             locationPlaceService.create(locationPlace);
         }
+
         cartRepository.save(cart);
         Page<EmployeeFilterResponse> filterList = filter(cart.getId(),pageable);
+        filterList.forEach(e -> e.setEExperience(e.getExperience().getName()));
         return filterList;
     }
 
