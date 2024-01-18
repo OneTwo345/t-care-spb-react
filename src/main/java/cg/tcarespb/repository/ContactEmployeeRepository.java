@@ -9,12 +9,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface ContactEmployeeRepository extends JpaRepository<ContactEmployee,String> {
-    @Query("SELECT NEW cg.tcarespb.service.contactEmployee.response.ContactEmployeeResponse(ce.id, ce.cart.id, ce.cart.user.id, ce.employee.id) " +
+public interface ContactEmployeeRepository extends JpaRepository<ContactEmployee, String> {
+    @Query("SELECT NEW cg.tcarespb.service.contactEmployee.response.ContactEmployeeResponse(ce.id, ce.cart.id, ce.cart.user.id, ce.employee.id,ce.dateTime,ce.fee) " +
             "FROM ContactEmployee ce " +
             "WHERE ce.employee.id = :idEmployee " +
             "AND ce.contactStatus = :status")
     Page<ContactEmployeeResponse> getContactEmployee(@Param("idEmployee") String idEmployee, @Param("status") EContactStatus status, Pageable pageable);
+
+    @Query("SELECT NEW cg.tcarespb.service.contactEmployee.response.ContactEmployeeResponse(ce.id, ce.cart.id, ce.cart.user.id, ce.employee.id,ce.dateTime,ce.fee) " +
+            "FROM ContactEmployee ce " +
+            "WHERE ce.contactStatus = :status")
+    Page<ContactEmployeeResponse> getContactEmployeeByStatus(@Param("status") EContactStatus status, Pageable pageable);
+
+    @Query("SELECT NEW cg.tcarespb.service.contactEmployee.response.ContactEmployeeResponse(ce.id, ce.cart.id, ce.cart.user.id, ce.employee.id,ce.dateTime,ce.fee) " +
+            "FROM ContactEmployee ce ")
+    Page<ContactEmployeeResponse> getAllContact(Pageable pageable);
+
 
 
 }

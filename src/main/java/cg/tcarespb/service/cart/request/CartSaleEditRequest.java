@@ -27,4 +27,6 @@ public class CartSaleEditRequest {
     private String phone;
     private String serviceId;
     List<CartDateSessionSaveRequest> listDateSession;
+    private List<String> idSkills;
+    private List<String> idAddInfos;
 }

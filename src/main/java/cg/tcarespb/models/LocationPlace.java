@@ -26,9 +26,5 @@ public class LocationPlace {
     private Double distanceForWork;
     private Double longitude;
     private Double latitude;
-    private Double distanceToWork;
     private Boolean deleted = false;
-
-
-
 }

@@ -25,4 +25,9 @@ public class CartInfo {
 
     @ManyToOne
     private AddInfo addInfo;
+
+    public CartInfo(Cart cart, AddInfo addInfo) {
+        this.cart = cart;
+        this.addInfo = addInfo;
+    }
 }

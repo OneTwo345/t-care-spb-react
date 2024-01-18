@@ -101,7 +101,7 @@ public class CartService {
             skill.setName(e.getSkill().getName());
             skillList.add(skill);
         }
-        cartResponse.setInfoList(skillList);
+        cartResponse.setSkillList(skillList);
 
         CartSkillInfoServiceResponse service = new CartSkillInfoServiceResponse();
         service.setId(cart.getService().getId());
@@ -125,22 +125,25 @@ public class CartService {
             contactEmployeeResponse.setFirstName(contactEmployee.getEmployee().getFirstName());
             contactEmployeeResponse.setFee(contactEmployee.getFee());
             contactEmployeeResponse.setDateTime(contactEmployee.getDateTime());
+            cartResponse.setContactEmployee(contactEmployeeResponse);
         }
 
         List<CartDateSessionResponse> dateSessionResponseList = new ArrayList<>();
-        for (var e : cart.getDateSessions()) {
+        for (var e : dateSessionRepository.findAllByCartId(id)) {
             CartDateSessionResponse dateSessionResponse = new CartDateSessionResponse();
             dateSessionResponse.setSessionOfDate(e.getSessionOfDate());
             dateSessionResponse.setDateInWeek(e.getDateInWeek());
+            dateSessionResponseList.add(dateSessionResponse);
         }
         cartResponse.setDateSessionResponseList(dateSessionResponseList);
 
         List<CartHistoryWorkingResponse> historyWorkingResponseList = new ArrayList<>();
-        for (var e : cart.getHistoryWorking()) {
+        for (var e : historyWorkingRepository.findAllByCartId(id)) {
             CartHistoryWorkingResponse historyWorkingResponse = new CartHistoryWorkingResponse();
             historyWorkingResponse.setSessionOfDate(e.getSessionOfDate());
             historyWorkingResponse.setDateInWeek(e.getDateInWeek());
             historyWorkingResponse.setDateWork(e.getDateWork());
+            historyWorkingResponseList.add(historyWorkingResponse);
         }
         cartResponse.setHistoryWorkingResponseList(historyWorkingResponseList);
 
@@ -438,6 +441,18 @@ public class CartService {
                 dateSessionService.create(newDateSession);
             }
         }
+        cartInfoRepository.saveAll(request
+                .getIdAddInfos()
+                .stream()
+                .map(infoId -> new CartInfo(cart, new AddInfo(String.valueOf(infoId))))
+                .collect(Collectors.toList())
+        );
+        cartSkillRepository.saveAll(request
+                .getIdSkills()
+                .stream()
+                .map(skillId -> new CartSkill(cart, new Skill(String.valueOf(skillId))))
+                .collect(Collectors.toList())
+        );
         cart.setDateSessions(dateSessionList);
         cart.setHistoryWorking(historyWorkingService.createHistoryWorkingForCart(cart));
         cartRepository.save(cart);
@@ -540,11 +555,11 @@ public class CartService {
         Optional<Saler> saler = salerRepository.findById(id);
         Saler saler1 = saler.get();
         cart.setSaler(saler1);
-       cartRepository.save(cart);
-       return cart.getId();
+        cartRepository.save(cart);
+        return cart.getId();
     }
 
-    public void deleteCartBySale(String id){
+    public void deleteCartBySale(String id) {
         cartRepository.deleteById(id);
     }
 
@@ -586,11 +601,103 @@ public class CartService {
                 dateSessionService.create(newDateSession);
             }
         }
+        dateSessionRepository.deleteAllByCartId(cart.getId());
+        historyWorkingRepository.deleteAllByCartId(cart.getId());
+
         cart.setDateSessions(dateSessionList);
+        cart.setHistoryWorking(historyWorkingService.createHistoryWorkingForCart(cart));
+
+        cartSkillRepository.deleteAllById(cart.getCartSkills().stream()
+                .map(CartSkill::getId)
+                .collect(Collectors.toList()));
+        var cartSkills = new ArrayList<CartSkill>();
+        for (String idSkill : request.getIdSkills()) {
+            Skill skill = new Skill(String.valueOf(idSkill));
+            cartSkills.add(new CartSkill(cart, skill));
+        }
+        cartSkillRepository.saveAll(cartSkills);
+
+        cartInfoRepository.deleteAllById(cart.getCartInfos().stream()
+                .map(CartInfo::getId)
+                .collect(Collectors.toList()));
+        var cartInfos = new ArrayList<CartInfo>();
+        for (String idInfo : request.getIdAddInfos()) {
+            AddInfo info = new AddInfo(String.valueOf(idInfo));
+            cartInfos.add(new CartInfo(cart, info));
+        }
+        cartInfoRepository.saveAll(cartInfos);
         cartRepository.save(cart);
         return cart.getId();
 
     }
 
+    public Page<CartAllFieldResponse> findAllCartByUserId(String userId, Pageable pageable) {
+        Page<CartAllFieldResponse> listCart = cartRepository.findAllCartByUserId(userId, pageable);
 
+        for (var elem : listCart) {
+            List<CartSkillInfoServiceResponse> infoList = new ArrayList<>();
+            Cart cart = findById(elem.getId());
+            for (var e : cart.getCartInfos()) {
+                CartSkillInfoServiceResponse info = new CartSkillInfoServiceResponse();
+                info.setId(e.getAddInfo().getId());
+                info.setName(e.getAddInfo().getName());
+                infoList.add(info);
+            }
+            elem.setInfoList(infoList);
+
+            List<CartSkillInfoServiceResponse> skillList = new ArrayList<>();
+            for (var e : cart.getCartSkills()) {
+                CartSkillInfoServiceResponse skill = new CartSkillInfoServiceResponse();
+                skill.setId(e.getSkill().getId());
+                skill.setName(e.getSkill().getName());
+                skillList.add(skill);
+            }
+            elem.setInfoList(skillList);
+
+            CartSkillInfoServiceResponse service = new CartSkillInfoServiceResponse();
+            service.setId(cart.getService().getId());
+            service.setName(cart.getService().getName());
+            service.setDesciption(cart.getService().getDescription());
+            elem.setService(service);
+
+            CartLocationPlaceRepsonse location = new CartLocationPlaceRepsonse();
+            location.setName(cart.getLocationPlace().getName());
+            location.setDistanceForWork(cart.getLocationPlace().getDistanceForWork());
+            location.setLongitude(cart.getLocationPlace().getLongitude());
+            location.setLatitude(cart.getLocationPlace().getLatitude());
+            elem.setLocationPlace(location);
+
+            CartContactEmployeeResponse contactEmployeeResponse = new CartContactEmployeeResponse();
+            ContactEmployee contactEmployee = cart.getContactEmployees();
+            if (contactEmployee != null) {
+                contactEmployeeResponse.setContactStatus(contactEmployee.getContactStatus());
+                contactEmployeeResponse.setIdEmployee(contactEmployee.getEmployee().getId());
+                contactEmployeeResponse.setLastName(contactEmployee.getEmployee().getLastName());
+                contactEmployeeResponse.setFirstName(contactEmployee.getEmployee().getFirstName());
+                contactEmployeeResponse.setFee(contactEmployee.getFee());
+                contactEmployeeResponse.setDateTime(contactEmployee.getDateTime());
+                elem.setContactEmployee(contactEmployeeResponse);
+            }
+
+            List<CartDateSessionResponse> dateSessionResponseList = new ArrayList<>();
+            for (var e : dateSessionRepository.findAllByCartId(cart.getId())) {
+                CartDateSessionResponse dateSessionResponse = new CartDateSessionResponse();
+                dateSessionResponse.setSessionOfDate(e.getSessionOfDate());
+                dateSessionResponse.setDateInWeek(e.getDateInWeek());
+                dateSessionResponseList.add(dateSessionResponse);
+            }
+            elem.setDateSessionResponseList(dateSessionResponseList);
+
+            List<CartHistoryWorkingResponse> historyWorkingResponseList = new ArrayList<>();
+            for (var e : historyWorkingRepository.findAllByCartId(cart.getId())) {
+                CartHistoryWorkingResponse historyWorkingResponse = new CartHistoryWorkingResponse();
+                historyWorkingResponse.setSessionOfDate(e.getSessionOfDate());
+                historyWorkingResponse.setDateInWeek(e.getDateInWeek());
+                historyWorkingResponse.setDateWork(e.getDateWork());
+                historyWorkingResponseList.add(historyWorkingResponse);
+            }
+            elem.setHistoryWorkingResponseList(historyWorkingResponseList);
+        }
+        return listCart;
+    }
 }

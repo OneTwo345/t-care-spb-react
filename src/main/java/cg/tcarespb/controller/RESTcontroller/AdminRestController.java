@@ -132,4 +132,20 @@ public class AdminRestController {
         return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.BAN), HttpStatus.OK);
     }
 
+    @GetMapping("/revenue/contact")
+    public ResponseEntity<?> getRevenueFromContact() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/revenue/contract")
+    public ResponseEntity<?> getRevenueFromContract() {
+//        return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.BAN), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/revenue")
+    public ResponseEntity<?> getRevenue() {
+//        return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.BAN), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
