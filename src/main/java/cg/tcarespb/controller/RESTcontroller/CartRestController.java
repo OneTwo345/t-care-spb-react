@@ -42,6 +42,11 @@ public class CartRestController {
         cartService.updateCartService(req, id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/employees")
+    public ResponseEntity<?> updateServiceGeneral( @RequestBody CartEmployeeSaveRequest req) {
+        cartService.updateEmployeeForCart(req);
+        return ResponseEntity.noContent().build();
+    }
 
     @PutMapping("/dateSessions/{id}")
     public ResponseEntity<?> updateDateSession(@PathVariable("id") String id, @RequestBody CartDateSessionListSaveRequest req) {

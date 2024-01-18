@@ -40,6 +40,7 @@ public class CartAllFieldResponse {
     private CartContactEmployeeResponse contactEmployee;
     private List<CartDateSessionResponse> dateSessionResponseList;
     private List<CartHistoryWorkingResponse> historyWorkingResponseList;
+    private CartEmployeeResponse employee;
 
 
     public CartAllFieldResponse(String id,
