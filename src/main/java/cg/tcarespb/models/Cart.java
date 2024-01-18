@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,6 +38,9 @@ public class Cart {
     private String lastName;
     private String saleNote;
     private String phone;
+    private BigDecimal totalAmount;;
+    private BigDecimal amount;
+    private BigDecimal feeAmount;
     private Boolean deleted = false;
     @Enumerated(EnumType.STRING)
     private EMemberOfFamily memberOfFamily;

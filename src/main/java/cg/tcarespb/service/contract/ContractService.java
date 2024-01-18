@@ -121,7 +121,14 @@ public class ContractService {
         return contractRepository.save(contract);
     }
 
-    public BigDecimal calculateRevenue(AdminStartEndDayRequest req){
+    public BigDecimal calculateRevenue(AdminStartEndDayRequest req) {
+
+        if (req.getEndDay() == "" || req.getEndDay() == null) {
+            req.setEndDay("2300/01/01");
+        }
+        if (req.getStartDay() == "" || req.getStartDay() == null) {
+            req.setStartDay("2022/01/01");
+        }
         return contractRepository.getAllRevenue(req);
     }
 }
