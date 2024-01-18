@@ -108,8 +108,8 @@ public class CartRestController {
         return new ResponseEntity<>(cartService.findCartById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/user/{idUser}")
-    public ResponseEntity<?> getCartById(@PathVariable("idUser") String idUser, Pageable pageable) {
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> getCartById(@PathVariable("id") String idUser, Pageable pageable) {
         return new ResponseEntity<>(cartService.findAllCartByUserId(idUser, pageable), HttpStatus.OK);
     }
 

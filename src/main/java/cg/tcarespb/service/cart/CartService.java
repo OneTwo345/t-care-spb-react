@@ -135,7 +135,9 @@ public class CartService {
         for (var e : dateSessionRepository.findAllByCartId(id)) {
             CartDateSessionResponse dateSessionResponse = new CartDateSessionResponse();
             dateSessionResponse.setSessionOfDate(e.getSessionOfDate());
+            dateSessionResponse.setSessionOfDateName(e.getSessionOfDate().getName());
             dateSessionResponse.setDateInWeek(e.getDateInWeek());
+            dateSessionResponse.setDateInWeekName(e.getDateInWeek().getName());
             dateSessionResponseList.add(dateSessionResponse);
         }
         cartResponse.setDateSessionResponseList(dateSessionResponseList);
@@ -624,7 +626,12 @@ public class CartService {
 
         cartRepository.save(cart);
         Page<EmployeeFilterResponse> filterList = filter(cart.getId(), pageable);
-        filterList.forEach(e -> e.setEExperience(e.getExperience().getName()));
+        filterList.forEach(e ->{
+                e.setEExperience(e.getExperience().getName());
+                e.setCartId(cart.getId());
+        }
+        );
+
         return filterList;
     }
 
@@ -705,7 +712,9 @@ public class CartService {
             for (var e : dateSessionRepository.findAllByCartId(cart.getId())) {
                 CartDateSessionResponse dateSessionResponse = new CartDateSessionResponse();
                 dateSessionResponse.setSessionOfDate(e.getSessionOfDate());
+                dateSessionResponse.setSessionOfDateName(e.getSessionOfDate().getName());
                 dateSessionResponse.setDateInWeek(e.getDateInWeek());
+                dateSessionResponse.setDateInWeekName(e.getDateInWeek().getName());
                 dateSessionResponseList.add(dateSessionResponse);
             }
             elem.setDateSessionResponseList(dateSessionResponseList);
