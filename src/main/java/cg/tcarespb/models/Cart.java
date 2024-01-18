@@ -1,5 +1,6 @@
 package cg.tcarespb.models;
 
+import cg.tcarespb.models.enums.ECartStatus;
 import cg.tcarespb.models.enums.EDecade;
 import cg.tcarespb.models.enums.EGender;
 import cg.tcarespb.models.enums.EMemberOfFamily;
@@ -42,6 +43,8 @@ public class Cart {
     private BigDecimal amount;
     private BigDecimal feeAmount;
     private Boolean deleted = false;
+    @Enumerated(EnumType.STRING)
+    private ECartStatus cartStatus = ECartStatus.UNREADY;
     @Enumerated(EnumType.STRING)
     private EMemberOfFamily memberOfFamily;
     @Enumerated(EnumType.STRING)

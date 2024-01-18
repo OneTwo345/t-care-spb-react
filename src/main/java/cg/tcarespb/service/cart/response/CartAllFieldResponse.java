@@ -41,6 +41,7 @@ public class CartAllFieldResponse {
     private List<CartDateSessionResponse> dateSessionResponseList;
     private List<CartHistoryWorkingResponse> historyWorkingResponseList;
     private CartEmployeeResponse employee;
+    private CartUserResponse user;
 
 
     public CartAllFieldResponse(String id,

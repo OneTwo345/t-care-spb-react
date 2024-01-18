@@ -1,6 +1,7 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 import cg.tcarespb.models.Cart;
+import cg.tcarespb.models.enums.ECartStatus;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
 import cg.tcarespb.service.cart.response.CartListResponse;
@@ -145,12 +146,16 @@ public class CartRestController {
         return new ResponseEntity<>(cartId, HttpStatus.CREATED);
     }
 
-    @PutMapping("/updateAllField/{id}")
-    public ResponseEntity<?> updateAllField(@PathVariable("id") String id, @RequestBody CartAllFieldRequest req) {
-        cartService.updateAllFieldCart(req, id);
+    @PutMapping("/updateAllField/{idCart}")
+    public ResponseEntity<?> updateAllField(@PathVariable("idCart") String idCart, @RequestBody CartAllFieldRequest req) {
+        cartService.updateAllFieldCart(req, idCart);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    @PutMapping("/updateField/{idCart}")
+    public ResponseEntity<?> updateField(@PathVariable("idCart") String idCart, @RequestBody CartUpdateFieldRequest req) {
+        cartService.updateFieldForCart(idCart, req);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @DeleteMapping("/deleteCustomerBySale/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
@@ -163,6 +168,10 @@ public class CartRestController {
         cartService.editCartBySale(request, id);
         return ResponseEntity.noContent().build();
     }
-
+    @PutMapping("/cartStatus/{idCart}")
+    public ResponseEntity<?> updateCartStatus(@PathVariable("idCart") String idCart) {
+        cartService.updateCartStatus(ECartStatus.READY, idCart);
+        return ResponseEntity.noContent().build();
+    }
 
 }

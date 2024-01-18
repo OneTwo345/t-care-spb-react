@@ -14,6 +14,7 @@ import cg.tcarespb.service.contract.request.ContractSaveRequest;
 import cg.tcarespb.service.contract.response.ContractDetailResponse;
 import cg.tcarespb.service.contract.response.ContractListResponse;
 import cg.tcarespb.service.historyWorking.HistoryWorkingService;
+import cg.tcarespb.util.AppConvertString;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
@@ -124,11 +125,13 @@ public class ContractService {
     public BigDecimal calculateRevenue(AdminStartEndDayRequest req) {
 
         if (req.getEndDay() == "" || req.getEndDay() == null) {
-            req.setEndDay("2300/01/01");
+            req.setEndDay("2024-02-20");
         }
         if (req.getStartDay() == "" || req.getStartDay() == null) {
-            req.setStartDay("2022/01/01");
+            req.setStartDay("2021-02-20");
         }
+        req.setStartDay(AppConvertString.converString(req.getStartDay()));
+        req.setEndDay(AppConvertString.converString(req.getEndDay()));
         return contractRepository.getAllRevenue(req);
     }
 }

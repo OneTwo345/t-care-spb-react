@@ -16,6 +16,8 @@ import java.time.LocalDate;
 public class CartHistoryWorkingResponse {
     private EDateInWeek dateInWeek;
     private ESessionOfDate sessionOfDate;
+    private String dateInWeekName;
+    private String sessionOfDateName;
     private LocalDate dateWork;
 
 }
