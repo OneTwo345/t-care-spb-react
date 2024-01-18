@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -149,6 +150,7 @@ public class CartService {
         }
         cartResponse.setHistoryWorkingResponseList(historyWorkingResponseList);
 
+
         return cartResponse;
     }
 
@@ -186,6 +188,9 @@ public class CartService {
         }
         cart.setDateSessions(dateSessionList);
         historyWorkingService.createHistoryWorkingForCart(cart);
+        cart.setTotalAmount(cart.getService().getTotalPrice().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+        cart.setFeeAmount(cart.getService().getFees().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+        cart.setAmount(cart.getService().getPriceEmployee().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
         cartRepository.save(cart);
     }
 
@@ -341,6 +346,7 @@ public class CartService {
             } else {
                 e.setPhotoUrl(photo.getUrl());
             }
+            e.setEExperience(e.getExperience().getName());
             e.setSkillName(employee.getEmployeeSkills().stream().map(elem -> elem.getSkill().getName()).collect(Collectors.toList()));
             e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
             e.setServiceName(employee.getEmployeeServiceGenerals().stream().map(elem -> elem.getService().getName()).collect(Collectors.toList()));
@@ -359,37 +365,6 @@ public class CartService {
         }
         return employeeList;
     }
-
-    //    public List<String> filterTest(String idCart) {
-//        Cart cart = findById(idCart);
-//        CartSkillFilterRequest req = new CartSkillFilterRequest();
-//        req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
-//        CartFilterRequest request = new CartFilterRequest();
-//        request.setCartServiceId(cart.getService().getId());
-//        request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
-//        request.setCartInfoIdList(cart.getCartInfos().stream().map(e -> e.getAddInfo().getId()).collect(Collectors.joining(",")));
-//        request.setDistance(cart.getLocationPlace().getDistanceForWork());
-//        request.setLatitude(cart.getLocationPlace().getLatitude());
-//        request.setLongitude(cart.getLocationPlace().getLongitude());
-//        request.setStatus(EStatus.ACTIVE);
-//        List<String> employeeList = employeeRepository.filterTest(request);
-//        return employeeList;
-//    }
-//    public List<String> filterTest(String idCart) {
-//        Cart cart = findById(idCart);
-//        CartSkillFilterRequest req = new CartSkillFilterRequest();
-//        req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
-//        CartFilterRequest request = new CartFilterRequest();
-//        request.setCartServiceId(cart.getService().getId());
-//        request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
-//        request.setCartInfoIdList(cart.getCartInfos().stream().map(e -> e.getAddInfo().getId()).collect(Collectors.joining(",")));
-//        request.setDistance(cart.getLocationPlace().getDistanceForWork());
-//        request.setLatitude(cart.getLocationPlace().getLatitude());
-//        request.setLongitude(cart.getLocationPlace().getLongitude());
-//        request.setStatus(EStatus.ACTIVE);
-//        List<String> employeeList = employeeRepository.filterTest(request);
-//        return employeeList;
-//    }
 
     public List<CartListResponse> findCartBySaler(String id) {
         Optional<Saler> saler = salerRepository.findById(id);
@@ -460,10 +435,15 @@ public class CartService {
                 historyWorkingService.createHistoryWorkingForCart(cart);
             }
         }
+
+
         if (req.getService() != null && !req.getService().isEmpty()) {
             ServiceGeneral serviceGeneral = serviceGeneralService.findById(req.getService());
             cart.setService(serviceGeneral);
         }
+        cart.setTotalAmount(cart.getService().getTotalPrice().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+        cart.setFeeAmount(cart.getService().getFees().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+        cart.setAmount(cart.getService().getPriceEmployee().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
         if (req.getListInfoId() != null && !req.getListInfoId().isEmpty()) {
             cartInfoRepository.deleteAllByCartId(cartId);
             List<CartInfo> cartInfoList = new ArrayList<>();
@@ -519,7 +499,9 @@ public class CartService {
         }
         cartRepository.save(cart);
     }
-    public Page<EmployeeFilterResponse> createAndFilterCart(CartAllFieldRequest req, Pageable pageable,String idUser){
+
+    public Page<EmployeeFilterResponse> createAndFilterCart(CartAllFieldRequest req, Pageable pageable, String
+            idUser) {
         Cart cart = new Cart();
         var user = userRepository.findById(idUser).get();
         cart.setUser(user);
@@ -612,7 +594,7 @@ public class CartService {
         }
 
         cartRepository.save(cart);
-        Page<EmployeeFilterResponse> filterList = filter(cart.getId(),pageable);
+        Page<EmployeeFilterResponse> filterList = filter(cart.getId(), pageable);
         filterList.forEach(e -> e.setEExperience(e.getExperience().getName()));
         return filterList;
     }
@@ -708,6 +690,9 @@ public class CartService {
                 historyWorkingResponseList.add(historyWorkingResponse);
             }
             elem.setHistoryWorkingResponseList(historyWorkingResponseList);
+            elem.setTotalAmount(cart.getService().getTotalPrice().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+            elem.setFeeAmount(cart.getService().getFees().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+            elem.setAmount(cart.getService().getPriceEmployee().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
         }
         return listCart;
     }

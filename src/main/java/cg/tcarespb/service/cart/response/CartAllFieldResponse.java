@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 @Getter
@@ -29,6 +30,9 @@ public class CartAllFieldResponse {
     private EMemberOfFamily memberOfFamily;
     private EGender gender;
     private EDecade decade;
+    private BigDecimal totalAmount;;
+    private BigDecimal amount;
+    private BigDecimal feeAmount;
     private List<CartSkillInfoServiceResponse> infoList;
     private List<CartSkillInfoServiceResponse> skillList;
     private CartSkillInfoServiceResponse service;

@@ -145,7 +145,7 @@ public class CartRestController {
     }
 
 
-    @DeleteMapping("deleteCustomerBySale/{id}")
+    @DeleteMapping("/deleteCustomerBySale/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
         cartService.deleteById(id);
         return ResponseEntity.ok("Xóa khách hàng thành công");
