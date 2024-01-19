@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.math.BigDecimal;
 
 public interface ContractRepository extends JpaRepository<Contract,String> {
-    @Query("SELECT calculate_total_revenue_contract(:#{#req.startDay},:#{#req.endDay}) ")
-    BigDecimal getAllRevenue(AdminStartEndDayRequest req);
+    @Query("SELECT calculate_total_fee_amount_contract(:#{#req.startDay},:#{#req.endDay}) ")
+    BigDecimal getAllFeeAmount(AdminStartEndDayRequest req);
+    @Query("SELECT calculate_total_fee_contact_contract(:#{#req.startDay},:#{#req.endDay}) ")
+    BigDecimal getAllFeeContact(AdminStartEndDayRequest req);
 
 }

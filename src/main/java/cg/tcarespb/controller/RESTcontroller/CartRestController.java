@@ -4,9 +4,11 @@ import cg.tcarespb.models.Cart;
 import cg.tcarespb.models.enums.ECartStatus;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
+import cg.tcarespb.service.cart.response.CartAllFieldResponse;
 import cg.tcarespb.service.cart.response.CartListResponse;
 import cg.tcarespb.service.employee.request.EmployeeEditRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -172,6 +174,16 @@ public class CartRestController {
     public ResponseEntity<?> updateCartStatus(@PathVariable("idCart") String idCart) {
         cartService.updateCartStatus(ECartStatus.READY, idCart);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/readyStatus")
+    public ResponseEntity<?> getCartListByStatus( Pageable pageable) {
+        Page<CartAllFieldResponse> cartListResponses= cartService.findAllCartByStatusCart(ECartStatus.READY,  pageable);
+        return new ResponseEntity<>(cartListResponses, HttpStatus.OK);
+    }
+    @GetMapping("/readyStatus/search")
+    public ResponseEntity<?> getCartListByStatusAndSearch( Pageable pageable,@RequestBody CartSearchFilterRequest req) {
+        Page<CartAllFieldResponse> cartListResponses= cartService.findAllCartByStatusCartAndSearch(ECartStatus.READY, pageable, req);
+        return new ResponseEntity<>(cartListResponses, HttpStatus.OK);
     }
 
 }

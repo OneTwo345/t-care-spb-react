@@ -20,7 +20,6 @@ public class CartAllFieldResponse {
     private String id;
     private LocalDate timeStart;
     private LocalDate timeEnd;
-    private Integer agePatient;
     private String noteForPatient;
     private String noteForEmployee;
     private String firstName;
@@ -33,6 +32,7 @@ public class CartAllFieldResponse {
     private BigDecimal totalAmount;;
     private BigDecimal amount;
     private BigDecimal feeAmount;
+    private String cartStatus;
     private List<CartSkillInfoServiceResponse> infoList;
     private List<CartSkillInfoServiceResponse> skillList;
     private CartSkillInfoServiceResponse service;
@@ -47,7 +47,6 @@ public class CartAllFieldResponse {
     public CartAllFieldResponse(String id,
                                 LocalDate timeStart,
                                 LocalDate timeEnd,
-                                Integer agePatient,
                                 String noteForPatient,
                                 String noteForEmployee,
                                 String firstName,
@@ -60,7 +59,6 @@ public class CartAllFieldResponse {
         this.id = id;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
-        this.agePatient = agePatient;
         this.noteForPatient = noteForPatient;
         this.noteForEmployee = noteForEmployee;
         this.firstName = firstName;
