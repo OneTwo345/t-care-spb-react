@@ -160,9 +160,14 @@ public class CartRestController {
     }
 
     @DeleteMapping("/deleteCustomerBySale/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable String id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
         cartService.deleteById(id);
         return ResponseEntity.ok("Xóa khách hàng thành công");
+    }
+    @DeleteMapping("/{idCart}")
+    public ResponseEntity<?> deleteCartById(@PathVariable ("idCart")String idCart) {
+        cartService.deleteById(idCart);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
