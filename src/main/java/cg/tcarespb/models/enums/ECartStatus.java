@@ -1,8 +1,8 @@
 package cg.tcarespb.models.enums;
 
 public enum ECartStatus {
-    READY("Sẵn sàng"),
-    UNREADY("Không sẵn sàng");
+    READY("Đang xác nhận"),
+    UNREADY("Chưa xác nhận ");
 
     private String name;
 

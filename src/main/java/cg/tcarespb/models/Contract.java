@@ -31,6 +31,7 @@ public class Contract {
     private String content;
     private Boolean deleted = false;
     private String nameService;
+    private BigDecimal feeContact;
     private BigDecimal feePrice;
     private BigDecimal totalPrice;
     private BigDecimal priceService;

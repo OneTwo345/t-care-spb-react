@@ -128,7 +128,6 @@ public class ContactEmployeeService {
             cartResponse.setId(cart.getId());
             cartResponse.setTimeStart(cart.getTimeStart());
             cartResponse.setTimeEnd(cart.getTimeEnd());
-            cartResponse.setAgePatient(cart.getAgePatient());
             cartResponse.setNoteForEmployee(cart.getNoteForEmployee());
             cartResponse.setNoteForPatient(cart.getNoteForPatient());
             cartResponse.setNoteForPatient(cart.getNoteForPatient());
@@ -220,7 +219,6 @@ public class ContactEmployeeService {
             cartResponse.setId(cart.getId());
             cartResponse.setTimeStart(cart.getTimeStart());
             cartResponse.setTimeEnd(cart.getTimeEnd());
-            cartResponse.setAgePatient(cart.getAgePatient());
             cartResponse.setNoteForEmployee(cart.getNoteForEmployee());
             cartResponse.setNoteForPatient(cart.getNoteForPatient());
             cartResponse.setNoteForPatient(cart.getNoteForPatient());
@@ -311,7 +309,6 @@ public class ContactEmployeeService {
             cartResponse.setId(cart.getId());
             cartResponse.setTimeStart(cart.getTimeStart());
             cartResponse.setTimeEnd(cart.getTimeEnd());
-            cartResponse.setAgePatient(cart.getAgePatient());
             cartResponse.setNoteForEmployee(cart.getNoteForEmployee());
             cartResponse.setNoteForPatient(cart.getNoteForPatient());
             cartResponse.setNoteForPatient(cart.getNoteForPatient());

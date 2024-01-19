@@ -13,6 +13,7 @@ import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
 import cg.tcarespb.service.contract.response.ContractDetailResponse;
 import cg.tcarespb.service.contract.response.ContractListResponse;
+import cg.tcarespb.service.contract.response.ContractRevenueContractResponse;
 import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.util.AppConvertString;
 import cg.tcarespb.util.AppMessage;
@@ -21,8 +22,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -59,9 +64,9 @@ public class ContractService {
         contractRepository.save(contract);
     }
 
-    public String createContract(ContractSaveFromCartRequest req) {
-        Cart cart = cartService.findById(req.getCartId());
-        Employee employee = employeeRepository.findById(req.getEmployeeId()).orElse(null);
+    public String createContract(String cartId) {
+        Cart cart = cartService.findById(cartId);
+        Employee employee = cart.getEmployee();
         Contract contract = new Contract();
         contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
@@ -80,11 +85,12 @@ public class ContractService {
         locationPlace.setDistanceForWork(cart.getLocationPlace().getDistanceForWork());
         List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract);
         contract.setHistoryWorking(historyWorkingList);
+        contract.setFeeContact(BigDecimal.valueOf(200000));
         contract.setFeeAmount(contract.getFeePrice().multiply(BigDecimal.valueOf(historyWorkingList.size())));
-        contract.setTotalAmount(contract.getTotalPrice().multiply(BigDecimal.valueOf(historyWorkingList.size())));
         contract.setAmount(contract.getPriceService().multiply(BigDecimal.valueOf(historyWorkingList.size())));
+        contract.setTotalAmount(contract.getTotalPrice().multiply(BigDecimal.valueOf(historyWorkingList.size())).add(contract.getFeeContact()));
         contractRepository.save(contract);
-        cartService.deleteById(req.getCartId());
+        cartService.deleteById(cartId);
         return contract.getId();
     }
 
@@ -122,16 +128,39 @@ public class ContractService {
         return contractRepository.save(contract);
     }
 
-    public BigDecimal calculateRevenue(AdminStartEndDayRequest req) {
+    public ContractRevenueContractResponse calculateRevenue(AdminStartEndDayRequest req)  {
 
         if (req.getEndDay() == "" || req.getEndDay() == null) {
-            req.setEndDay("2024-02-20");
+            req.setEndDay("2050-02-20");
         }
         if (req.getStartDay() == "" || req.getStartDay() == null) {
             req.setStartDay("2021-02-20");
         }
         req.setStartDay(AppConvertString.converString(req.getStartDay()));
         req.setEndDay(AppConvertString.converString(req.getEndDay()));
-        return contractRepository.getAllRevenue(req);
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDate = dateFormat.parse(req.getStartDay());
+            Date endDate = dateFormat.parse(req.getEndDay());
+
+            if (endDate.before(startDate)) {
+                String dateMid = req.getStartDay();
+                req.setStartDay(req.getEndDay());
+                req.setEndDay(dateMid);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        BigDecimal feeAmountRevenue = contractRepository.getAllFeeAmount(req);
+        BigDecimal feeContactRevenue = contractRepository.getAllFeeContact(req);
+        if (feeContactRevenue == null){
+            feeAmountRevenue = BigDecimal.valueOf(0);
+        }if (feeContactRevenue == null){
+            feeContactRevenue = BigDecimal.valueOf(0);
+        }
+        ContractRevenueContractResponse revenue = new ContractRevenueContractResponse(feeAmountRevenue, feeContactRevenue);
+        return revenue;
     }
 }
