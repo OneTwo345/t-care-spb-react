@@ -118,18 +118,6 @@ public class CartService {
         location.setLatitude(cart.getLocationPlace().getLatitude());
         cartResponse.setLocationPlace(location);
 
-        CartContactEmployeeResponse contactEmployeeResponse = new CartContactEmployeeResponse();
-        ContactEmployee contactEmployee = cart.getContactEmployees();
-        if (contactEmployee != null) {
-            contactEmployeeResponse.setContactStatus(contactEmployee.getContactStatus());
-            contactEmployeeResponse.setIdEmployee(contactEmployee.getEmployee().getId());
-            contactEmployeeResponse.setLastName(contactEmployee.getEmployee().getLastName());
-            contactEmployeeResponse.setFirstName(contactEmployee.getEmployee().getFirstName());
-            contactEmployeeResponse.setFee(contactEmployee.getFee());
-            contactEmployeeResponse.setDateTime(contactEmployee.getDateTime());
-            cartResponse.setContactEmployee(contactEmployeeResponse);
-        }
-
         List<CartDateSessionResponse> dateSessionResponseList = new ArrayList<>();
         for (var e : dateSessionRepository.findAllByCartId(id)) {
             CartDateSessionResponse dateSessionResponse = new CartDateSessionResponse();
@@ -708,17 +696,6 @@ public class CartService {
             location.setLatitude(cart.getLocationPlace().getLatitude());
             elem.setLocationPlace(location);
 
-            CartContactEmployeeResponse contactEmployeeResponse = new CartContactEmployeeResponse();
-            ContactEmployee contactEmployee = cart.getContactEmployees();
-            if (contactEmployee != null) {
-                contactEmployeeResponse.setContactStatus(contactEmployee.getContactStatus());
-                contactEmployeeResponse.setIdEmployee(contactEmployee.getEmployee().getId());
-                contactEmployeeResponse.setLastName(contactEmployee.getEmployee().getLastName());
-                contactEmployeeResponse.setFirstName(contactEmployee.getEmployee().getFirstName());
-                contactEmployeeResponse.setFee(contactEmployee.getFee());
-                contactEmployeeResponse.setDateTime(contactEmployee.getDateTime());
-                elem.setContactEmployee(contactEmployeeResponse);
-            }
 
             List<CartDateSessionResponse> dateSessionResponseList = new ArrayList<>();
             for (var e : dateSessionRepository.findAllByCartId(cart.getId())) {
@@ -823,17 +800,7 @@ public class CartService {
             location.setLatitude(cart.getLocationPlace().getLatitude());
             elem.setLocationPlace(location);
 
-            CartContactEmployeeResponse contactEmployeeResponse = new CartContactEmployeeResponse();
-            ContactEmployee contactEmployee = cart.getContactEmployees();
-            if (contactEmployee != null) {
-                contactEmployeeResponse.setContactStatus(contactEmployee.getContactStatus());
-                contactEmployeeResponse.setIdEmployee(contactEmployee.getEmployee().getId());
-                contactEmployeeResponse.setLastName(contactEmployee.getEmployee().getLastName());
-                contactEmployeeResponse.setFirstName(contactEmployee.getEmployee().getFirstName());
-                contactEmployeeResponse.setFee(contactEmployee.getFee());
-                contactEmployeeResponse.setDateTime(contactEmployee.getDateTime());
-                elem.setContactEmployee(contactEmployeeResponse);
-            }
+
 
             List<CartDateSessionResponse> dateSessionResponseList = new ArrayList<>();
             for (var e : dateSessionRepository.findAllByCartId(cart.getId())) {
@@ -937,17 +904,7 @@ public class CartService {
             location.setLatitude(cart.getLocationPlace().getLatitude());
             elem.setLocationPlace(location);
 
-            CartContactEmployeeResponse contactEmployeeResponse = new CartContactEmployeeResponse();
-            ContactEmployee contactEmployee = cart.getContactEmployees();
-            if (contactEmployee != null) {
-                contactEmployeeResponse.setContactStatus(contactEmployee.getContactStatus());
-                contactEmployeeResponse.setIdEmployee(contactEmployee.getEmployee().getId());
-                contactEmployeeResponse.setLastName(contactEmployee.getEmployee().getLastName());
-                contactEmployeeResponse.setFirstName(contactEmployee.getEmployee().getFirstName());
-                contactEmployeeResponse.setFee(contactEmployee.getFee());
-                contactEmployeeResponse.setDateTime(contactEmployee.getDateTime());
-                elem.setContactEmployee(contactEmployeeResponse);
-            }
+
 
             List<CartDateSessionResponse> dateSessionResponseList = new ArrayList<>();
             for (var e : dateSessionRepository.findAllByCartId(cart.getId())) {

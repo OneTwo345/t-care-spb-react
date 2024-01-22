@@ -43,39 +43,26 @@ public class Employee {
     private EExperience experience;
     @Enumerated(EnumType.STRING)
     private EEducation education;
-
     @OneToMany(mappedBy = "employee")
     private List<Contract> contracts;
-
     @OneToMany(mappedBy = "employee")
     private List<EmployeeInfo> employeeInfos;
-
     @OneToMany(mappedBy = "employee")
     private List<EmployeeServiceGeneral> employeeServiceGenerals;
-
     @OneToMany(mappedBy = "employee")
     private List<EmployeeSkill> employeeSkills;
-
     @OneToMany(mappedBy = "employee")
     private List<Favorite> favorites;
-
-    @OneToMany(mappedBy = "employee")
-    private List<FeeContactEmployee> feeContactEmployees;
-
     @OneToMany(mappedBy = "employee")
     private List<Rate> rates;
-
     @OneToMany(mappedBy = "employee")
     private List<DateSession> dateSessions;
     @OneToOne
     private LocationPlace locationPlace;
     @OneToMany(mappedBy = "employee")
     private List<HistoryWorking> historyWorking;
-    @OneToMany(mappedBy = "employee")
-    private List<ContactEmployee> contactEmployees;
     @OneToOne
     private Photo photo;
-
     public Employee(String id) {
         this.id = id;
     }

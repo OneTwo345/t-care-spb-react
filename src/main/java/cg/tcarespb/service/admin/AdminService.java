@@ -30,7 +30,6 @@ public class AdminService {
     private final ContractRepository contractRepository;
     private final AccountRepository accountRepository;
     private final SalerRepository salerRepository;
-    private final ContactEmployeeRepository contactEmployeeRepository;
 
     public Page<AdminUserResponse> getAllUser(Pageable pageable, Boolean deleted) {
         return userRepository.getAllUser(pageable, deleted);
@@ -101,14 +100,5 @@ public class AdminService {
         employee.setStatus(EStatus.ACTIVE);
         employeeRepository.save(employee);
     }
-
-    public AdminRevenueResponse getRevenueFromContactAndContract(AdminStartEndDayRequest day) {
-
-
-        return null;
-    }
-
-    public BigDecimal getAllRevenueContact(AdminStartEndDayRequest req) {
-        return contactEmployeeRepository.getAllRevenue(req);
-    }
 }
+

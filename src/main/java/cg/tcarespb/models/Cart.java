@@ -73,8 +73,6 @@ public class Cart {
     private LocationPlace locationPlace;
     @OneToMany(mappedBy = "cart")
     private List<HistoryWorking> historyWorking;
-    @OneToOne(mappedBy = "cart")
-    private ContactEmployee contactEmployees;
     @ManyToOne
     private Employee employee;
 }
