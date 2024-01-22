@@ -1,10 +1,10 @@
 package cg.tcarespb.models.enums;
 
 public enum ESessionOfDate {
-    MORNING("Buổi sáng"),
-    AFTERNOON("Buổi trưa chiều"),
-    EVENING("Buổi chiều tối"),
-    NIGHT("Buổi tối");
+    MORNING("Sáng"),
+    AFTERNOON("Chiều"),
+    EVENING("Tối"),
+    NIGHT("Khuya");
 
     private String name;
 

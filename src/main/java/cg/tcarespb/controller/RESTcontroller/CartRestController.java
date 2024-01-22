@@ -4,9 +4,11 @@ import cg.tcarespb.models.Cart;
 import cg.tcarespb.models.enums.ECartStatus;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
+import cg.tcarespb.service.cart.response.CartAllFieldResponse;
 import cg.tcarespb.service.cart.response.CartListResponse;
 import cg.tcarespb.service.employee.request.EmployeeEditRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -45,7 +47,7 @@ public class CartRestController {
     }
 
     @PutMapping("/employees")
-    public ResponseEntity<?> updateServiceGeneral(@RequestBody CartEmployeeSaveRequest req) {
+    public ResponseEntity<?> updateEmployee(@RequestBody CartEmployeeSaveRequest req) {
         cartService.updateEmployeeForCart(req);
         return ResponseEntity.noContent().build();
     }
@@ -161,9 +163,14 @@ public class CartRestController {
     }
 
     @DeleteMapping("/deleteCustomerBySale/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable String id) {
+    public ResponseEntity<String> deleteById(@PathVariable("id") String id) {
         cartService.deleteById(id);
         return ResponseEntity.ok("Xóa khách hàng thành công");
+    }
+    @DeleteMapping("/{idCart}")
+    public ResponseEntity<?> deleteCartById(@PathVariable ("idCart")String idCart) {
+        cartService.deleteById(idCart);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/sale/{id}")
@@ -175,6 +182,16 @@ public class CartRestController {
     public ResponseEntity<?> updateCartStatus(@PathVariable("idCart") String idCart) {
         cartService.updateCartStatus(ECartStatus.READY, idCart);
         return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/readyStatus")
+    public ResponseEntity<?> getCartListByStatus( Pageable pageable) {
+        Page<CartAllFieldResponse> cartListResponses= cartService.findAllCartByStatusCart(ECartStatus.READY,  pageable);
+        return new ResponseEntity<>(cartListResponses, HttpStatus.OK);
+    }
+    @GetMapping("/readyStatus/search")
+    public ResponseEntity<?> getCartListByStatusAndSearch( Pageable pageable,@RequestBody CartSearchFilterRequest req) {
+        Page<CartAllFieldResponse> cartListResponses= cartService.findAllCartByStatusCartAndSearch(ECartStatus.READY, pageable, req);
+        return new ResponseEntity<>(cartListResponses, HttpStatus.OK);
     }
 
 }
