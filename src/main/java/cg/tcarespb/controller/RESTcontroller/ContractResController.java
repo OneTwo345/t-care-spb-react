@@ -6,7 +6,10 @@ import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
 import cg.tcarespb.service.contract.response.ContractDetailResponse;
 import cg.tcarespb.service.contract.response.ContractListResponse;
+import cg.tcarespb.service.contract.response.ContractResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +22,26 @@ import java.util.List;
 public class ContractResController {
     private final ContractService contractService;
 
+    //    @GetMapping
+//    public ResponseEntity<List<ContractListResponse>> getContractList() {
+//        List<ContractListResponse> contractListResponses = contractService.getContractList();
+//        return ResponseEntity.ok(contractListResponses);
+//    }
     @GetMapping
-    public ResponseEntity<List<ContractListResponse>> getContractList() {
-        List<ContractListResponse> contractListResponses = contractService.getContractList();
+    public ResponseEntity<?> getAllContract(Pageable pageable) {
+        Page<ContractResponse> contractListResponses = contractService.getAllContract(pageable);
+        return ResponseEntity.ok(contractListResponses);
+    }
+
+    @GetMapping("/employees/{idEmployee}")
+    public ResponseEntity<?> getContractsByEmployee(@PathVariable("idEmployee") String idEmployee, Pageable pageable) {
+        Page<ContractResponse> contractListResponses = contractService.getContractByEmployeeId(idEmployee, pageable);
+        return ResponseEntity.ok(contractListResponses);
+    }
+
+    @GetMapping("/users/{idUser}")
+    public ResponseEntity<?> getContractsByUser(@PathVariable("idUser") String idUser, Pageable pageable) {
+        Page<ContractResponse> contractListResponses = contractService.getContractByUserId(idUser, pageable);
         return ResponseEntity.ok(contractListResponses);
     }
 
@@ -43,7 +63,7 @@ public class ContractResController {
     }
 
     @PostMapping("/createContract/{cartId}")
-    public ResponseEntity<?> create(@PathVariable("cartId")String cartId) {
+    public ResponseEntity<?> create(@PathVariable("cartId") String cartId) {
         contractService.createContract(cartId);
         return ResponseEntity.noContent().build();
     }

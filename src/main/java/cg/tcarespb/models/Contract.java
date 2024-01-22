@@ -29,6 +29,8 @@ public class Contract {
     private String namePatient;
     private Integer agePatient;
     private String content;
+    private String noteForPatient;
+    private String noteForEmployee;
     private Boolean deleted = false;
     private String nameService;
     private BigDecimal feeContact;

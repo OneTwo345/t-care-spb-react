@@ -7,14 +7,14 @@ import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
-import cg.tcarespb.service.contract.response.ContractDetailResponse;
-import cg.tcarespb.service.contract.response.ContractListResponse;
-import cg.tcarespb.service.contract.response.ContractRevenueContractResponse;
+import cg.tcarespb.service.contract.response.*;
 import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.util.AppConvertString;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -50,6 +51,102 @@ public class ContractService {
                         .build())
                 .collect(Collectors.toList());
     }
+    public Page<ContractResponse> getContractByEmployeeId(String idEmployee, Pageable pageable){
+        Page<ContractResponse> contractResponseList = contractRepository.findAllByEmployee(idEmployee,pageable);
+        for (var e : contractResponseList){
+            Contract contract = findById(e.getId());
+            ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
+            user.setId(contract.getUser().getId());
+            user.setName(contract.getUser().getId());
+            user.setPhone(contract.getUser().getPhoneNumber());
+            e.setUser(user);
+            ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
+            employee.setId(contract.getEmployee().getId());
+            employee.setName(contract.getEmployee().getId());
+            employee.setPhone(contract.getEmployee().getPhoneNumber());
+            e.setEmployee(employee);
+            List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
+            for (var elem : contract.getHistoryWorking()){
+                ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
+                historyWorking.setDateWork(elem.getDateWork());
+                historyWorking.setDateInWeekName(elem.getDateInWeek().getName());
+                historyWorking.setSessionOfDateName(elem.getSessionOfDate().getName());
+                contractHistoryWorkingList.add(historyWorking);
+            }
+            e.setHistoryWorking(contractHistoryWorkingList);
+            ContractLocationResponse location = new ContractLocationResponse();
+            location.setName(contract.getLocationPlace().getName());
+            location.setLatitude(contract.getLocationPlace().getLatitude());
+            location.setLongitude(contract.getLocationPlace().getLongitude());
+            location.setDistanceForWork(contract.getLocationPlace().getDistanceForWork());
+            e.setLocation(location);
+        }
+        return contractResponseList;
+    }
+    public Page<ContractResponse> getContractByUserId(String idUser, Pageable pageable){
+        Page<ContractResponse> contractResponseList = contractRepository.findAllByUser(idUser,pageable);
+        for (var e : contractResponseList){
+            Contract contract = findById(e.getId());
+            ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
+            user.setId(contract.getUser().getId());
+            user.setName(contract.getUser().getId());
+            user.setPhone(contract.getUser().getPhoneNumber());
+            e.setUser(user);
+            ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
+            employee.setId(contract.getEmployee().getId());
+            employee.setName(contract.getEmployee().getId());
+            employee.setPhone(contract.getEmployee().getPhoneNumber());
+            e.setEmployee(employee);
+            List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
+            for (var elem : contract.getHistoryWorking()){
+                ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
+                historyWorking.setDateWork(elem.getDateWork());
+                historyWorking.setDateInWeekName(elem.getDateInWeek().getName());
+                historyWorking.setSessionOfDateName(elem.getSessionOfDate().getName());
+                contractHistoryWorkingList.add(historyWorking);
+            }
+            e.setHistoryWorking(contractHistoryWorkingList);
+            ContractLocationResponse location = new ContractLocationResponse();
+            location.setName(contract.getLocationPlace().getName());
+            location.setLatitude(contract.getLocationPlace().getLatitude());
+            location.setLongitude(contract.getLocationPlace().getLongitude());
+            location.setDistanceForWork(contract.getLocationPlace().getDistanceForWork());
+            e.setLocation(location);
+        }
+        return contractResponseList;
+    }
+    public Page<ContractResponse> getAllContract( Pageable pageable){
+        Page<ContractResponse> contractResponseList = contractRepository.findAllContract(pageable);
+        for (var e : contractResponseList){
+            Contract contract = findById(e.getId());
+            ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
+            user.setId(contract.getUser().getId());
+            user.setName(contract.getUser().getId());
+            user.setPhone(contract.getUser().getPhoneNumber());
+            e.setUser(user);
+            ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
+            employee.setId(contract.getEmployee().getId());
+            employee.setName(contract.getEmployee().getId());
+            employee.setPhone(contract.getEmployee().getPhoneNumber());
+            e.setEmployee(employee);
+            List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
+            for (var elem : contract.getHistoryWorking()){
+                ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
+                historyWorking.setDateWork(elem.getDateWork());
+                historyWorking.setDateInWeekName(elem.getDateInWeek().getName());
+                historyWorking.setSessionOfDateName(elem.getSessionOfDate().getName());
+                contractHistoryWorkingList.add(historyWorking);
+            }
+            e.setHistoryWorking(contractHistoryWorkingList);
+            ContractLocationResponse location = new ContractLocationResponse();
+            location.setName(contract.getLocationPlace().getName());
+            location.setLatitude(contract.getLocationPlace().getLatitude());
+            location.setLongitude(contract.getLocationPlace().getLongitude());
+            location.setDistanceForWork(contract.getLocationPlace().getDistanceForWork());
+            e.setLocation(location);
+        }
+        return contractResponseList;
+    }
 
     public void create(ContractSaveRequest request) {
         var contract = AppUtil.mapper.map(request, Contract.class);
@@ -72,6 +169,8 @@ public class ContractService {
         contract.setPriceService(cart.getService().getPriceEmployee());
         contract.setFeePrice(cart.getService().getFees());
         contract.setTotalPrice(cart.getService().getTotalPrice());
+        contract.setNoteForEmployee(cart.getNoteForEmployee());
+        contract.setNoteForPatient(cart.getNoteForPatient());
         LocationPlace locationPlace = new LocationPlace();
         locationPlace.setName(cart.getLocationPlace().getName());
         locationPlace.setLatitude(cart.getLocationPlace().getLatitude());
@@ -122,7 +221,7 @@ public class ContractService {
         return contractRepository.save(contract);
     }
 
-    public ContractRevenueContractResponse calculateRevenue(AdminStartEndDayRequest req)  {
+    public ContractRevenueContractResponse calculateRevenue(AdminStartEndDayRequest req) {
 
         if (req.getEndDay() == "" || req.getEndDay() == null) {
             req.setEndDay("2050-02-20");
@@ -149,9 +248,10 @@ public class ContractService {
 
         BigDecimal feeAmountRevenue = contractRepository.getAllFeeAmount(req);
         BigDecimal feeContactRevenue = contractRepository.getAllFeeContact(req);
-        if (feeContactRevenue == null){
+        if (feeContactRevenue == null) {
             feeAmountRevenue = BigDecimal.valueOf(0);
-        }if (feeContactRevenue == null){
+        }
+        if (feeContactRevenue == null) {
             feeContactRevenue = BigDecimal.valueOf(0);
         }
         ContractRevenueContractResponse revenue = new ContractRevenueContractResponse(feeAmountRevenue, feeContactRevenue);
