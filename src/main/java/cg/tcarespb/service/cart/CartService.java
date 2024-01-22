@@ -158,6 +158,9 @@ public class CartService {
             employeeResponse.setLatitude(employee.getLocationPlace().getLatitude());
             cartResponse.setEmployee(employeeResponse);
         }
+        cartResponse.setTotalAmount(cart.getService().getTotalPrice().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+        cartResponse.setFeeAmount(cart.getService().getFees().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
+        cartResponse.setAmount(cart.getService().getPriceEmployee().multiply(BigDecimal.valueOf(cart.getHistoryWorking().size())));
         User user = cart.getUser();
         CartUserResponse cartUserResponse = new CartUserResponse();
         if (user != null) {
