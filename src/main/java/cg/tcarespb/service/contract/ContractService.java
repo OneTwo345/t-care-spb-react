@@ -1,15 +1,11 @@
 package cg.tcarespb.service.contract;
 
 import cg.tcarespb.models.*;
-import cg.tcarespb.models.enums.EContactStatus;
-import cg.tcarespb.models.enums.EPayStatus;
-import cg.tcarespb.repository.ContactEmployeeRepository;
 import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
 import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
-import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
 import cg.tcarespb.service.contract.response.ContractDetailResponse;
 import cg.tcarespb.service.contract.response.ContractListResponse;
@@ -26,7 +22,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +34,6 @@ public class ContractService {
     private final EmployeeRepository employeeRepository;
     private final CartService cartService;
     private final HistoryWorkingService historyWorkingService;
-    private final ContactEmployeeRepository contactEmployeeRepository;
 
     public List<ContractListResponse> getContractList() {
         return contractRepository.findAll()
