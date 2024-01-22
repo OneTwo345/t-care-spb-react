@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,4 +25,8 @@ public class CartSaveRequest {
     private String lastName;
     private String saleNote;
     private String phone;
+    private String serviceId;
+    List<CartDateSessionSaveRequest> listDateSession;
+    private List<String> idSkills;
+    private List<String> idAddInfos;
 }
