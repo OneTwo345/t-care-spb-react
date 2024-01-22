@@ -238,7 +238,7 @@ public class AuthResController {
 
     private String passwordResetEmailLink(Account account, String applicationUrl,
                                           String passwordToken) throws MessagingException, UnsupportedEncodingException, MessagingException, UnsupportedEncodingException {
-        String url = applicationUrl + "/forgot-password?token=" + passwordToken;
+        String url = applicationUrl + "/reset-password?token=" + passwordToken;
         eventListener.sendPasswordResetVerificationEmail(url, account);
         return url;
     }
