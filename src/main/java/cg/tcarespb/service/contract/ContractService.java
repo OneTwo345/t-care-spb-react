@@ -3,6 +3,7 @@ package cg.tcarespb.service.contract;
 import cg.tcarespb.models.*;
 import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
+import cg.tcarespb.repository.LocationPalaceRepository;
 import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
@@ -34,6 +35,7 @@ public class ContractService {
     private final EmployeeRepository employeeRepository;
     private final CartService cartService;
     private final HistoryWorkingService historyWorkingService;
+    private final LocationPalaceRepository locationPalaceRepository;
 
     public List<ContractListResponse> getContractList() {
         return contractRepository.findAll()
@@ -77,6 +79,8 @@ public class ContractService {
         locationPlace.setLatitude(cart.getLocationPlace().getLatitude());
         locationPlace.setLongitude(cart.getLocationPlace().getLongitude());
         locationPlace.setDistanceForWork(cart.getLocationPlace().getDistanceForWork());
+        locationPalaceRepository.save(locationPlace);
+        contract.setLocationPlace(locationPlace);
         List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract);
         contract.setHistoryWorking(historyWorkingList);
         contract.setFeeContact(BigDecimal.valueOf(200000));
