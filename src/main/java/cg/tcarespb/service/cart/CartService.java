@@ -374,6 +374,7 @@ public class CartService {
             } else {
                 e.setPhotoUrl(photo.getUrl());
             }
+            e.setPhone(employee.getPhoneNumber());
             e.setEExperience(e.getExperience().getName());
             e.setSkillName(employee.getEmployeeSkills().stream().map(elem -> elem.getSkill().getName()).collect(Collectors.toList()));
             e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
@@ -411,17 +412,23 @@ public class CartService {
                                 .lastName(service.getLastName())
                                 .saleNote(service.getSaleNote())
                                 .phone(service.getPhone())
+                                .employeeFirstName(service.getEmployee() != null ? service.getEmployee().getFirstName() : "")
+                                .employeeLastName(service.getEmployee() != null ? service.getEmployee().getLastName() : "")
                                 .serviceGeneral(service.getService().getName() != null ? service.getService().getName() : "")
                                 .locationPlace(service.getLocationPlace() != null ? service.getLocationPlace().getName() : "")
                                 .build())
+
                 .collect(Collectors.toList());
     }
 
-    public void createCartBySale(CartSaveRequest request, String id) {
+    @Transactional
+    public String createCartBySale(CartSaveRequest request,String id) {
         var cart = AppUtil.mapper.map(request, Cart.class);
         Optional<Saler> saler = salerRepository.findById(id);
         Saler saler1 = saler.get();
         cart.setSaler(saler1);
+        ServiceGeneral serviceGeneral = serviceGeneralService.findById(request.getServiceId());
+        cart.setService(serviceGeneral);
         LocationPlace locationPalace = new LocationPlace();
         locationPalace.setName(request.getLocationPlace());
         locationPalace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
@@ -429,7 +436,36 @@ public class CartService {
         locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
         locationPalaceRepository.save(locationPalace);
         cart.setLocationPlace(locationPalace);
+
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : request.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setCart(cart);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        cartInfoRepository.saveAll(request
+                .getIdAddInfos()
+                .stream()
+                .map(infoId -> new CartInfo(cart, new AddInfo(String.valueOf(infoId))))
+                .collect(Collectors.toList())
+        );
+        cartSkillRepository.saveAll(request
+                .getIdSkills()
+                .stream()
+                .map(skillId -> new CartSkill(cart, new Skill(String.valueOf(skillId))))
+                .collect(Collectors.toList())
+        );
+        cart.setDateSessions(dateSessionList);
+        cart.setHistoryWorking(historyWorkingService.createHistoryWorkingForCart(cart));
         cartRepository.save(cart);
+        return cart.getId();
     }
 
     public void updateAllFieldCart(CartAllFieldRequest req, String cartId) {
@@ -651,16 +687,72 @@ public class CartService {
         cartRepository.deleteById(id);
     }
 
-    public void editCartBySale(CartSaleEditRequest request, String id) {
+    @Transactional
+    public String editCartBySale(CartSaleEditRequest request, String id) {
         Cart cart = cartRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Cart", id)));
 
+        cart.setTimeStart(LocalDate.parse(request.getTimeStart()));
+        cart.setTimeEnd(LocalDate.parse(request.getTimeEnd()));
+        cart.setNoteForPatient(request.getNoteForPatient());
+        cart.setNoteForEmployee(request.getNoteForEmployee());
+        cart.setMemberOfFamily(EMemberOfFamily.valueOf(request.getMemberOfFamily()));
+        cart.setGender(EGender.valueOf(request.getGender()));
+        cart.setEDecade(EDecade.valueOf(request.getEDecade()));
+        LocationPlace locationPlace = new LocationPlace();
+        locationPlace.setName(request.getLocationPlace());
+        locationPlace.setLongitude(Double.valueOf(request.getLongitude()));
+        locationPlace.setLatitude(Double.valueOf(request.getLatitude()));
+        locationPlace.setDistanceForWork(Double.valueOf(request.getDistanceForWork()));
+        locationPalaceRepository.save(locationPlace);
+        cart.setLocationPlace(locationPlace);
         cart.setFirstName(request.getFirstName());
         cart.setLastName(request.getLastName());
         cart.setPhone(request.getPhone());
         cart.setSaleNote(request.getSaleNote());
-        cart.setTimeStart(LocalDate.parse(request.getTimeStart()));
-        cart.setTimeEnd(LocalDate.parse(request.getTimeEnd()));
+        ServiceGeneral serviceGeneral = serviceGeneralService.findById(request.getServiceId());
+        cart.setService(serviceGeneral);
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : request.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setCart(cart);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        dateSessionRepository.deleteAllByCartId(cart.getId());
+        historyWorkingRepository.deleteAllByCartId(cart.getId());
+
+        cart.setDateSessions(dateSessionList);
+        cart.setHistoryWorking(historyWorkingService.createHistoryWorkingForCart(cart));
+
+        cartSkillRepository.deleteAllById(cart.getCartSkills().stream()
+                .map(CartSkill::getId)
+                .collect(Collectors.toList()));
+        var cartSkills = new ArrayList<CartSkill>();
+        for (String idSkill : request.getIdSkills()) {
+            Skill skill = new Skill(String.valueOf(idSkill));
+            cartSkills.add(new CartSkill(cart, skill));
+        }
+        cartSkillRepository.saveAll(cartSkills);
+
+        cartInfoRepository.deleteAllById(cart.getCartInfos().stream()
+                .map(CartInfo::getId)
+                .collect(Collectors.toList()));
+        var cartInfos = new ArrayList<CartInfo>();
+        for (String idInfo : request.getIdAddInfos()) {
+            AddInfo info = new AddInfo(String.valueOf(idInfo));
+            cartInfos.add(new CartInfo(cart, info));
+        }
+        cartInfoRepository.saveAll(cartInfos);
+        cartRepository.save(cart);
+        return cart.getId();
+
     }
 
     public Page<CartAllFieldResponse> findAllCartByUserId(String userId, Pageable pageable) {

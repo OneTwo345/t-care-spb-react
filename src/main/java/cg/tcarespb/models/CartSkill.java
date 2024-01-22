@@ -29,4 +29,9 @@ public class CartSkill {
 
     @ManyToOne
     private Skill skill;
+
+    public CartSkill(Cart cart, Skill skill) {
+        this.cart = cart;
+        this.skill = skill;
+    }
 }
