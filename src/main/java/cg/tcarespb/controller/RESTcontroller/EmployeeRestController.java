@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,9 @@ public class EmployeeRestController {
     private final EmailSenderService emailSenderService;
 
     @GetMapping
-    public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(Pageable pageable) {
+    public ResponseEntity<Page<EmployeeListResponse>> getEmployeeList(@PageableDefault(size = 5)Pageable pageable) {
         Page<EmployeeListResponse> employeeListResponseList = employeeService.getEmployeeList(EStatus.ACTIVE,pageable);
+
         return ResponseEntity.ok(employeeListResponseList);
     }
 
@@ -95,6 +97,18 @@ public class EmployeeRestController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/status/ban/{id}")
+    public ResponseEntity<?> updateBanStatusEmployee(@PathVariable("id") String id) {
+        employeeService.updateStatusForEmployee(id, EStatus.BAN);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/status/active/{id}")
+    public ResponseEntity<?> updateActiveStatusEmployee(@PathVariable("id") String id) {
+        employeeService.updateStatusForEmployee(id, EStatus.ACTIVE);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable String id) {
         employeeService.delete(id);
@@ -113,6 +127,7 @@ public class EmployeeRestController {
         EmployeeDetailInFilterListResponse employee = employeeService.findEmployeeDetailById(idEmployee, idCart);
         return ResponseEntity.ok(employee);
     }
+
 
     // Cho phép các phương thức liên quan tới CORS
     @RequestMapping(method = RequestMethod.OPTIONS)

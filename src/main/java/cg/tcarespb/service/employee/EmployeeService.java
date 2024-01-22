@@ -49,6 +49,7 @@ public class EmployeeService {
         Page<EmployeeListResponse> employeeList = employeeRepository.findAllByStatus(status, pageable);
         employeeList.stream().forEach(e -> {
             Employee employee = findById(e.getId());
+            e.setExperience(employee.getExperience().getName());
 
             List<EmployeeSkillServiceInfoResponse> skillList = new ArrayList<>();
             for (var elem : employee.getEmployeeSkills()) {
@@ -237,7 +238,7 @@ public class EmployeeService {
 
     }
 
-
+@Transactional
     public EmployeeDetailResponse findDetailEmployeeById(String id) {
         var employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
@@ -284,7 +285,6 @@ public class EmployeeService {
     public void edit(EmployeeEditRequest request, String id) {
         Employee employee = employeeRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
-        employee.setAddress(request.getAddress());
         employee.setFirstName(request.getFirstName());
         employee.setLastName(request.getLastName());
         employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
@@ -406,6 +406,12 @@ public class EmployeeService {
         locationPalace.setLongitude(Double.valueOf(request.getLongitude()));
         locationPalaceRepository.save(locationPalace);
         employee.setLocationPlace(locationPalace);
+        employeeRepository.save(employee);
+    }
+
+    public void updateStatusForEmployee(String id, EStatus status) {
+        Employee employee = findById(id);
+        employee.setStatus(status);
         employeeRepository.save(employee);
     }
 

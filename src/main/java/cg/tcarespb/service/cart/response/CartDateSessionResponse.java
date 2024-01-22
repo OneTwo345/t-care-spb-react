@@ -13,5 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CartDateSessionResponse {
     private EDateInWeek dateInWeek;
+    private String dateInWeekName;
     private ESessionOfDate sessionOfDate;
+    private String sessionOfDateName ;
 }

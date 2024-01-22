@@ -1,5 +1,6 @@
 package cg.tcarespb.models;
 
+import cg.tcarespb.models.enums.ECartStatus;
 import cg.tcarespb.models.enums.EDecade;
 import cg.tcarespb.models.enums.EGender;
 import cg.tcarespb.models.enums.EMemberOfFamily;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,7 +39,12 @@ public class Cart {
     private String lastName;
     private String saleNote;
     private String phone;
+    private BigDecimal totalAmount;;
+    private BigDecimal amount;
+    private BigDecimal feeAmount;
     private Boolean deleted = false;
+    @Enumerated(EnumType.STRING)
+    private ECartStatus cartStatus = ECartStatus.UNREADY;
     @Enumerated(EnumType.STRING)
     private EMemberOfFamily memberOfFamily;
     @Enumerated(EnumType.STRING)
@@ -68,4 +75,6 @@ public class Cart {
     private List<HistoryWorking> historyWorking;
     @OneToOne(mappedBy = "cart")
     private ContactEmployee contactEmployees;
+    @ManyToOne
+    private Employee employee;
 }
