@@ -135,12 +135,9 @@ public class AdminRestController {
         return new ResponseEntity<>(adminService.getALlEmployeeByStatus(pageable, EStatus.BAN), HttpStatus.OK);
     }
 
-    @GetMapping("/revenue/contact")
-    public ResponseEntity<?> getRevenueFromContact() {
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
-    @GetMapping("/revenue/contract")
+
+    @PostMapping("/revenue/contract")
     public ResponseEntity<?> getRevenueFromContract(@RequestBody  AdminStartEndDayRequest req) {
         return new ResponseEntity<>( contractService.calculateRevenue(req),HttpStatus.OK);
     }

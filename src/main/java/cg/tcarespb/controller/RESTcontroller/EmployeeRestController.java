@@ -1,6 +1,7 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 
+import cg.tcarespb.models.Employee;
 import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.service.customMail.EmailSenderService;
 import cg.tcarespb.service.employee.EmployeeService;
@@ -38,7 +39,7 @@ public class EmployeeRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeDetailResponse> getEmployeeDetail(@PathVariable("id") String id) {
+    public ResponseEntity<?> getEmployeeDetail(@PathVariable("id") String id) {
         EmployeeDetailResponse employee = employeeService.findDetailEmployeeById(id);
         return ResponseEntity.ok(employee);
     }

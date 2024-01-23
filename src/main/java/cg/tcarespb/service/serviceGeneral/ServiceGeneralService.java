@@ -34,6 +34,7 @@ public class ServiceGeneralService {
         return serviceGeneralRepository.findAll().stream().map(service -> ServiceListResponse.builder()
                 .id(service.getId())
                 .name(service.getName())
+                .price(String.valueOf(service.getTotalPrice()))
                 .description(service.getDescription()).build()).collect(Collectors.toList());
     }
 
