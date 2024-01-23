@@ -37,7 +37,6 @@ public class CartAllFieldResponse {
     private List<CartSkillInfoServiceResponse> skillList;
     private CartSkillInfoServiceResponse service;
     private CartLocationPlaceRepsonse locationPlace;
-    private CartContactEmployeeResponse contactEmployee;
     private List<CartDateSessionResponse> dateSessionResponseList;
     private List<CartHistoryWorkingResponse> historyWorkingResponseList;
     private CartEmployeeResponse employee;

@@ -86,16 +86,16 @@ public class HistoryWorkingService {
         return historyWorkingList;
     }
 
-    public List<HistoryWorking> createTest(Contract contract) {
+    public List<HistoryWorking> createTest(Contract contract,Cart cart) {
         Employee employee = contract.getEmployee();
         LocalDate startDate = contract.getTimeStart();
         LocalDate endDate = contract.getTimeEnd();
-        List<DateSession> dateSessionList = employee.getDateSessions();
+        List<DateSession> dateSessionList = cart.getDateSessions();
         List<HistoryWorking> historyWorkingList = createHistoryWorking(dateSessionList, startDate, endDate, employee, contract);
         List<HistoryWorking> historyWorkingEmployee = employee.getHistoryWorking();
         historyWorkingEmployee.addAll(historyWorkingList);
         employee.setHistoryWorking(historyWorkingEmployee);
-        return historyWorkingList;
+            return historyWorkingList;
     }
 
     public List<HistoryWorking> createHistoryWorkingForCart(Cart cart) {

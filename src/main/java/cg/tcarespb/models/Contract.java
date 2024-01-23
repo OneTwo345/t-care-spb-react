@@ -29,6 +29,8 @@ public class Contract {
     private String namePatient;
     private Integer agePatient;
     private String content;
+    private String noteForPatient;
+    private String noteForEmployee;
     private Boolean deleted = false;
     private String nameService;
     private BigDecimal feeContact;
@@ -38,6 +40,8 @@ public class Contract {
     private BigDecimal totalAmount;;
     private BigDecimal amount;
     private BigDecimal feeAmount;
+    private String customerName;
+    private String customerPhone;
     @Enumerated(EnumType.STRING)
     private EGender gender;
     @ManyToOne

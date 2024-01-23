@@ -62,6 +62,7 @@ public interface CartRepository extends JpaRepository<Cart, String> {
             "c.eDecade" +
             ")  FROM Cart c where  c.cartStatus =:status and (c.user.lastName LIKE CONCAT('%', :#{#req.search},'%') " +
             "or c.user.firstName  LIKE CONCAT('%', :#{#req.search},'%') " +
+            "or c.user.phoneNumber  LIKE CONCAT('%', :#{#req.search},'%') " +
             "or c.firstName LIKE CONCAT('%', :#{#req.search},'%') " +
             "or c.lastName LIKE CONCAT('%', :#{#req.search},'%') " +
             "or c.employee.firstName LIKE CONCAT('%', :#{#req.search},'%') " +

@@ -1,24 +1,21 @@
 package cg.tcarespb.service.contract;
 
 import cg.tcarespb.models.*;
-import cg.tcarespb.models.enums.EContactStatus;
-import cg.tcarespb.models.enums.EPayStatus;
-import cg.tcarespb.repository.ContactEmployeeRepository;
 import cg.tcarespb.repository.ContractRepository;
 import cg.tcarespb.repository.EmployeeRepository;
+import cg.tcarespb.repository.LocationPalaceRepository;
 import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
-import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
 import cg.tcarespb.service.contract.request.ContractSaveRequest;
-import cg.tcarespb.service.contract.response.ContractDetailResponse;
-import cg.tcarespb.service.contract.response.ContractListResponse;
-import cg.tcarespb.service.contract.response.ContractRevenueContractResponse;
+import cg.tcarespb.service.contract.response.*;
 import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.util.AppConvertString;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,7 +23,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +36,7 @@ public class ContractService {
     private final EmployeeRepository employeeRepository;
     private final CartService cartService;
     private final HistoryWorkingService historyWorkingService;
-    private final ContactEmployeeRepository contactEmployeeRepository;
+    private final LocationPalaceRepository locationPalaceRepository;
 
     public List<ContractListResponse> getContractList() {
         return contractRepository.findAll()
@@ -56,6 +53,120 @@ public class ContractService {
                         .build())
                 .collect(Collectors.toList());
     }
+    public Page<ContractResponse> getContractByEmployeeId(String idEmployee, Pageable pageable){
+        Page<ContractResponse> contractResponseList = contractRepository.findAllByEmployee(idEmployee,pageable);
+        for (var e : contractResponseList){
+            Contract contract = findById(e.getId());
+            e.setCustomerName(contract.getCustomerName());
+            e.setCustomerPhone(contract.getCustomerPhone());
+            ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
+            if (contract.getUser()!=null){
+                user.setId(contract.getUser().getId());
+                user.setName(contract.getUser().getId());
+                user.setPhone(contract.getUser().getPhoneNumber());
+                e.setUser(user);
+            }
+            ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
+            if(contract.getEmployee()!=null){
+                employee.setId(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getId());
+                employee.setPhone(contract.getEmployee().getPhoneNumber());
+                e.setEmployee(employee);
+            }
+            List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
+            for (var elem : contract.getHistoryWorking()){
+                ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
+                historyWorking.setDateWork(elem.getDateWork());
+                historyWorking.setDateInWeekName(elem.getDateInWeek().getName());
+                historyWorking.setSessionOfDateName(elem.getSessionOfDate().getName());
+                contractHistoryWorkingList.add(historyWorking);
+            }
+            e.setHistoryWorking(contractHistoryWorkingList);
+            ContractLocationResponse location = new ContractLocationResponse();
+            location.setName(contract.getLocationPlace().getName());
+            location.setLatitude(contract.getLocationPlace().getLatitude());
+            location.setLongitude(contract.getLocationPlace().getLongitude());
+            location.setDistanceForWork(contract.getLocationPlace().getDistanceForWork());
+            e.setLocation(location);
+        }
+        return contractResponseList;
+    }
+    public Page<ContractResponse> getContractByUserId(String idUser, Pageable pageable){
+        Page<ContractResponse> contractResponseList = contractRepository.findAllByUser(idUser,pageable);
+        for (var e : contractResponseList){
+            Contract contract = findById(e.getId());
+            e.setCustomerName(contract.getCustomerName());
+            e.setCustomerPhone(contract.getCustomerPhone());
+            ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
+            if (contract.getUser()!=null){
+                user.setId(contract.getUser().getId());
+                user.setName(contract.getUser().getId());
+                user.setPhone(contract.getUser().getPhoneNumber());
+                e.setUser(user);
+            }
+            ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
+            if(contract.getEmployee()!=null){
+                employee.setId(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getId());
+                employee.setPhone(contract.getEmployee().getPhoneNumber());
+                e.setEmployee(employee);
+            }
+            List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
+            for (var elem : contract.getHistoryWorking()){
+                ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
+                historyWorking.setDateWork(elem.getDateWork());
+                historyWorking.setDateInWeekName(elem.getDateInWeek().getName());
+                historyWorking.setSessionOfDateName(elem.getSessionOfDate().getName());
+                contractHistoryWorkingList.add(historyWorking);
+            }
+            e.setHistoryWorking(contractHistoryWorkingList);
+            ContractLocationResponse location = new ContractLocationResponse();
+            location.setName(contract.getLocationPlace().getName());
+            location.setLatitude(contract.getLocationPlace().getLatitude());
+            location.setLongitude(contract.getLocationPlace().getLongitude());
+            location.setDistanceForWork(contract.getLocationPlace().getDistanceForWork());
+            e.setLocation(location);
+        }
+        return contractResponseList;
+    }
+    public Page<ContractResponse> getAllContract( Pageable pageable){
+        Page<ContractResponse> contractResponseList = contractRepository.findAllContract(pageable);
+        for (var e : contractResponseList){
+            Contract contract = findById(e.getId());
+            e.setCustomerName(contract.getCustomerName());
+            e.setCustomerPhone(contract.getCustomerPhone());
+            ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
+            if (contract.getUser()!=null){
+                user.setId(contract.getUser().getId());
+                user.setName(contract.getUser().getFirstName() + " " + contract.getUser().getLastName());
+                user.setPhone(contract.getUser().getPhoneNumber());
+                e.setUser(user);
+            }
+            ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
+            if(contract.getEmployee()!=null){
+                employee.setId(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getFirstName() + " " + contract.getEmployee().getLastName());
+                employee.setPhone(contract.getEmployee().getPhoneNumber());
+                e.setEmployee(employee);
+            }
+            List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
+            for (var elem : contract.getHistoryWorking()){
+                ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
+                historyWorking.setDateWork(elem.getDateWork());
+                historyWorking.setDateInWeekName(elem.getDateInWeek().getName());
+                historyWorking.setSessionOfDateName(elem.getSessionOfDate().getName());
+                contractHistoryWorkingList.add(historyWorking);
+            }
+            e.setHistoryWorking(contractHistoryWorkingList);
+            ContractLocationResponse location = new ContractLocationResponse();
+            location.setName(contract.getLocationPlace().getName());
+            location.setLatitude(contract.getLocationPlace().getLatitude());
+            location.setLongitude(contract.getLocationPlace().getLongitude());
+            location.setDistanceForWork(contract.getLocationPlace().getDistanceForWork());
+            e.setLocation(location);
+        }
+        return contractResponseList;
+    }
 
     public void create(ContractSaveRequest request) {
         var contract = AppUtil.mapper.map(request, Contract.class);
@@ -70,6 +181,8 @@ public class ContractService {
         Contract contract = new Contract();
         contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
+        contract.setCustomerName(cart.getFirstName() + " " + cart.getLastName());
+        contract.setCustomerPhone(cart.getPhone());
         contract.setTimeEnd(cart.getTimeEnd());
         contract.setEmployee(employee);
         contract.setCreateAt(LocalDate.now());
@@ -78,12 +191,16 @@ public class ContractService {
         contract.setPriceService(cart.getService().getPriceEmployee());
         contract.setFeePrice(cart.getService().getFees());
         contract.setTotalPrice(cart.getService().getTotalPrice());
+        contract.setNoteForEmployee(cart.getNoteForEmployee());
+        contract.setNoteForPatient(cart.getNoteForPatient());
         LocationPlace locationPlace = new LocationPlace();
         locationPlace.setName(cart.getLocationPlace().getName());
         locationPlace.setLatitude(cart.getLocationPlace().getLatitude());
         locationPlace.setLongitude(cart.getLocationPlace().getLongitude());
         locationPlace.setDistanceForWork(cart.getLocationPlace().getDistanceForWork());
-        List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract);
+        locationPalaceRepository.save(locationPlace);
+        contract.setLocationPlace(locationPlace);
+        List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract,cart);
         contract.setHistoryWorking(historyWorkingList);
         contract.setFeeContact(BigDecimal.valueOf(200000));
         contract.setFeeAmount(contract.getFeePrice().multiply(BigDecimal.valueOf(historyWorkingList.size())));
@@ -128,7 +245,7 @@ public class ContractService {
         return contractRepository.save(contract);
     }
 
-    public ContractRevenueContractResponse calculateRevenue(AdminStartEndDayRequest req)  {
+    public ContractRevenueContractResponse calculateRevenue(AdminStartEndDayRequest req) {
 
         if (req.getEndDay() == "" || req.getEndDay() == null) {
             req.setEndDay("2050-02-20");
@@ -155,9 +272,10 @@ public class ContractService {
 
         BigDecimal feeAmountRevenue = contractRepository.getAllFeeAmount(req);
         BigDecimal feeContactRevenue = contractRepository.getAllFeeContact(req);
-        if (feeContactRevenue == null){
+        if (feeContactRevenue == null) {
             feeAmountRevenue = BigDecimal.valueOf(0);
-        }if (feeContactRevenue == null){
+        }
+        if (feeContactRevenue == null) {
             feeContactRevenue = BigDecimal.valueOf(0);
         }
         ContractRevenueContractResponse revenue = new ContractRevenueContractResponse(feeAmountRevenue, feeContactRevenue);

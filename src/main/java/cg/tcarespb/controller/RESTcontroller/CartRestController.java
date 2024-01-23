@@ -47,7 +47,7 @@ public class CartRestController {
     }
 
     @PutMapping("/employees")
-    public ResponseEntity<?> updateServiceGeneral(@RequestBody CartEmployeeSaveRequest req) {
+    public ResponseEntity<?> updateEmployee(@RequestBody CartEmployeeSaveRequest req) {
         cartService.updateEmployeeForCart(req);
         return ResponseEntity.noContent().build();
     }
@@ -135,11 +135,14 @@ public class CartRestController {
     public ResponseEntity<List<CartListResponse>> getCartList(@PathVariable("id") String id) {
         List<CartListResponse> cartListResponses = cartService.findCartBySaler(id);
         return ResponseEntity.ok(cartListResponses);
+
     }
 
     @PostMapping("/sale/{id}")
-    public void createCartBySale(@RequestBody CartSaveRequest request, @PathVariable String id) {
-        cartService.createCartBySale(request, id);
+    public ResponseEntity<String> createCartBySale(@RequestBody CartSaveRequest request,@PathVariable String id) {
+      String cartId =  cartService.createCartBySale(request,id);
+        return ResponseEntity.ok(cartId);
+
     }
 
     @PostMapping("/cartSale/{id}")
@@ -170,10 +173,10 @@ public class CartRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> edit(@PathVariable("id") String id, @RequestBody CartSaleEditRequest request) {
-        cartService.editCartBySale(request, id);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/sale/{id}")
+    public ResponseEntity<?> edit(@PathVariable("id") String id, @RequestBody CartSaleEditRequest request) {
+        String cartId = cartService.editCartBySale(request, id);
+        return new ResponseEntity<>(cartId, HttpStatus.OK);
     }
     @PutMapping("/cartStatus/{idCart}")
     public ResponseEntity<?> updateCartStatus(@PathVariable("idCart") String idCart) {

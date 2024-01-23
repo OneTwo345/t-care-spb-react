@@ -23,4 +23,5 @@ public class CartEmployeeResponse {
     private Double distanceForWork;
     private Double longitude;
     private Double latitude;
+    private String phone;
 }

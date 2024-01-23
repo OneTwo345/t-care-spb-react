@@ -22,4 +22,6 @@ public class CartListResponse {
     private String saleNote;
     private String phone;
     private String serviceGeneral;
+    private String employeeFirstName;
+    private String employeeLastName;
 }
