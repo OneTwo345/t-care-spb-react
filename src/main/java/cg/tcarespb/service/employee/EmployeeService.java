@@ -238,16 +238,22 @@ public class EmployeeService {
 
     }
 
-@Transactional
+    @Transactional
     public EmployeeDetailResponse findDetailEmployeeById(String id) {
-        var employee = employeeRepository.findById(id).orElseThrow(
-                () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Employee", id)));
+        var employee = findById(id);
 
         var result = AppUtil.mapper.map(employee, EmployeeDetailResponse.class);
+        var idCart = accountRepository.findAccountByEmployeeId(id);
+
         result.setPhotoUrl(employee.getPhoto().getUrl());
         result.setAddress(employee.getLocationPlace().getName());
         result.setEducation(employee.getEducation().getName());
         result.setExperience(employee.getExperience().getName());
+        result.setGender(employee.getGender().getName());
+        result.setStatus(employee.getStatus().getName());
+        result.setTime(String.valueOf(idCart.getTime()));
+        result.setEmail(idCart.getEmail());
+        result.setPhone(employee.getPhoneNumber());
         result.setIdSkills(employee
                 .getEmployeeSkills()
                 .stream().map(employeeSkill -> employeeSkill.getSkill().getName())

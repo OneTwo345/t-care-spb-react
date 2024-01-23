@@ -13,6 +13,8 @@ import java.util.List;
 public class EmployeeDetailResponse {
     private String address;
     private String firstName;
+    private String email;
+    private String phone;
     private String lastName;
     private String descriptionAboutMySelf;
     private String bioTitle;
@@ -30,6 +32,7 @@ public class EmployeeDetailResponse {
     private String priceMin;
     private String priceMax;
     private String minHourPerJob;
+    private String time;
     private String jobType;
     private List<String> listDateSessions;
 }

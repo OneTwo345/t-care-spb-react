@@ -43,12 +43,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.AccountNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.security.Key;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import static cg.tcarespb.models.enums.ERole.ROLE_ADMIN;
-import static cg.tcarespb.models.enums.ERole.ROLE_USER;
+import static cg.tcarespb.models.enums.ERole.*;
 
 
 @RestController
@@ -100,8 +100,10 @@ public class AuthResController {
         user.setGender(EGender.valueOf(request.getGender()));
         user.setPersonID(request.getPersonId());
         user.setPhoneNumber(request.getPhoneNumber());
+
         userRepository.save(user);
         account.setUser(user);
+        account.setTime(LocalDate.now());
         accountRepository.save(account);
 
         Cart cart = new Cart();
@@ -119,7 +121,7 @@ public class AuthResController {
         Account account = new Account();
         account.setEmail(request.getEmail());
         account.setPassword(passwordEncoder.encode(request.getPassword()));
-        account.setERole(ERole.ROLE_EMPLOYEE);
+        account.setERole(ROLE_EMPLOYEE);
         accountRepository.save(account);
         Employee employee = new Employee();
         employee.setGender(EGender.valueOf(request.getGender()));
@@ -149,7 +151,20 @@ public class AuthResController {
                 AuthResponse authResponse = new AuthResponse();
                 authResponse.setJwt(token);
                 authResponse.setIsAdmin(account.get().getERole().equals(ROLE_ADMIN));
-                authResponse.setIdAccount(account.get().getId());
+                authResponse.setIsEmployee(account.get().getERole().equals(ROLE_EMPLOYEE));
+                authResponse.setIsUser(account.get().getERole().equals(ROLE_USER));
+                authResponse.setIsSale(account.get().getERole().equals(ROLE_SALER));
+                if(account.get().getUser()!= null){
+                    authResponse.setIdAccount(account.get().getUser().getId());
+                }
+              else   if(account.get().getEmployee()!= null){
+                    authResponse.setIdAccount(account.get().getEmployee().getId());
+                }
+              else   if(account.get().getSaler()!= null){
+                    authResponse.setIdAccount(account.get().getSaler().getId());
+                } else {
+                    authResponse.setIdAccount(account.get().getId());
+                }
                 return ResponseEntity.ok(authResponse);
             }
         }
