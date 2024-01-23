@@ -132,6 +132,7 @@ public class AuthResController {
         employee.setPhoneNumber(request.getPhoneNumber());
         employeeRepository.save(employee);
         account.setEmployee(employee);
+        account.setTime(LocalDate.now());
         accountRepository.save(account);
         String employeeId = employee.getId();
 
