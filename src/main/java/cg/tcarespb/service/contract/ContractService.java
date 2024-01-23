@@ -57,6 +57,8 @@ public class ContractService {
         Page<ContractResponse> contractResponseList = contractRepository.findAllByEmployee(idEmployee,pageable);
         for (var e : contractResponseList){
             Contract contract = findById(e.getId());
+            e.setCustomerName(contract.getCustomerName());
+            e.setCustomerPhone(contract.getCustomerPhone());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
             if (contract.getUser()!=null){
                 user.setId(contract.getUser().getId());
@@ -93,6 +95,8 @@ public class ContractService {
         Page<ContractResponse> contractResponseList = contractRepository.findAllByUser(idUser,pageable);
         for (var e : contractResponseList){
             Contract contract = findById(e.getId());
+            e.setCustomerName(contract.getCustomerName());
+            e.setCustomerPhone(contract.getCustomerPhone());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
             if (contract.getUser()!=null){
                 user.setId(contract.getUser().getId());
@@ -129,17 +133,19 @@ public class ContractService {
         Page<ContractResponse> contractResponseList = contractRepository.findAllContract(pageable);
         for (var e : contractResponseList){
             Contract contract = findById(e.getId());
+            e.setCustomerName(contract.getCustomerName());
+            e.setCustomerPhone(contract.getCustomerPhone());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
             if (contract.getUser()!=null){
                 user.setId(contract.getUser().getId());
-                user.setName(contract.getUser().getId());
+                user.setName(contract.getUser().getFirstName() + " " + contract.getUser().getLastName());
                 user.setPhone(contract.getUser().getPhoneNumber());
                 e.setUser(user);
             }
             ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
             if(contract.getEmployee()!=null){
                 employee.setId(contract.getEmployee().getId());
-                employee.setName(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getFirstName() + " " + contract.getEmployee().getLastName());
                 employee.setPhone(contract.getEmployee().getPhoneNumber());
                 e.setEmployee(employee);
             }
@@ -175,6 +181,8 @@ public class ContractService {
         Contract contract = new Contract();
         contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
+        contract.setCustomerName(cart.getFirstName() + " " + cart.getLastName());
+        contract.setCustomerPhone(cart.getPhone());
         contract.setTimeEnd(cart.getTimeEnd());
         contract.setEmployee(employee);
         contract.setCreateAt(LocalDate.now());
@@ -192,7 +200,7 @@ public class ContractService {
         locationPlace.setDistanceForWork(cart.getLocationPlace().getDistanceForWork());
         locationPalaceRepository.save(locationPlace);
         contract.setLocationPlace(locationPlace);
-        List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract);
+        List<HistoryWorking> historyWorkingList = historyWorkingService.createTest(contract,cart);
         contract.setHistoryWorking(historyWorkingList);
         contract.setFeeContact(BigDecimal.valueOf(200000));
         contract.setFeeAmount(contract.getFeePrice().multiply(BigDecimal.valueOf(historyWorkingList.size())));

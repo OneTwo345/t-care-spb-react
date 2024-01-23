@@ -27,6 +27,8 @@ public class ContractResponse {
     private String noteForPatient;
     private String noteForEmployee;
     private String nameService;
+    private String customerName;
+    private String customerPhone;
     private BigDecimal feeContact;
     private BigDecimal feePrice;
     private BigDecimal totalPrice;
