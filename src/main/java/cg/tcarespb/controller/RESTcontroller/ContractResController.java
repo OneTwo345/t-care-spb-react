@@ -1,5 +1,6 @@
 package cg.tcarespb.controller.RESTcontroller;
 
+import cg.tcarespb.models.ChatMessage;
 import cg.tcarespb.service.contract.ContractService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
 import cg.tcarespb.service.contract.request.ContractSaveFromCartRequest;
@@ -11,8 +12,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -21,6 +24,7 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class ContractResController {
     private final ContractService contractService;
+    private final SimpMessageSendingOperations messagingTemplate;
 
     //    @GetMapping
 //    public ResponseEntity<List<ContractListResponse>> getContractList() {
@@ -65,6 +69,10 @@ public class ContractResController {
     @PostMapping("/createContract/{cartId}")
     public ResponseEntity<?> create(@PathVariable("cartId") String cartId) {
         contractService.createContract(cartId);
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessage("Sent to User");
+        chatMessage.setTimeStamp(new Date());
+        messagingTemplate.convertAndSend("/topic/messages", chatMessage);
         return ResponseEntity.noContent().build();
     }
 

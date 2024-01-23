@@ -1,6 +1,7 @@
 package cg.tcarespb.controller.RESTcontroller;
 
 import cg.tcarespb.models.Cart;
+import cg.tcarespb.models.ChatMessage;
 import cg.tcarespb.models.enums.ECartStatus;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.cart.request.*;
@@ -13,8 +14,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -23,6 +26,8 @@ import java.util.List;
 @CrossOrigin("http://localhost:3000")
 public class CartRestController {
     private final CartService cartService;
+    private final SimpMessageSendingOperations messagingTemplate;
+
 
 
 //    @PostMapping
@@ -191,6 +196,10 @@ public class CartRestController {
     @GetMapping("/readyStatus/search")
     public ResponseEntity<?> getCartListByStatusAndSearch( Pageable pageable,@RequestBody CartSearchFilterRequest req) {
         Page<CartAllFieldResponse> cartListResponses= cartService.findAllCartByStatusCartAndSearch(ECartStatus.READY, pageable, req);
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessage("Sent to Saler");
+        chatMessage.setTimeStamp(new Date());
+        messagingTemplate.convertAndSend("/topic/messages", chatMessage);
         return new ResponseEntity<>(cartListResponses, HttpStatus.OK);
     }
 
