@@ -11,6 +11,8 @@ import cg.tcarespb.service.admin.response.AdminEmployeeResponse;
 import cg.tcarespb.service.admin.response.AdminRevenueResponse;
 import cg.tcarespb.service.admin.response.AdminSalerResponse;
 import cg.tcarespb.service.admin.response.AdminUserResponse;
+import cg.tcarespb.service.employee.EmployeeService;
+import cg.tcarespb.service.employee.response.EmployeeListResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +32,7 @@ public class AdminService {
     private final ContractRepository contractRepository;
     private final AccountRepository accountRepository;
     private final SalerRepository salerRepository;
+    private final EmployeeService employeeService;
 
     public Page<AdminUserResponse> getAllUser(Pageable pageable, Boolean deleted) {
         return userRepository.getAllUser(pageable, deleted);
@@ -39,8 +42,8 @@ public class AdminService {
         return salerRepository.getAllSaler(deleted, pageable);
     }
 
-    public Page<AdminEmployeeResponse> getALlEmployeeByStatus(Pageable pageable, EStatus status) {
-        return employeeRepository.getAllEmployeeByStatus(status, pageable);
+    public Page<EmployeeListResponse> getALlEmployeeByStatus(Pageable pageable, EStatus status) {
+        return employeeService.getEmployeeList(status, pageable);
     }
 
     @Transactional

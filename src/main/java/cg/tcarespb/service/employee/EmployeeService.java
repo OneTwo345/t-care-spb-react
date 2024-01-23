@@ -50,7 +50,8 @@ public class EmployeeService {
         employeeList.stream().forEach(e -> {
             Employee employee = findById(e.getId());
             e.setExperience(employee.getExperience().getName());
-
+            Account account = accountRepository.findAccountByEmployeeId(e.getId());
+            e.setCreateAt(account.getTime());
             List<EmployeeSkillServiceInfoResponse> skillList = new ArrayList<>();
             for (var elem : employee.getEmployeeSkills()) {
                 EmployeeSkillServiceInfoResponse skill = new EmployeeSkillServiceInfoResponse();
@@ -87,6 +88,7 @@ public class EmployeeService {
                 dateSessionList.add(dateSession);
             }
             e.setDateSessionList(dateSessionList);
+
 
             List<EmployeeHistoryWorkingResponse> historyWorkingList = new ArrayList<>();
             for (var elem : employee.getHistoryWorking()) {
