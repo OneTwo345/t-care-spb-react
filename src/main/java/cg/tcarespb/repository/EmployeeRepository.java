@@ -22,7 +22,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             "WHERE check_list_intersection((SELECT GROUP_CONCAT(eskill.skill.id) FROM EmployeeSkill eskill WHERE e.id = eskill.employee.id), :#{#reqFilter.cartSkillIdList}) > 0 " +
             "AND check_list_intersection((SELECT GROUP_CONCAT(eser.service.id) FROM EmployeeServiceGeneral eser WHERE e.id = eser.employee.id), :#{#reqFilter.cartServiceId}) > 0 " +
             "AND check_list_intersection((SELECT GROUP_CONCAT(ein.addInfo.id) FROM EmployeeInfo ein WHERE e.id = ein.employee.id), :#{#reqFilter.cartInfoIdList}) > 0 " +
-            "AND count_matching_records(e.id, :#{#reqFilter.cartId}) = 0 " +
+            "AND count_matching_records(e.id, :#{#reqFilter.cartId})  < 1 " +
             "AND get_distance(e.locationPlace.latitude,e.locationPlace.longitude,:#{#reqFilter.latitude},:#{#reqFilter.longitude})<= :#{#reqFilter.distance}  " +
             "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id ")
     Page<EmployeeFilterResponse> filter(@Param("reqFilter") CartFilterRequest reqFilter, Pageable pageable);
