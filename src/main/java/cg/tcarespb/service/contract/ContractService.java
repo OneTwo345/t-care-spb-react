@@ -58,15 +58,19 @@ public class ContractService {
         for (var e : contractResponseList){
             Contract contract = findById(e.getId());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
-            user.setId(contract.getUser().getId());
-            user.setName(contract.getUser().getId());
-            user.setPhone(contract.getUser().getPhoneNumber());
-            e.setUser(user);
+            if (contract.getUser()!=null){
+                user.setId(contract.getUser().getId());
+                user.setName(contract.getUser().getId());
+                user.setPhone(contract.getUser().getPhoneNumber());
+                e.setUser(user);
+            }
             ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
-            employee.setId(contract.getEmployee().getId());
-            employee.setName(contract.getEmployee().getId());
-            employee.setPhone(contract.getEmployee().getPhoneNumber());
-            e.setEmployee(employee);
+            if(contract.getEmployee()!=null){
+                employee.setId(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getId());
+                employee.setPhone(contract.getEmployee().getPhoneNumber());
+                e.setEmployee(employee);
+            }
             List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
             for (var elem : contract.getHistoryWorking()){
                 ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
@@ -90,15 +94,19 @@ public class ContractService {
         for (var e : contractResponseList){
             Contract contract = findById(e.getId());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
-            user.setId(contract.getUser().getId());
-            user.setName(contract.getUser().getId());
-            user.setPhone(contract.getUser().getPhoneNumber());
-            e.setUser(user);
+            if (contract.getUser()!=null){
+                user.setId(contract.getUser().getId());
+                user.setName(contract.getUser().getId());
+                user.setPhone(contract.getUser().getPhoneNumber());
+                e.setUser(user);
+            }
             ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
-            employee.setId(contract.getEmployee().getId());
-            employee.setName(contract.getEmployee().getId());
-            employee.setPhone(contract.getEmployee().getPhoneNumber());
-            e.setEmployee(employee);
+            if(contract.getEmployee()!=null){
+                employee.setId(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getId());
+                employee.setPhone(contract.getEmployee().getPhoneNumber());
+                e.setEmployee(employee);
+            }
             List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
             for (var elem : contract.getHistoryWorking()){
                 ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
@@ -122,15 +130,19 @@ public class ContractService {
         for (var e : contractResponseList){
             Contract contract = findById(e.getId());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
-            user.setId(contract.getUser().getId());
-            user.setName(contract.getUser().getId());
-            user.setPhone(contract.getUser().getPhoneNumber());
-            e.setUser(user);
+            if (contract.getUser()!=null){
+                user.setId(contract.getUser().getId());
+                user.setName(contract.getUser().getId());
+                user.setPhone(contract.getUser().getPhoneNumber());
+                e.setUser(user);
+            }
             ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
-            employee.setId(contract.getEmployee().getId());
-            employee.setName(contract.getEmployee().getId());
-            employee.setPhone(contract.getEmployee().getPhoneNumber());
-            e.setEmployee(employee);
+            if(contract.getEmployee()!=null){
+                employee.setId(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getId());
+                employee.setPhone(contract.getEmployee().getPhoneNumber());
+                e.setEmployee(employee);
+            }
             List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
             for (var elem : contract.getHistoryWorking()){
                 ContractHistoryWorkingResponse historyWorking = new ContractHistoryWorkingResponse();
