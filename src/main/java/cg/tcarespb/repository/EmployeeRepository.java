@@ -55,6 +55,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             "e.locationPlace.longitude," +
             "e.locationPlace.latitude," +
             "e.locationPlace.name," +
-            "e.photo.url)  FROM Employee e where  e.status =:status ")
+            "e.photo.url," +
+            "e.phoneNumber)  FROM Employee e where  e.status =:status ")
     Page<EmployeeListResponse> findAllByStatus(@Param("status")EStatus status, Pageable pageable);
 }

@@ -4,6 +4,7 @@ import cg.tcarespb.models.enums.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,8 @@ public class EmployeeListResponse {
     private EStatus status;
     private String experience;
     private EEducation education;
+    private String phoneNumber;
+    private LocalDate createAt;
     private List<EmployeeSkillServiceInfoResponse> skillList;
     private List<EmployeeSkillServiceInfoResponse> addInfoList;
     private List<EmployeeSkillServiceInfoResponse> serviceList;
@@ -43,7 +46,8 @@ public class EmployeeListResponse {
                                 Double longitude,
                                 Double latitude,
                                 String nameLocation,
-                                String photoUrl) {
+                                String photoUrl,
+                                String phoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -57,5 +61,6 @@ public class EmployeeListResponse {
         this.latitude = latitude;
         this.nameLocation = nameLocation;
         this.photoUrl = photoUrl;
+        this.phoneNumber=phoneNumber;
     }
 }
