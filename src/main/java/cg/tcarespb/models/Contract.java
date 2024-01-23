@@ -40,6 +40,8 @@ public class Contract {
     private BigDecimal totalAmount;;
     private BigDecimal amount;
     private BigDecimal feeAmount;
+    private String customerName;
+    private String customerPhone;
     @Enumerated(EnumType.STRING)
     private EGender gender;
     @ManyToOne

@@ -945,6 +945,7 @@ public class CartService {
                 employeeResponse.setDistanceForWork(employee.getLocationPlace().getDistanceForWork());
                 employeeResponse.setLongitude(employee.getLocationPlace().getLongitude());
                 employeeResponse.setLatitude(employee.getLocationPlace().getLatitude());
+                employeeResponse.setPhone(employee.getPhoneNumber());
                 elem.setEmployee(employeeResponse);
             }
 
@@ -1049,6 +1050,7 @@ public class CartService {
                 employeeResponse.setDistanceForWork(employee.getLocationPlace().getDistanceForWork());
                 employeeResponse.setLongitude(employee.getLocationPlace().getLongitude());
                 employeeResponse.setLatitude(employee.getLocationPlace().getLatitude());
+                employeeResponse.setPhone(employee.getPhoneNumber());
                 elem.setEmployee(employeeResponse);
             }
 
