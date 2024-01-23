@@ -30,7 +30,7 @@ public interface CartRepository extends JpaRepository<Cart, String> {
             "c.memberOfFamily," +
             "c.gender," +
             "c.eDecade" +
-            ")  FROM Cart c where  c.user.id =:idUser ")
+            ")  FROM Cart c where  c.user.id =:idUser  ")
     Page<CartAllFieldResponse> findAllCartByUserId(@Param("idUser") String idUser, Pageable pageable);
     @Query("SELECT NEW  cg.tcarespb.service.cart.response.CartAllFieldResponse(" +
             "c.id," +

@@ -55,20 +55,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<UserListResponse> getUserListResponse(){
+    public List<UserListResponse> getUserListResponse() {
         return userRepository.findAll()
                 .stream()
-                .map(user ->UserListResponse.builder()
+                .map(user -> UserListResponse.builder()
                         .id(user.getId())
                         .lastName(user.getLastName())
                         .firstName(user.getFirstName())
                         .gender(user.getGender())
                         .personID(user.getPersonID())
-                        .photoUrl(user.getPhoto().getUrl())
+                        .photoUrl(user.getPhoto() != null ? user.getPhoto().getUrl() : null)
                         .phoneNumber(user.getPhoneNumber())
                         .build())
                 .collect(Collectors.toList());
     }
+
 
     public UserListResponse findById(String id){
         var user = findUserById(id);

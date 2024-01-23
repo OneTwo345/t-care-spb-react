@@ -14,6 +14,9 @@ public class AuthResponse {
     private String jwt;
     private Boolean isAdmin;
     private String idAccount;
+    private Boolean isEmployee;
+    private Boolean isUser;
+    private Boolean isSale;
 
 
 }

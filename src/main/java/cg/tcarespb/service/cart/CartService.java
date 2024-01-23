@@ -250,7 +250,7 @@ public class CartService {
         cart.setLocationPlace(locationPlace);
         cartRepository.save(cart);
     }
-
+@Transactional
     public void updateCartSkill(CartSkillSaveRequest req, String cartId) {
         Cart cart = findById(cartId);
         cartSkillRepository.deleteAllByCartId(cartId);
@@ -266,6 +266,7 @@ public class CartService {
         cart.setCartSkills(cartSkillList);
         cartRepository.save(cart);
     }
+    @Transactional
 
     public void updateCartInfo(CartInfoSaveRequest req, String cartId) {
         Cart cart = findById(cartId);
