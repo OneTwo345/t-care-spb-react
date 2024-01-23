@@ -355,6 +355,7 @@ public class CartService {
         CartSkillFilterRequest req = new CartSkillFilterRequest();
         req.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
         CartFilterRequest request = new CartFilterRequest();
+        request.setCartId(idCart);
         request.setCartServiceId(cart.getService().getId());
         request.setCartSkillIdList(cart.getCartSkills().stream().map(e -> e.getSkill().getId()).collect(Collectors.joining(",")));
         request.setCartInfoIdList(cart.getCartInfos().stream().map(e -> e.getAddInfo().getId()).collect(Collectors.joining(",")));
