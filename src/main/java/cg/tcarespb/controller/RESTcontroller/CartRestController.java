@@ -186,6 +186,10 @@ public class CartRestController {
     @PutMapping("/cartStatus/{idCart}")
     public ResponseEntity<?> updateCartStatus(@PathVariable("idCart") String idCart) {
         cartService.updateCartStatus(ECartStatus.READY, idCart);
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessage("Sent to Saler");
+        chatMessage.setTimeStamp(new Date());
+        messagingTemplate.convertAndSend("/topic/cart", chatMessage);
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/readyStatus")
@@ -196,10 +200,6 @@ public class CartRestController {
     @GetMapping("/readyStatus/search")
     public ResponseEntity<?> getCartListByStatusAndSearch( Pageable pageable,@RequestBody CartSearchFilterRequest req) {
         Page<CartAllFieldResponse> cartListResponses= cartService.findAllCartByStatusCartAndSearch(ECartStatus.READY, pageable, req);
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setMessage("Sent to Saler");
-        chatMessage.setTimeStamp(new Date());
-        messagingTemplate.convertAndSend("/topic/messages", chatMessage);
         return new ResponseEntity<>(cartListResponses, HttpStatus.OK);
     }
 

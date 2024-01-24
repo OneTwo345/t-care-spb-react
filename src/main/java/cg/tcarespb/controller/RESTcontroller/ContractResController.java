@@ -72,7 +72,7 @@ public class ContractResController {
         ChatMessage chatMessage = new ChatMessage();
         chatMessage.setMessage("Sent to User");
         chatMessage.setTimeStamp(new Date());
-        messagingTemplate.convertAndSend("/topic/messages", chatMessage);
+        messagingTemplate.convertAndSend("/topic/saler", chatMessage);
         return ResponseEntity.noContent().build();
     }
 
