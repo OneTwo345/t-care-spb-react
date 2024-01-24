@@ -32,6 +32,7 @@ public class SpringSecurity {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorize ->
                 authorize.requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
 //                        .requestMatchers("/api/auth/**").permitAll()
 //                        .requestMatchers("/api/admin/**").permitAll()
 //                        .requestMatchers("/api/rates/**").permitAll()
