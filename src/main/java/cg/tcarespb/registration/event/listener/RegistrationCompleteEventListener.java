@@ -28,14 +28,13 @@ public class RegistrationCompleteEventListener implements ApplicationListener<Re
 
 
     public void sendPasswordResetVerificationEmail(String url, Account account) throws MessagingException, UnsupportedEncodingException {
-        String subject = "Password Reset Request Verification";
+        String subject = "T-Care Password Reset Request Verification";
         String senderName = "User Registration Portal Service";
         String name = (account.getEmployee() == null ? account.getUser().getFirstName() :account.getEmployee().getFirstName());
-        String mailContent = "<p> Hi, " + name + ", </p>" +
-                "<p><b>You recently requested to reset your password,</b>" + "" +
-                "Please, follow the link below to complete the action.</p>" +
-                "<a href=\"" + url + "\">Reset password</a>" +
-                "<p> Users Registration Portal Service";
+        String mailContent = "<p> Hi " + name + ", </p>" +
+                "<p>Bạn gần đây đã yêu cầu thay đổi mật khẩu,</p>" + "" +
+                "<p>Hãy nhấn vào link bên dưới để hoàn thành yêu cầu.</p>" +
+                "<a href=\"" + url + "\">Reset password</a>" ;
         MimeMessage message = mailSender.createMimeMessage();
         var messageHelper = new MimeMessageHelper(message);
         messageHelper.setFrom(senderEmail);

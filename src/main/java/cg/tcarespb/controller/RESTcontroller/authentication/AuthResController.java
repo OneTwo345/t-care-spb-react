@@ -12,6 +12,7 @@ import cg.tcarespb.models.enums.ERole;
 import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.registration.event.listener.RegistrationCompleteEventListener;
 import cg.tcarespb.registration.password.PasswordResetRequest;
+import cg.tcarespb.registration.password.PasswordResetTokenService;
 import cg.tcarespb.registration.token.VerificationToken;
 import cg.tcarespb.repository.AccountRepository;
 import cg.tcarespb.repository.CartRepository;
@@ -65,13 +66,11 @@ public class AuthResController {
     private final PasswordEncoder passwordEncoder;
     private final CartRepository cartRepository;
     private final AccountService accountService;
-
     private final JwtUtil jwtUtil;
-
     private final AuthenticationManager authenticationManager;
-
     private final RegistrationCompleteEventListener eventListener;
     private final HttpServletRequest servletRequest;
+    private final PasswordResetTokenService passwordResetTokenService;
     private final String SECRET = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
     @PostMapping("/check-mail")
@@ -154,13 +153,11 @@ public class AuthResController {
                 authResponse.setIsEmployee(account.get().getERole().equals(ROLE_EMPLOYEE));
                 authResponse.setIsUser(account.get().getERole().equals(ROLE_USER));
                 authResponse.setIsSale(account.get().getERole().equals(ROLE_SALER));
-                if(account.get().getUser()!= null){
+                if (account.get().getUser() != null) {
                     authResponse.setIdAccount(account.get().getUser().getId());
-                }
-              else   if(account.get().getEmployee()!= null){
+                } else if (account.get().getEmployee() != null) {
                     authResponse.setIdAccount(account.get().getEmployee().getId());
-                }
-              else   if(account.get().getSaler()!= null){
+                } else if (account.get().getSaler() != null) {
                     authResponse.setIdAccount(account.get().getSaler().getId());
                 } else {
                     authResponse.setIdAccount(account.get().getId());
@@ -237,8 +234,7 @@ public class AuthResController {
 //        return "Invalid verification link, <a href=\"" +url+"\"> Get a new verification link. </a>";
 //    }
     @PostMapping("/password-reset-request")
-    public String resetPasswordRequest(@RequestBody PasswordResetRequest passwordResetRequest,
-                                       final HttpServletRequest servletRequest)
+    public String resetPasswordRequest(@RequestBody PasswordResetRequest passwordResetRequest)
             throws MessagingException, UnsupportedEncodingException {
 
         Optional<Account> account = accountService.findByEmail(passwordResetRequest.getEmail());
@@ -268,15 +264,18 @@ public class AuthResController {
     @PostMapping("/reset-password")
     public String resetPassword(@RequestBody PasswordResetRequest passwordResetRequest,
                                 @RequestParam("token") String token) {
-        String tokenVerificationResult = accountService.validateToken(token);
+        String tokenVerificationResult = passwordResetTokenService.validatePasswordResetToken(token);
         if (!tokenVerificationResult.equalsIgnoreCase("valid")) {
+            passwordResetTokenService.deleteToken(token);
             return "Invalid token password reset token";
         }
         Optional<Account> theAccount = Optional.ofNullable(accountService.findAccountByPasswordToken(token));
         if (theAccount.isPresent()) {
             accountService.changePassword(theAccount.get(), passwordResetRequest.getNewPassword());
+            passwordResetTokenService.deleteToken(token);
             return "Password has been reset successfully";
         }
+        passwordResetTokenService.deleteToken(token);
         return "Invalid password reset token";
     }
 

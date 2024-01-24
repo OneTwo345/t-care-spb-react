@@ -1,6 +1,7 @@
 package cg.tcarespb.service.account;
 
 import cg.tcarespb.models.Account;
+import cg.tcarespb.registration.password.PasswordResetToken;
 import cg.tcarespb.registration.password.PasswordResetTokenService;
 import cg.tcarespb.registration.token.VerificationToken;
 import cg.tcarespb.registration.token.VerificationTokenRepository;
@@ -58,6 +59,7 @@ public class AccountService {
         accountRepository.save(account);
         return "valid";
     }
+
 
     public void changePassword(Account theAccount, String newPassword) {
         theAccount.setPassword(passwordEncoder.encode(newPassword));
