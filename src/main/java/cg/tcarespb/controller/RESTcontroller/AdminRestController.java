@@ -93,7 +93,7 @@ public class AdminRestController {
 
 
     @PutMapping("/employees/active/{idEmployee}")
-    public ResponseEntity<?> active(@PathVariable("id") String idEmployee) {
+    public ResponseEntity<?> active(@PathVariable("idEmployee") String idEmployee) {
         adminService.activeEmployee(idEmployee);
         return new ResponseEntity<>(HttpStatus.OK);
     }
