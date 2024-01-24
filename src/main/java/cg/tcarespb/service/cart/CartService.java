@@ -377,7 +377,7 @@ public class CartService {
                 e.setPhotoUrl(photo.getUrl());
             }
             e.setPhone(employee.getPhoneNumber());
-            e.setEExperience(e.getExperience().getName());
+            e.setExperience(e.getEExperience().getName());
             e.setSkillName(employee.getEmployeeSkills().stream().map(elem -> elem.getSkill().getName()).collect(Collectors.toList()));
             e.setInfoName(employee.getEmployeeInfos().stream().map(elem -> elem.getAddInfo().getName()).collect(Collectors.toList()));
             e.setServiceName(employee.getEmployeeServiceGenerals().stream().map(elem -> elem.getService().getName()).collect(Collectors.toList()));
@@ -668,7 +668,7 @@ public class CartService {
         cartRepository.save(cart);
         Page<EmployeeFilterResponse> filterList = filter(cart.getId(), pageable);
         filterList.forEach(e -> {
-                    e.setEExperience(e.getExperience().getName());
+                    e.setExperience(e.getEExperience().getName());
                     e.setCartId(cart.getId());
                 }
         );

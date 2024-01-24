@@ -17,8 +17,8 @@ public class EmployeeFilterResponse {
     private String lastName;
     private String bio;
     private String descriptionAboutMySelf;
-    private EExperience experience;
-    private String eExperience;
+    private EExperience  eExperience;
+    private String experience;
     private Double longitude;
     private Double latitude;
     private String nameLocation;
@@ -39,7 +39,7 @@ public class EmployeeFilterResponse {
         this.lastName = lastName;
         this.bio = bio;
         this.descriptionAboutMySelf = descriptionAboutMySelf;
-        this.experience = experience;
+        this.eExperience = experience;
         this.longitude = longitude;
         this.latitude = latitude;
     }
