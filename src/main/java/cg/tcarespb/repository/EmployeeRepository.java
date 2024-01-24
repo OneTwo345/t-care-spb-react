@@ -38,11 +38,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, String> {
             "AND  e.status =:#{#reqFilter.status}  GROUP BY e.id ")
     Page<EmployeeFilterResponse> filterTestCase(@Param("reqFilter") CartFilterRequest reqFilter, Pageable pageable);
 
-    @Query("SELECT NEW  cg.tcarespb.service.admin.response.AdminEmployeeResponse(e.id,e.personID,e.firstName,e.lastName,e.gender,e.status)  FROM Employee e where e.deleted=:deleted ")
-    Page<AdminEmployeeResponse> getAllEmployee(Pageable pageable, @Param("deleted") Boolean deleted);
-
-    @Query("SELECT NEW  cg.tcarespb.service.admin.response.AdminEmployeeResponse(e.id,e.personID,e.firstName,e.lastName,e.gender,e.status)  FROM Employee e where  e.status =:status ")
-    Page<AdminEmployeeResponse> getAllEmployeeByStatus(@Param("status") EStatus status, Pageable pageable);
+//    @Query("SELECT NEW  cg.tcarespb.service.admin.response.AdminEmployeeResponse(e.id,e.personID,e.firstName,e.lastName,e.gender,e.status)  FROM Employee e where e.deleted=:deleted ")
+//    Page<AdminEmployeeResponse> getAllEmployee(Pageable pageable, @Param("deleted") Boolean deleted);
+//
+//    @Query("SELECT NEW  cg.tcarespb.service.admin.response.AdminEmployeeResponse(e.id,e.personID,e.firstName,e.lastName,e.gender,e.status)  FROM Employee e where  e.status =:status ")
+//    Page<AdminEmployeeResponse> getAllEmployeeByStatus(@Param("status") EStatus status, Pageable pageable);
 
     @Query("SELECT NEW  cg.tcarespb.service.employee.response.EmployeeListResponse(e.id,e.firstName," +
             "e.lastName," +

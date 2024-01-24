@@ -240,6 +240,7 @@ public class EmployeeService {
         Employee employee = findById(employeeId);
         Photo image = photoRepository.findPhotoById(request.getAvatar()).get();
         employee.setPhoto(image);
+        employee.setStatus(EStatus.WAITING);
 //        employee.setDescriptionAboutMySelf(request.getDescriptionAboutMySelf());
         employeeRepository.save(employee);
 

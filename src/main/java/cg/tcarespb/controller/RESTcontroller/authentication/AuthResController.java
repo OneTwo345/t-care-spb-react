@@ -128,12 +128,10 @@ public class AuthResController {
         employee.setFirstName(request.getFirstName());
         employee.setLastName(request.getLastName());
         employee.setPersonID(request.getPersonId());
-        employee.setStatus(EStatus.WAITING);
         employee.setPhoneNumber(request.getPhoneNumber());
         employeeRepository.save(employee);
         account.setEmployee(employee);
         account.setTime(LocalDate.now());
-
         accountRepository.save(account);
         String employeeId = employee.getId();
 

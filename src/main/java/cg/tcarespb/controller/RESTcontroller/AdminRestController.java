@@ -1,9 +1,6 @@
 package cg.tcarespb.controller.RESTcontroller;
 
-import cg.tcarespb.models.Account;
-import cg.tcarespb.models.Cart;
-import cg.tcarespb.models.Employee;
-import cg.tcarespb.models.Saler;
+import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.EGender;
 import cg.tcarespb.models.enums.ERole;
 import cg.tcarespb.models.enums.EStatus;
@@ -18,9 +15,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -33,6 +32,7 @@ public class AdminRestController {
     private final PasswordEncoder passwordEncoder;
     private final SalerRepository salerRepository;
     private final ContractService contractService;
+    private final SimpMessageSendingOperations messagingTemplate;
 
 
     @GetMapping("/users")
@@ -141,6 +141,13 @@ public class AdminRestController {
     public ResponseEntity<?> getRevenueFromContract(@RequestBody  AdminStartEndDayRequest req) {
         return new ResponseEntity<>( contractService.calculateRevenue(req),HttpStatus.OK);
     }
-
+    @GetMapping("")
+    public ResponseEntity<?> showTest(){
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessage("Server gui ve du lieu chi do");
+        chatMessage.setTimeStamp(new Date());
+        messagingTemplate.convertAndSend("/topic/messages", chatMessage);
+        return new ResponseEntity<>("AAA", HttpStatus.OK);
+    }
 
 }
