@@ -19,6 +19,10 @@ public class PasswordResetTokenService {
         passwordResetTokenRepository.save(passwordResetToken);
     }
 
+    public void deleteToken(String token){
+        passwordResetTokenRepository.deleteByToken(token);
+    }
+
     public String validatePasswordResetToken(String passwordResetToken) {
         PasswordResetToken passwordToken = passwordResetTokenRepository.findByToken(passwordResetToken);
         if (passwordToken == null) {
