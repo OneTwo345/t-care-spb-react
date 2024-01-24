@@ -23,6 +23,7 @@ public class ServiceGeneralRestController {
         return new ResponseEntity<>(serviceListResponseList, HttpStatus.OK);
     }
 
+
     @PostMapping
     public void create(@RequestBody ServiceSaveRequest req) {
         serviceGeneralService.create(req);
