@@ -52,6 +52,9 @@ public class EmployeeService {
             e.setExperience(employee.getExperience().getName());
             Account account = accountRepository.findAccountByEmployeeId(e.getId());
             e.setCreateAt(account.getTime());
+            e.setEmail(account.getEmail());
+            e.setEGender(employee.getGender().getName());
+            e.setEEducation(employee.getEducation().getName());
             List<EmployeeSkillServiceInfoResponse> skillList = new ArrayList<>();
             for (var elem : employee.getEmployeeSkills()) {
                 EmployeeSkillServiceInfoResponse skill = new EmployeeSkillServiceInfoResponse();
@@ -85,6 +88,8 @@ public class EmployeeService {
                 EmployeeDateSessionResponse dateSession = new EmployeeDateSessionResponse();
                 dateSession.setDateInWeek(elem.getDateInWeek());
                 dateSession.setSessionOfDate(elem.getSessionOfDate());
+                dateSession.setESessionOfDate(elem.getSessionOfDate().getName());
+                dateSession.setEDateInWeek(elem.getDateInWeek().getName());
                 dateSessionList.add(dateSession);
             }
             e.setDateSessionList(dateSessionList);

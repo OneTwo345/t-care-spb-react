@@ -19,11 +19,14 @@ public class EmployeeListResponse {
     private String bioTitle;
     private String personID;
     private EGender gender;
+    private String eGender;
+    private String eEducation;
     private EStatus status;
     private String experience;
     private EEducation education;
     private String phoneNumber;
     private LocalDate createAt;
+    private String email;
     private List<EmployeeSkillServiceInfoResponse> skillList;
     private List<EmployeeSkillServiceInfoResponse> addInfoList;
     private List<EmployeeSkillServiceInfoResponse> serviceList;
