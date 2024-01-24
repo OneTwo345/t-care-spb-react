@@ -13,4 +13,9 @@ public class ContractEmployeeUserResponse {
     private String id;
     private String name;
     private String phone;
+    private String gender;
+    private String personId;
+    private String location;
+    private String email;
+
 }

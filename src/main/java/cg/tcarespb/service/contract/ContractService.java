@@ -1,9 +1,7 @@
 package cg.tcarespb.service.contract;
 
 import cg.tcarespb.models.*;
-import cg.tcarespb.repository.ContractRepository;
-import cg.tcarespb.repository.EmployeeRepository;
-import cg.tcarespb.repository.LocationPalaceRepository;
+import cg.tcarespb.repository.*;
 import cg.tcarespb.service.admin.request.AdminStartEndDayRequest;
 import cg.tcarespb.service.cart.CartService;
 import cg.tcarespb.service.contract.request.ContractEditRequest;
@@ -37,40 +35,39 @@ public class ContractService {
     private final CartService cartService;
     private final HistoryWorkingService historyWorkingService;
     private final LocationPalaceRepository locationPalaceRepository;
+    private final AccountRepository accountRepository;
+    private final ServiceGeneralRepository serviceGeneralRepository;
 
-    public List<ContractListResponse> getContractList() {
-        return contractRepository.findAll()
-                .stream()
-                .map(contract -> ContractListResponse.builder()
-                        .id(contract.getId())
-                        .timeStart(contract.getTimeStart())
-                        .timeEnd(contract.getTimeEnd())
-                        .namePatient(contract.getNamePatient())
-                        .agePatient(contract.getAgePatient())
-                        .content(contract.getContent())
-                        .totalPrice(contract.getTotalPrice())
-                        .employeeName(contract.getEmployee().getFirstName())
-                        .build())
-                .collect(Collectors.toList());
-    }
+
     public Page<ContractResponse> getContractByEmployeeId(String idEmployee, Pageable pageable){
         Page<ContractResponse> contractResponseList = contractRepository.findAllByEmployee(idEmployee,pageable);
         for (var e : contractResponseList){
             Contract contract = findById(e.getId());
             e.setCustomerName(contract.getCustomerName());
             e.setCustomerPhone(contract.getCustomerPhone());
+            e.setAgePatient(contract.getAgePatient());
+            e.setGenders(contract.getGender().getName());
+            var description = serviceGeneralRepository.findByName(contract.getNameService());
+            e.setDescriptionService(description.getDescription());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
             if (contract.getUser()!=null){
                 user.setId(contract.getUser().getId());
-                user.setName(contract.getUser().getId());
+                user.setName(contract.getUser().getLastName() +" " + contract.getUser().getFirstName() );
                 user.setPhone(contract.getUser().getPhoneNumber());
+                user.setGender(contract.getUser().getGender().getName());
+                user.setPersonId(contract.getUser().getPersonID());
                 e.setUser(user);
             }
             ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
             if(contract.getEmployee()!=null){
+                var accountEmployee = accountRepository.findAccountByEmployeeId(contract.getEmployee().getId());
                 employee.setId(contract.getEmployee().getId());
-                employee.setName(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getLastName() +" " + contract.getEmployee().getFirstName());
                 employee.setPhone(contract.getEmployee().getPhoneNumber());
+                employee.setLocation(contract.getEmployee().getLocationPlace().getName());
+                employee.setPersonId(contract.getEmployee().getPersonID());
+                employee.setGender(contract.getEmployee().getGender().getName());
+                employee.setEmail(accountEmployee.getEmail());
                 e.setEmployee(employee);
             }
             List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
@@ -97,18 +94,30 @@ public class ContractService {
             Contract contract = findById(e.getId());
             e.setCustomerName(contract.getCustomerName());
             e.setCustomerPhone(contract.getCustomerPhone());
+            e.setAgePatient(contract.getAgePatient());
+            e.setGenders(contract.getGender().getName());
+
+            var description = serviceGeneralRepository.findByName(contract.getNameService());
+            e.setDescriptionService(description.getDescription());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
             if (contract.getUser()!=null){
                 user.setId(contract.getUser().getId());
-                user.setName(contract.getUser().getId());
+                user.setName(contract.getUser().getLastName() +" " + contract.getUser().getFirstName() );
                 user.setPhone(contract.getUser().getPhoneNumber());
+                user.setGender(contract.getUser().getGender().getName());
+                user.setPersonId(contract.getUser().getPersonID());
                 e.setUser(user);
             }
             ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
             if(contract.getEmployee()!=null){
+                var accountEmployee = accountRepository.findAccountByEmployeeId(contract.getEmployee().getId());
                 employee.setId(contract.getEmployee().getId());
-                employee.setName(contract.getEmployee().getId());
+                employee.setName(contract.getEmployee().getLastName() +" " + contract.getEmployee().getFirstName());
                 employee.setPhone(contract.getEmployee().getPhoneNumber());
+                employee.setLocation(contract.getEmployee().getLocationPlace().getName());
+                employee.setPersonId(contract.getEmployee().getPersonID());
+                employee.setGender(contract.getEmployee().getGender().getName());
+                employee.setEmail(accountEmployee.getEmail());
                 e.setEmployee(employee);
             }
             List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
@@ -135,18 +144,30 @@ public class ContractService {
             Contract contract = findById(e.getId());
             e.setCustomerName(contract.getCustomerName());
             e.setCustomerPhone(contract.getCustomerPhone());
+            e.setAgePatient(contract.getAgePatient());
+            e.setGenders(contract.getGender().getName());
+
+            var description = serviceGeneralRepository.findByName(contract.getNameService());
+            e.setDescriptionService(description.getDescription());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
             if (contract.getUser()!=null){
                 user.setId(contract.getUser().getId());
-                user.setName(contract.getUser().getFirstName() + " " + contract.getUser().getLastName());
+                user.setName(contract.getUser().getLastName() +" " + contract.getUser().getFirstName() );
                 user.setPhone(contract.getUser().getPhoneNumber());
+                user.setGender(contract.getUser().getGender().getName());
+                user.setPersonId(contract.getUser().getPersonID());
                 e.setUser(user);
             }
             ContractEmployeeUserResponse employee = new ContractEmployeeUserResponse();
             if(contract.getEmployee()!=null){
+                var accountEmployee = accountRepository.findAccountByEmployeeId(contract.getEmployee().getId());
                 employee.setId(contract.getEmployee().getId());
-                employee.setName(contract.getEmployee().getFirstName() + " " + contract.getEmployee().getLastName());
+                employee.setName(contract.getEmployee().getLastName() +" " + contract.getEmployee().getFirstName());
                 employee.setPhone(contract.getEmployee().getPhoneNumber());
+                employee.setLocation(contract.getEmployee().getLocationPlace().getName());
+                employee.setPersonId(contract.getEmployee().getPersonID());
+                employee.setGender(contract.getEmployee().getGender().getName());
+                employee.setEmail(accountEmployee.getEmail());
                 e.setEmployee(employee);
             }
             List<ContractHistoryWorkingResponse> contractHistoryWorkingList = new ArrayList<>();
@@ -181,13 +202,14 @@ public class ContractService {
         Contract contract = new Contract();
         contractRepository.save(contract);
         contract.setTimeStart(cart.getTimeStart());
-        contract.setCustomerName(cart.getFirstName() + " " + cart.getLastName());
+        contract.setCustomerName(cart.getLastName() + " " + cart.getFirstName());
         contract.setCustomerPhone(cart.getPhone());
         contract.setTimeEnd(cart.getTimeEnd());
         contract.setEmployee(employee);
         contract.setCreateAt(LocalDate.now());
+        contract.setGender(cart.getGender());
         contract.setNameService(cart.getService().getName());
-        contract.setAgePatient(cart.getAgePatient());
+        contract.setAgePatient(cart.getEDecade().getName());
         contract.setPriceService(cart.getService().getPriceEmployee());
         contract.setFeePrice(cart.getService().getFees());
         contract.setTotalPrice(cart.getService().getTotalPrice());
@@ -233,7 +255,7 @@ public class ContractService {
         contract.setTimeStart(LocalDate.parse(request.getTimeStart()));
         contract.setTimeEnd(LocalDate.parse(request.getTimeEnd()));
         contract.setNamePatient(request.getNamePatient());
-        contract.setAgePatient(Integer.valueOf(request.getAgePatient()));
+        contract.setAgePatient(request.getAgePatient());
         contract.setContent(request.getContent());
         contract.setTotalPrice(new BigDecimal(request.getTotalPrice()));
         Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
