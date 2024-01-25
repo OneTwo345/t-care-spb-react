@@ -22,7 +22,6 @@ public interface ContractRepository extends JpaRepository<Contract,String> {
             "c.timeEnd," +
             "c.createAt," +
             "c.namePatient," +
-            "c.agePatient," +
             "c.content," +
             "c.noteForPatient," +
             "c.noteForEmployee," +
@@ -40,7 +39,6 @@ public interface ContractRepository extends JpaRepository<Contract,String> {
             "c.timeEnd," +
             "c.createAt," +
             "c.namePatient," +
-            "c.agePatient," +
             "c.content," +
             "c.noteForPatient," +
             "c.noteForEmployee," +
@@ -58,7 +56,6 @@ public interface ContractRepository extends JpaRepository<Contract,String> {
             "c.timeEnd," +
             "c.createAt," +
             "c.namePatient," +
-            "c.agePatient," +
             "c.content," +
             "c.noteForPatient," +
             "c.noteForEmployee," +

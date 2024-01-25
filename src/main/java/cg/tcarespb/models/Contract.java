@@ -1,5 +1,6 @@
 package cg.tcarespb.models;
 
+import cg.tcarespb.models.enums.EDecade;
 import cg.tcarespb.models.enums.EGender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,7 @@ public class Contract {
     private LocalDate timeEnd;
     private LocalDate createAt;
     private String namePatient;
-    private Integer agePatient;
+    private String agePatient;
     private String content;
     private String noteForPatient;
     private String noteForEmployee;

@@ -14,5 +14,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EmployeeDateSessionResponse {
     private EDateInWeek dateInWeek;
+    private String eDateInWeek;
     private ESessionOfDate sessionOfDate;
+    private String eSessionOfDate;
 }
