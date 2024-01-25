@@ -174,6 +174,7 @@ public class AuthResController {
                 }
                 String token = jwtToken(account.get().getEmail());
                 AuthResponse authResponse = new AuthResponse();
+
                 authResponse.setJwt(token);
                 authResponse.setIsAdmin(account.get().getERole().equals(ROLE_ADMIN));
                 authResponse.setIsEmployee(account.get().getERole().equals(ROLE_EMPLOYEE));
