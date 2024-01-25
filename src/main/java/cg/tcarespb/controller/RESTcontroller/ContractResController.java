@@ -11,6 +11,7 @@ import cg.tcarespb.service.contract.response.ContractResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
@@ -73,7 +74,7 @@ public class ContractResController {
         chatMessage.setMessage("Sent to User");
         chatMessage.setTimeStamp(new Date());
         messagingTemplate.convertAndSend("/topic/saler", chatMessage);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

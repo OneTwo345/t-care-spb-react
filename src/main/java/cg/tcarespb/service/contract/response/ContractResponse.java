@@ -20,7 +20,7 @@ public class ContractResponse {
     private String id;
     private LocalDate timeStart;
     private LocalDate timeEnd;
-    private LocalDate createAt;
+    private String createAt;
     private String namePatient;
     private String agePatient;
     private String content;
@@ -41,11 +41,10 @@ public class ContractResponse {
     private String descriptionService;
 
 
-    public ContractResponse(String id, LocalDate timeStart, LocalDate timeEnd, LocalDate createAt, String namePatient, String content, String noteForPatient, String noteForEmployee, String nameService, BigDecimal feeContact, BigDecimal feePrice, BigDecimal totalPrice, BigDecimal priceService, BigDecimal totalAmount, BigDecimal amount, BigDecimal feeAmount, EGender gender) {
+    public ContractResponse(String id, LocalDate timeStart, LocalDate timeEnd, String namePatient, String content, String noteForPatient, String noteForEmployee, String nameService, BigDecimal feeContact, BigDecimal feePrice, BigDecimal totalPrice, BigDecimal priceService, BigDecimal totalAmount, BigDecimal amount, BigDecimal feeAmount, EGender gender) {
         this.id = id;
         this.timeStart = timeStart;
         this.timeEnd = timeEnd;
-        this.createAt = createAt;
         this.namePatient = namePatient;
         this.content = content;
         this.noteForPatient = noteForPatient;

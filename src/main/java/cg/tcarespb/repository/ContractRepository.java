@@ -20,7 +20,6 @@ public interface ContractRepository extends JpaRepository<Contract,String> {
     BigDecimal getAllFeeContact(AdminStartEndDayRequest req);
     @Query("SELECT NEW  cg.tcarespb.service.contract.response.ContractResponse(c.id,c.timeStart," +
             "c.timeEnd," +
-            "c.createAt," +
             "c.namePatient," +
             "c.content," +
             "c.noteForPatient," +
@@ -37,7 +36,6 @@ public interface ContractRepository extends JpaRepository<Contract,String> {
     Page<ContractResponse> findAllByEmployee(@Param("idEmployee") String idEmployee, Pageable pageable);
     @Query("SELECT NEW  cg.tcarespb.service.contract.response.ContractResponse(c.id,c.timeStart," +
             "c.timeEnd," +
-            "c.createAt," +
             "c.namePatient," +
             "c.content," +
             "c.noteForPatient," +
@@ -54,7 +52,6 @@ public interface ContractRepository extends JpaRepository<Contract,String> {
     Page<ContractResponse> findAllByUser(@Param("idUser") String idUser, Pageable pageable);
     @Query("SELECT NEW  cg.tcarespb.service.contract.response.ContractResponse(c.id,c.timeStart," +
             "c.timeEnd," +
-            "c.createAt," +
             "c.namePatient," +
             "c.content," +
             "c.noteForPatient," +

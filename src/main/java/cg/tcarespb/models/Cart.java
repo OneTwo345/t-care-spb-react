@@ -15,6 +15,7 @@ import org.hibernate.annotations.Where;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -39,7 +40,8 @@ public class Cart {
     private String lastName;
     private String saleNote;
     private String phone;
-    private BigDecimal totalAmount;;
+    private BigDecimal totalAmount;
+    private LocalDateTime createAt;
     private BigDecimal amount;
     private BigDecimal feeAmount;
     private Boolean deleted = false;

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -410,6 +411,7 @@ public class CartService {
                                 .noteForEmployee(service.getNoteForEmployee())
                                 .memberOfFamily(String.valueOf(service.getMemberOfFamily()))
                                 .gender(String.valueOf(service.getGender()))
+                                .createAt(service.getCreateAt().toString())
                                 .eDecade(String.valueOf(service.getEDecade()))
                                 .firstName(service.getFirstName())
                                 .lastName(service.getLastName())
@@ -430,6 +432,8 @@ public class CartService {
         Optional<Saler> saler = salerRepository.findById(id);
         Saler saler1 = saler.get();
         cart.setSaler(saler1);
+        cart.setCreateAt(LocalDateTime.now());
+
         ServiceGeneral serviceGeneral = serviceGeneralService.findById(request.getServiceId());
         cart.setService(serviceGeneral);
         LocationPlace locationPalace = new LocationPlace();
@@ -578,6 +582,7 @@ public class CartService {
         Cart cart = new Cart();
         var user = userRepository.findById(idUser).get();
         cart.setUser(user);
+        cart.setCreateAt(LocalDateTime.now());
         cartRepository.save(cart);
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         if (req.getTimeStart() != null
@@ -682,6 +687,7 @@ public class CartService {
         Optional<Saler> saler = salerRepository.findById(id);
         Saler saler1 = saler.get();
         cart.setSaler(saler1);
+        cart.setCreateAt(LocalDateTime.now());
         cartRepository.save(cart);
         return cart.getId();
     }
@@ -782,6 +788,7 @@ public class CartService {
             elem.setSkillList(skillList);
 
             CartSkillInfoServiceResponse service = new CartSkillInfoServiceResponse();
+
             service.setId(cart.getService().getId());
             service.setName(cart.getService().getName());
             service.setDesciption(cart.getService().getDescription());
@@ -858,7 +865,7 @@ public class CartService {
                 elem.setUser(cartUserResponse);
             }
             elem.setCartStatus(cart.getCartStatus().getName());
-
+            elem.setCreateAt(cart.getCreateAt().toString());
         }
         return listCart;
     }
@@ -1088,6 +1095,8 @@ public class CartService {
 
     public void updateCartStatus(ECartStatus cartStatus, String cartId) {
         Cart cart = findById(cartId);
+        cart.setCreateAt(LocalDateTime.now());
+
         cart.setCartStatus(cartStatus);
         cartRepository.save(cart);
     }

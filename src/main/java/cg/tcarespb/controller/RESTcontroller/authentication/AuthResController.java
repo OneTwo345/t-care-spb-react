@@ -41,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -105,6 +106,7 @@ public class AuthResController {
 
         Cart cart = new Cart();
         cart.setUser(user);
+        cart.setCreateAt(LocalDateTime.now());
         cartRepository.save(cart);
 
         return new ResponseEntity<>(cart.getId(), HttpStatus.CREATED);
