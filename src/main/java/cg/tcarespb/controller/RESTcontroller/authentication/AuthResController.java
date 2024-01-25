@@ -3,10 +3,7 @@ package cg.tcarespb.controller.RESTcontroller.authentication;
 
 import cg.tcarespb.config.JwtUtil;
 import cg.tcarespb.controller.RESTcontroller.authentication.response.AuthResponse;
-import cg.tcarespb.models.Account;
-import cg.tcarespb.models.Cart;
-import cg.tcarespb.models.Employee;
-import cg.tcarespb.models.User;
+import cg.tcarespb.models.*;
 import cg.tcarespb.models.enums.EGender;
 import cg.tcarespb.models.enums.ERole;
 import cg.tcarespb.models.enums.EStatus;
@@ -14,10 +11,7 @@ import cg.tcarespb.registration.event.listener.RegistrationCompleteEventListener
 import cg.tcarespb.registration.password.PasswordResetRequest;
 import cg.tcarespb.registration.password.PasswordResetTokenService;
 import cg.tcarespb.registration.token.VerificationToken;
-import cg.tcarespb.repository.AccountRepository;
-import cg.tcarespb.repository.CartRepository;
-import cg.tcarespb.repository.EmployeeRepository;
-import cg.tcarespb.repository.UserRepository;
+import cg.tcarespb.repository.*;
 import cg.tcarespb.service.account.AccountService;
 import cg.tcarespb.service.account.request.AccountSaveRequest;
 import cg.tcarespb.service.account.request.LoginSaveRequest;
@@ -70,6 +64,7 @@ public class AuthResController {
     private final AuthenticationManager authenticationManager;
     private final RegistrationCompleteEventListener eventListener;
     private final HttpServletRequest servletRequest;
+    private final SalerRepository salerRepository;
     private final PasswordResetTokenService passwordResetTokenService;
     private final String SECRET = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
@@ -292,6 +287,31 @@ public class AuthResController {
     public String applicationUrl(HttpServletRequest request) {
         return "http://" + request.getServerName() + ":"
                 + request.getServerPort() + request.getContextPath();
+    }
+
+    @PostMapping("/saler/account")
+    public ResponseEntity<?> registerSaler(@RequestBody AccountSaveRequest request) {
+        if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email Đã Tồn Tại");
+
+        Account account = new Account();
+        account.setEmail(request.getEmail());
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        account.setERole(ROLE_SALER);
+        accountRepository.save(account);
+        Saler saler = new Saler();
+        saler.setGender(EGender.valueOf(request.getGender()));
+        saler.setFirstName(request.getFirstName());
+        saler.setLastName(request.getLastName());
+        saler.setPersonID(request.getPersonId());
+        saler.setPhoneNumber(request.getPhoneNumber());
+        salerRepository.save(saler);
+        account.setSaler(saler);
+        account.setTime(LocalDate.now());
+        accountRepository.save(account);
+        String salerId = saler.getId();
+
+        return new ResponseEntity<>(salerId, HttpStatus.CREATED);
     }
 
 
