@@ -221,6 +221,7 @@ public class CartService {
         Cart cart = findById(cardId);
         cart.setNoteForPatient(req.getNoteForPatient());
         cart.setGender(EGender.valueOf(req.getGender()));
+
         cart.setEDecade(EDecade.valueOf(req.getDecade()));
         cart.setMemberOfFamily(EMemberOfFamily.valueOf(req.getMemberOfFamily()));
         cartRepository.save(cart);
