@@ -212,7 +212,9 @@ public class ContractService {
         contract.setTimeEnd(cart.getTimeEnd());
         contract.setEmployee(employee);
         contract.setCreateAt(LocalDateTime.now());
-
+        if (cart.getUser() != null){
+            contract.setUser(cart.getUser());
+        }
         contract.setGender(cart.getGender());
         contract.setNameService(cart.getService().getName());
         contract.setAgePatient(cart.getEDecade().getName());
