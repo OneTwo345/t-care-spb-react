@@ -2,6 +2,7 @@ package cg.tcarespb.registration.password;
 
 import cg.tcarespb.models.Account;
 import cg.tcarespb.repository.PasswordResetTokenRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PasswordResetTokenService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
-
+@Transactional
     public void createPasswordResetTokenForAccount(Account account, String passwordToken) {
         PasswordResetToken passwordResetToken = new PasswordResetToken(passwordToken, account);
         passwordResetTokenRepository.save(passwordResetToken);
@@ -21,6 +22,10 @@ public class PasswordResetTokenService {
 
     public void deleteToken(String token){
         passwordResetTokenRepository.deleteByToken(token);
+    }
+
+    public void deleteTokenByAccount(Account account){
+        passwordResetTokenRepository.deleteByAccount_Id(account.getId());
     }
 
     public String validatePasswordResetToken(String passwordResetToken) {

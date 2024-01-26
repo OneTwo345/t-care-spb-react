@@ -11,6 +11,7 @@ import cg.tcarespb.service.historyWorking.HistoryWorkingService;
 import cg.tcarespb.util.AppConvertString;
 import cg.tcarespb.util.AppMessage;
 import cg.tcarespb.util.AppUtil;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +22,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -47,6 +48,7 @@ public class ContractService {
             e.setCustomerPhone(contract.getCustomerPhone());
             e.setAgePatient(contract.getAgePatient());
             e.setGenders(contract.getGender().getName());
+            e.setCreateAt(contract.getCreateAt().toString());
             var description = serviceGeneralRepository.findByName(contract.getNameService());
             e.setDescriptionService(description.getDescription());
             ContractEmployeeUserResponse user = new ContractEmployeeUserResponse();
@@ -96,6 +98,7 @@ public class ContractService {
             e.setCustomerPhone(contract.getCustomerPhone());
             e.setAgePatient(contract.getAgePatient());
             e.setGenders(contract.getGender().getName());
+            e.setCreateAt(contract.getCreateAt().toString());
 
             var description = serviceGeneralRepository.findByName(contract.getNameService());
             e.setDescriptionService(description.getDescription());
@@ -146,6 +149,7 @@ public class ContractService {
             e.setCustomerPhone(contract.getCustomerPhone());
             e.setAgePatient(contract.getAgePatient());
             e.setGenders(contract.getGender().getName());
+            e.setCreateAt(contract.getCreateAt().toString());
 
             var description = serviceGeneralRepository.findByName(contract.getNameService());
             e.setDescriptionService(description.getDescription());
@@ -192,11 +196,12 @@ public class ContractService {
     public void create(ContractSaveRequest request) {
         var contract = AppUtil.mapper.map(request, Contract.class);
         Optional<Employee> employee = employeeRepository.findById(request.getEmployeeId());
+
         contract.setEmployee(employee.get());
         contractRepository.save(contract);
     }
-
-    public String createContract(String cartId) {
+@Transactional
+    public void createContract(String cartId) {
         Cart cart = cartService.findById(cartId);
         Employee employee = cart.getEmployee();
         Contract contract = new Contract();
@@ -206,7 +211,10 @@ public class ContractService {
         contract.setCustomerPhone(cart.getPhone());
         contract.setTimeEnd(cart.getTimeEnd());
         contract.setEmployee(employee);
-        contract.setCreateAt(LocalDate.now());
+        contract.setCreateAt(LocalDateTime.now());
+        if (cart.getUser() != null){
+            contract.setUser(cart.getUser());
+        }
         contract.setGender(cart.getGender());
         contract.setNameService(cart.getService().getName());
         contract.setAgePatient(cart.getEDecade().getName());
@@ -230,7 +238,6 @@ public class ContractService {
         contract.setTotalAmount(contract.getTotalPrice().multiply(BigDecimal.valueOf(historyWorkingList.size())).add(contract.getFeeContact()));
         contractRepository.save(contract);
         cartService.deleteById(cartId);
-        return contract.getId();
     }
 
     public Contract findById(String id) {

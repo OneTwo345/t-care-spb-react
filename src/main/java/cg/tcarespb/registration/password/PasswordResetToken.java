@@ -20,8 +20,7 @@ public class PasswordResetToken {
     private Date expirationTime;
     private static final int EXPIRATION_TIME = 10;
 
-    @OneToOne
-    @JoinColumn(name = "account_id")
+    @ManyToOne
     private Account account;
 
     public PasswordResetToken(String token, Account account) {

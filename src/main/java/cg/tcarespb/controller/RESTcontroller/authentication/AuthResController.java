@@ -9,6 +9,7 @@ import cg.tcarespb.models.enums.ERole;
 import cg.tcarespb.models.enums.EStatus;
 import cg.tcarespb.registration.event.listener.RegistrationCompleteEventListener;
 import cg.tcarespb.registration.password.PasswordResetRequest;
+import cg.tcarespb.registration.password.PasswordResetToken;
 import cg.tcarespb.registration.password.PasswordResetTokenService;
 import cg.tcarespb.registration.token.VerificationToken;
 import cg.tcarespb.repository.*;
@@ -38,7 +39,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.AccountNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.security.Key;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,6 +61,7 @@ public class AuthResController {
     private final UserRepository userRepository;
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final CartRepository cartRepository;
     private final AccountService accountService;
     private final JwtUtil jwtUtil;
@@ -79,7 +83,7 @@ public class AuthResController {
 
 
     @Transactional
-    @PostMapping("/users/account")
+    @PostMapping("/users/cart/account")
     public ResponseEntity<?> register(@RequestBody AccountSaveRequest request) {
 
         if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
@@ -102,9 +106,36 @@ public class AuthResController {
 
         Cart cart = new Cart();
         cart.setUser(user);
+        cart.setCreateAt(LocalDateTime.now());
         cartRepository.save(cart);
 
         return new ResponseEntity<>(cart.getId(), HttpStatus.CREATED);
+    }
+    @Transactional
+    @PostMapping("/users/account")
+    public ResponseEntity<?> registerUser(@RequestBody AccountSaveRequest request) {
+
+        if (accountRepository.existsByEmailIgnoreCase(request.getEmail()))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email Đã Tồn Tại");
+        var account = AppUtil.mapper.map(request, Account.class);
+        account.setERole(ERole.valueOf(request.getRole()));
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        accountRepository.save(account);
+        var user = AppUtil.mapper.map(request, User.class);
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setGender(EGender.valueOf(request.getGender()));
+        user.setPersonID(request.getPersonId());
+        user.setPhoneNumber(request.getPhoneNumber());
+
+        userRepository.save(user);
+        account.setUser(user);
+        account.setTime(LocalDate.now());
+        accountRepository.save(account);
+
+
+
+        return new ResponseEntity<>(account.getUser().getId(), HttpStatus.CREATED);
     }
 
     @PostMapping("/employees/account")
@@ -229,18 +260,28 @@ public class AuthResController {
 //        }
 //        return "Invalid verification link, <a href=\"" +url+"\"> Get a new verification link. </a>";
 //    }
+
+
     @PostMapping("/password-reset-request")
-    public String resetPasswordRequest(@RequestBody PasswordResetRequest passwordResetRequest)
+    public ResponseEntity<?> resetPasswordRequest(@RequestBody PasswordResetRequest passwordResetRequest)
             throws MessagingException, UnsupportedEncodingException {
 
         Optional<Account> account = accountService.findByEmail(passwordResetRequest.getEmail());
-        String passwordResetUrl = "";
         if (account.isPresent()) {
-            String passwordResetToken = UUID.randomUUID().toString();
-            accountService.createPasswordResetTokenForUser(account.get(), passwordResetToken);
-            passwordResetUrl = passwordResetEmailLink(account.get(), "http://localhost:3000", passwordResetToken);
+             PasswordResetToken token = passwordResetTokenRepository.findByAccount_Id(account.get().getId());
+            if(token == null) {
+                String passwordResetToken = UUID.randomUUID().toString();
+                accountService.createPasswordResetTokenForUser(account.get(), passwordResetToken);
+                passwordResetEmailLink(account.get(), "http://localhost:3000", passwordResetToken);
+            } else if (token.getExpirationTime().toInstant().isBefore(Instant.now())){
+                passwordResetTokenService.deleteTokenByAccount(account.get());
+                String passwordResetToken = UUID.randomUUID().toString();
+                accountService.createPasswordResetTokenForUser(account.get(), passwordResetToken);
+                passwordResetEmailLink(account.get(), "http://localhost:3000", passwordResetToken);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token đã tồn tại");            }
         }
-        return passwordResetUrl;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private String passwordResetEmailLink(Account account, String applicationUrl,
@@ -274,7 +315,8 @@ public class AuthResController {
         passwordResetTokenService.deleteToken(token);
         return "Invalid password reset token";
     }
-
+//    @GetMapping("/{account_id}")
+//    public String findByAccount( @PathVariable("idEmployee") String idEmployee)
     @PostMapping("/change-password")
     public String changePassword(@RequestBody PasswordResetRequest passwordResetRequest) {
         Account account = accountService.findByEmail(passwordResetRequest.getEmail()).get();

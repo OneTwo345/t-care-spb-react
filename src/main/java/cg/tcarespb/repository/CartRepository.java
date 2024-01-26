@@ -30,9 +30,11 @@ public interface CartRepository extends JpaRepository<Cart, String> {
             "c.memberOfFamily," +
             "c.gender," +
             "c.eDecade" +
-            ")  FROM Cart c where  c.user.id =:idUser  ")
+            ")  FROM Cart c where  c.user.id =:idUser   "+"AND c.service IS NOT NULL " +
+            "AND SIZE(c.cartInfos) != 0 " +
+            "AND SIZE(c.cartSkills) != 0")
     Page<CartAllFieldResponse> findAllCartByUserId(@Param("idUser") String idUser, Pageable pageable);
-    @Query("SELECT NEW  cg.tcarespb.service.cart.response.CartAllFieldResponse(" +
+    @Query("SELECT NEW cg.tcarespb.service.cart.response.CartAllFieldResponse(" +
             "c.id," +
             "c.timeStart," +
             "c.timeEnd," +
@@ -45,8 +47,14 @@ public interface CartRepository extends JpaRepository<Cart, String> {
             "c.memberOfFamily," +
             "c.gender," +
             "c.eDecade" +
-            ")  FROM Cart c where  c.cartStatus =:status ")
+
+            ") FROM Cart c " +
+            "WHERE c.cartStatus = :status " +
+            "AND c.service IS NOT NULL " +
+            "AND SIZE(c.cartInfos) != 0 " +
+            "AND SIZE(c.cartSkills) != 0")
     Page<CartAllFieldResponse> findAllCartByCartStatus(@Param("status") ECartStatus status, Pageable pageable);
+
     @Query("SELECT NEW  cg.tcarespb.service.cart.response.CartAllFieldResponse(" +
             "c.id," +
             "c.timeStart," +

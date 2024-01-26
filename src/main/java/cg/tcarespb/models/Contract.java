@@ -11,6 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,7 +27,7 @@ public class Contract {
     private String id;
     private LocalDate timeStart;
     private LocalDate timeEnd;
-    private LocalDate createAt;
+    private LocalDateTime createAt;
     private String namePatient;
     private String agePatient;
     private String content;

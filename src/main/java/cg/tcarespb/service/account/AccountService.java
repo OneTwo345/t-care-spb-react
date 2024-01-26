@@ -7,6 +7,7 @@ import cg.tcarespb.registration.token.VerificationToken;
 import cg.tcarespb.registration.token.VerificationTokenRepository;
 import cg.tcarespb.repository.AccountRepository;
 import cg.tcarespb.service.account.response.AccountListResponse;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class AccountService {
     public Optional<Account> findByEmail(String email) {
         return accountRepository.findAccountByEmail(email);
     }
-
+@Transactional
     public void createPasswordResetTokenForUser(Account account, String passwordResetToken) {
         passwordResetTokenService.createPasswordResetTokenForAccount(account, passwordResetToken);
     }
