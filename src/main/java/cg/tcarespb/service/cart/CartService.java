@@ -700,7 +700,23 @@ public class CartService {
     public String editCartBySale(CartSaleEditRequest request, String id) {
         Cart cart = cartRepository.findById(id).orElseThrow(
                 () -> new RuntimeException(String.format(AppMessage.ID_NOT_FOUND, "Cart", id)));
-
+    if(request.getListDateSession().size() != 0){
+        List<DateSession> dateSessionList = new ArrayList<>();
+        for (var dateSession : request.getListDateSession()) {
+            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
+            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
+                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
+                DateSession newDateSession = new DateSession();
+                newDateSession.setSessionOfDate(sessionDate);
+                newDateSession.setDateInWeek(date);
+                newDateSession.setCart(cart);
+                dateSessionList.add(newDateSession);
+                dateSessionService.create(newDateSession);
+            }
+        }
+        dateSessionRepository.deleteAllByCartId(cart.getId());
+        cart.setDateSessions(dateSessionList);
+    }
         cart.setTimeStart(LocalDate.parse(request.getTimeStart()));
         cart.setTimeEnd(LocalDate.parse(request.getTimeEnd()));
         cart.setNoteForPatient(request.getNoteForPatient());
@@ -721,23 +737,10 @@ public class CartService {
         cart.setSaleNote(request.getSaleNote());
         ServiceGeneral serviceGeneral = serviceGeneralService.findById(request.getServiceId());
         cart.setService(serviceGeneral);
-        List<DateSession> dateSessionList = new ArrayList<>();
-        for (var dateSession : request.getListDateSession()) {
-            EDateInWeek date = EDateInWeek.valueOf(dateSession.getDate());
-            for (var sessionOfDate : dateSession.getSessionOfDateList()) {
-                ESessionOfDate sessionDate = ESessionOfDate.valueOf(sessionOfDate);
-                DateSession newDateSession = new DateSession();
-                newDateSession.setSessionOfDate(sessionDate);
-                newDateSession.setDateInWeek(date);
-                newDateSession.setCart(cart);
-                dateSessionList.add(newDateSession);
-                dateSessionService.create(newDateSession);
-            }
-        }
-        dateSessionRepository.deleteAllByCartId(cart.getId());
+
+
         historyWorkingRepository.deleteAllByCartId(cart.getId());
 
-        cart.setDateSessions(dateSessionList);
         cart.setHistoryWorking(historyWorkingService.createHistoryWorkingForCart(cart));
 
         cartSkillRepository.deleteAllById(cart.getCartSkills().stream()
@@ -970,7 +973,7 @@ public class CartService {
                 cartUserResponse.setPhoneNumber(user.getPhoneNumber());
                 elem.setUser(cartUserResponse);
             }
-
+            elem.setCreateAt(cart.getCreateAt().toString());
         }
         return listCart;
     }
@@ -1076,6 +1079,8 @@ public class CartService {
                 elem.setUser(cartUserResponse);
             }
             elem.setCartStatus(cart.getCartStatus().getName());
+            elem.setCreateAt(cart.getCreateAt().toString());
+
         }
         return listCart;
     }
@@ -1096,7 +1101,6 @@ public class CartService {
     public void updateCartStatus(ECartStatus cartStatus, String cartId) {
         Cart cart = findById(cartId);
         cart.setCreateAt(LocalDateTime.now());
-
         cart.setCartStatus(cartStatus);
         cartRepository.save(cart);
     }

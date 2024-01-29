@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,10 +35,16 @@ public class Cart {
     private LocalDate timeStart;
     private LocalDate timeEnd;
     private Integer agePatient;
+    @Column(length = 2000)
+    @Length(max = 2000, message = "Description must not exceed 2000 characters")
     private String noteForPatient;
+    @Column(length = 2000)
+    @Length(max = 2000, message = "Description must not exceed 2000 characters")
     private String noteForEmployee;
     private String firstName;
     private String lastName;
+    @Column(length = 2000)
+    @Length(max = 2000, message = "Description must not exceed 2000 characters")
     private String saleNote;
     private String phone;
     private BigDecimal totalAmount;

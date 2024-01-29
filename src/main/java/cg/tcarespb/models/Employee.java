@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
@@ -28,7 +29,11 @@ public class Employee {
     private String id;
     private String firstName;
     private String lastName;
+    @Column(length = 2000)
+    @Length(max = 2000, message = "Description must not exceed 2000 characters")
     private String descriptionAboutMySelf;
+    @Column(length = 2000)
+    @Length(max = 2000, message = "Description must not exceed 2000 characters")
     private String bioTitle;
     private String personID;
     private Boolean deleted = false;

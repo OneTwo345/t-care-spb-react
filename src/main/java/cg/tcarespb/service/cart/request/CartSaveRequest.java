@@ -19,7 +19,7 @@ public class CartSaveRequest {
     private String eDecade;
     private String locationPlace;
     private String distanceForWork;
-    private String longitude;
+    private String longitude;   
     private String latitude;
     private String firstName;
     private String lastName;
