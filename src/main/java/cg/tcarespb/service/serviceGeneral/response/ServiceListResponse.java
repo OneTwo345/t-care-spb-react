@@ -13,4 +13,5 @@ public class ServiceListResponse {
     private String name;
     private String description;
     private String price;
+    private String priceEmployee;
 }

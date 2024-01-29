@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,7 +32,11 @@ public class Contract {
     private String namePatient;
     private String agePatient;
     private String content;
+    @Column(length = 2000)
+    @Length(max = 2000, message = "Description must not exceed 2000 characters")
     private String noteForPatient;
+    @Column(length = 2000)
+    @Length(max = 2000, message = "Description must not exceed 2000 characters")
     private String noteForEmployee;
     private Boolean deleted = false;
     private String nameService;

@@ -35,6 +35,7 @@ public class ServiceGeneralService {
                 .id(service.getId())
                 .name(service.getName())
                 .price(String.valueOf(service.getTotalPrice()))
+                .priceEmployee(String.valueOf(service.getPriceEmployee()))
                 .description(service.getDescription()).build()).collect(Collectors.toList());
     }
 
